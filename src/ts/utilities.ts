@@ -9,7 +9,7 @@ namespace MG {
             
             if (id !== undefined) {
                 canvas = document.getElementById(id) as HTMLCanvasElement;
-                if (canvas === undefined) throw new Error('Cannot finda  canvas element named' + id);
+                if (canvas === undefined) throw new Error('Cannot find a canvas element named' + id);
             } else {
                 canvas = document.createElement('canvas') as HTMLCanvasElement;
                 document.body.appendChild(canvas);
