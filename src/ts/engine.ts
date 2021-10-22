@@ -13,7 +13,7 @@ namespace MG {
 
         public Start (): void {
 
-
+            InputHandler.Initialise();
 
             this.MainLoop();
         }
