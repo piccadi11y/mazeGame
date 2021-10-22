@@ -22,6 +22,8 @@ namespace MG {
         private MainLoop (): void {
 
             ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
             ctx.fillStyle = 'green';
             ctx.fillRect(10, 10, 150, 255);

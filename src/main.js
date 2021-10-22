@@ -18,6 +18,8 @@ var MG;
         Engine.prototype.MainLoop = function () {
             var _this = this;
             MG.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            MG.ctx.fillStyle = 'black';
+            MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
             MG.ctx.fillStyle = 'green';
             MG.ctx.fillRect(10, 10, 150, 255);
             requestAnimationFrame(function () { return _this.MainLoop(); });

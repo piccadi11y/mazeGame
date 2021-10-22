@@ -1,0 +1,54 @@
+ui flow
+    - main menu
+        -- play (current game, if loaded)
+        -- generate new game
+        -- save (current game)
+        -- load (from saved string)
+        -- options
+            --- remap keys? (maybe as a programming exercise on my part)
+            --- view keymap
+            --- music volume
+            --- effect volume
+            --- ...
+    - pause menu
+        -- resume
+        -- save (perform manual save)
+        -- options
+        -- exit (to menu)
+    - game ui/options
+        -- sector overview (globalish map)
+        -- ...
+
+procedural generation
+    - grid of playable sectors generates, say 5x5:  e  1  0  1  1       e = end
+                                                    0  1  1  1  0       s = start
+                                                    1  1  0  0  1       1 = playable sector
+                                                    1  1  0  1  0       0 = scenery/unplayable sector
+                                                    0  1  1  1  s
+    - each playable sector then broken down into moveable area with connections to other playable sectors, say 50x50 with the player being 3x3 (?)
+        -- terrain height
+        -- bodies of water
+        -- flora
+        -- ...
+    - structures placed
+        -- buildings (interactable?)
+        -- wells (?)
+        -- ...
+    - decorations placed
+        -- fences
+        -- ...
+    - generate npc spawns
+        -- hostile (?)
+        -- characters (?)
+    - light sources placed
+    - calculate collisions for connected objects (no point having an object the player can't reach being included in real-time collision checks) and build data
+    - generate lighting paths
+    - apply lighting data to any textures/colours (depending on the art style i decide on) and place in world (dependant on previous generation)
+    - save to level as grid + object spawns, etc
+
+games mechanics
+    - walk
+    - swim
+    - rotation based off either mouse location or movement direction (dependant on other mechanics)
+    - interact
+    - ...
