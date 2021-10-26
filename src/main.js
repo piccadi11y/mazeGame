@@ -4,6 +4,84 @@ window.onload = function () {
 };
 var MG;
 (function (MG) {
+    var Colour = /** @class */ (function () {
+        function Colour(r, g, b, a) {
+            if (r === void 0) { r = 255; }
+            if (g === void 0) { g = 255; }
+            if (b === void 0) { b = 255; }
+            if (a === void 0) { a = 255; }
+            this._r = r;
+            this._g = g;
+            this._b = b;
+            this._a = a;
+        }
+        Object.defineProperty(Colour.prototype, "r", {
+            get: function () {
+                return this._r;
+            },
+            set: function (value) {
+                this._r = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "g", {
+            get: function () {
+                return this._g;
+            },
+            set: function (value) {
+                this._g = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "b", {
+            get: function () {
+                return this._b;
+            },
+            set: function (value) {
+                this._b = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "a", {
+            get: function () {
+                return this._a;
+            },
+            set: function (value) {
+                this._a = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Colour.prototype.hex = function (bAlpha) {
+            if (bAlpha === void 0) { bAlpha = false; }
+            if (bAlpha)
+                return '#' + this._r.toString(16) + this._g.toString(16) + this._b.toString(16) + this._a.toString(16);
+            return '#' + this._r.toString(16) + this._g.toString(16) + this._b.toString(16);
+        };
+        Colour.white = function () {
+            return new Colour(255, 255, 255, 255);
+        };
+        Colour.black = function () {
+            return new Colour(0, 0, 0, 255);
+        };
+        Colour.red = function () {
+            return new Colour(255, 0, 0, 255);
+        };
+        Colour.green = function () {
+            return new Colour(0, 255, 0, 255);
+        };
+        Colour.blue = function () {
+            return new Colour(0, 0, 255, 255);
+        };
+        return Colour;
+    }());
+    MG.Colour = Colour;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Engine = /** @class */ (function () {
         function Engine(canvasID) {
             var _this = this;
@@ -13,6 +91,7 @@ var MG;
         }
         Engine.prototype.Start = function () {
             MG.InputHandler.Initialise();
+            this._sprite = new MG.Sprite(200, 200, '');
             this.MainLoop();
         };
         Engine.prototype.MainLoop = function () {
@@ -21,7 +100,8 @@ var MG;
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
             MG.ctx.fillStyle = 'green';
-            MG.ctx.fillRect(10, 10, 150, 255);
+            MG.ctx.fillRect(10, 10, 200, 200);
+            this._sprite.draw();
             requestAnimationFrame(function () { return _this.MainLoop(); });
         };
         Engine.prototype.Resize = function () {
@@ -109,6 +189,50 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var oObject = /** @class */ (function () {
+        function oObject() {
+        }
+        return oObject;
+    }());
+    MG.oObject = oObject;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Sprite = /** @class */ (function () {
+        function Sprite(width, height, textureName) {
+            this._width = width;
+            this._height = height;
+            //this._currentTexture = TextureManager[textureName] // or something
+            this._currentTexture = new MG.Texture(this._width, this._height);
+        }
+        Sprite.prototype.update = function () {
+        };
+        Sprite.prototype.draw = function () {
+            this._currentTexture.draw(0, 0);
+        };
+        return Sprite;
+    }());
+    MG.Sprite = Sprite;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Texture = /** @class */ (function () {
+        function Texture(width, height, baseColour) {
+            if (baseColour === void 0) { baseColour = MG.Colour.white(); }
+            this._width = width;
+            this._height = height;
+            this._baseColour = baseColour;
+        }
+        Texture.prototype.draw = function (x, y) {
+            MG.ctx.fillStyle = this._baseColour.hex(false);
+            MG.ctx.fillRect(x, y, this._width, this._height);
+        };
+        return Texture;
+    }());
+    MG.Texture = Texture;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Utilities = /** @class */ (function () {
         function Utilities() {
         }
@@ -131,4 +255,13 @@ var MG;
         return Utilities;
     }());
     MG.Utilities = Utilities;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Level = /** @class */ (function () {
+        function Level() {
+        }
+        return Level;
+    }());
+    MG.Level = Level;
 })(MG || (MG = {}));

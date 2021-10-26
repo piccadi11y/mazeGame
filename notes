@@ -46,7 +46,7 @@ procedural generation
     - apply lighting data to any textures/colours (depending on the art style i decide on) and place in world (dependant on previous generation)
     - save to level as grid + object spawns, etc
 
-games mechanics
+game's mechanics
     - walk
     - swim
     - rotation based off either mouse location or movement direction (dependant on other mechanics)

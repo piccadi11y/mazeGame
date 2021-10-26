@@ -3,6 +3,7 @@ namespace MG {
     export class Engine {
 
         private _canvas: HTMLCanvasElement;
+        private _sprite: Sprite;
 
         public constructor (canvasID?: string) {
             window.onresize = ()=>this.Resize();
@@ -14,6 +15,7 @@ namespace MG {
         public Start (): void {
 
             InputHandler.Initialise();
+            this._sprite = new Sprite(200, 200, '');
 
             this.MainLoop();
         }
@@ -26,7 +28,9 @@ namespace MG {
             ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
             ctx.fillStyle = 'green';
-            ctx.fillRect(10, 10, 150, 255);
+            ctx.fillRect(10, 10, 200, 200);
+
+            this._sprite.draw();
 
 
             requestAnimationFrame(()=>this.MainLoop());
