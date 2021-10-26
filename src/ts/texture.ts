@@ -10,7 +10,6 @@ namespace MG {
         private _colour: Colour;
         private _points: Vector2[] = [];
 
-
         public get colour (): Colour {
             return this._colour;
         }
@@ -48,12 +47,11 @@ namespace MG {
             return this._name;
         }
 
-        public addLayer () {
-            let l = new Layer();
-            l.colour = Colour.red();
-            l.addPoint(new Vector2(9));
-            l.addPoint(new Vector2(3, 5));
-            this._layers.push(l);
+        public addLayer (points: Vector2[], colour: Colour) {
+            let layer = new Layer();
+            layer.colour = colour;
+            for (let p of points) layer.addPoint(p);
+            this._layers.push(layer);
         }
 
         // TODO // refactor this abomination
@@ -80,8 +78,6 @@ namespace MG {
                 points[3].x += vec.x + width / 2;
                 points[3].y += vec.y + height / 2;
 
-
-                // ctx.fillStyle = 'purple';
                 ctx.fillStyle = this._baseColour.hex();
                 let path = new Path2D();
                 path.moveTo(points[0].x, points[0].y);
@@ -143,8 +139,6 @@ namespace MG {
                             path.lineTo(points[1].x, points[1].y);
                             path.lineTo(points[2].x, points[2].y);
                             path.lineTo(points[3].x, points[3].y);
-
-
                         }
 
                         path.closePath();
@@ -154,6 +148,7 @@ namespace MG {
                 } else console.warn('Repeated texture rendering is not yet implemented');
                 // 26/10/2021 - 1851: TODO // implment repeat functionality, if needed, otherwise remove option (?)
             }
+            // draw object centre for debugging
             ctx.fillStyle = 'orange';
             ctx.fillRect(_x,_y,5,5);
         }

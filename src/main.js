@@ -1,3 +1,18 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 window.onload = function () {
     var engine = new MG.Engine('GameCanvas');
     engine.Start();
@@ -93,21 +108,22 @@ var MG;
             MG.InputHandler.Initialise();
             MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
             var texTemp = MG.TextureManager.getTexture('testTex');
-            texTemp.addLayer();
+            texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
+            texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
             console.log('testTex', texTemp);
             texTemp = undefined;
             MG.TextureManager.releaseTexture('testTex');
-            this._sprite = new MG.Sprite(200, 200, 'testTex');
+            this._spriteComponent = new MG.SpriteComponent('testSprite', 'testTex', 300);
             this.MainLoop();
         };
         Engine.prototype.MainLoop = function () {
             var _this = this;
-            MG.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+            // ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
             MG.ctx.fillStyle = 'green';
             MG.ctx.fillRect(10, 10, 200, 200);
-            this._sprite.draw();
+            this._spriteComponent.render();
             requestAnimationFrame(function () { return _this.MainLoop(); });
         };
         Engine.prototype.Resize = function () {
@@ -210,12 +226,12 @@ var MG;
             this._width = width;
             this._height = height;
             this._currentTexture = MG.TextureManager.getTexture(textureName);
-            // this._currentTexture = new Texture('test', this._width, this._height);
+            // TODO // add animation/multiple frame support
         }
-        Sprite.prototype.update = function () {
+        Sprite.prototype.update = function (deltaTime) {
         };
         Sprite.prototype.draw = function () {
-            // TODO // taking this objects location at some point too, and time
+            // TODO // take in this object's location at some point too, and time
             this._currentTexture.draw(this._tempLoc.x, this._tempLoc.y, 30, this._width, this._height);
         };
         return Sprite;
@@ -272,12 +288,25 @@ var MG;
             enumerable: false,
             configurable: true
         });
-        Texture.prototype.addLayer = function () {
-            var l = new Layer();
-            l.colour = MG.Colour.red();
-            l.addPoint(new MG.Vector2(9));
-            l.addPoint(new MG.Vector2(3, 5));
+        Texture.prototype.addLayer = function (points, colour) {
+            /*let l = new Layer();
+            l.colour = Colour.red();
+            l.addPoint(new Vector2(9));
+            l.addPoint(new Vector2(3, 5));
             this._layers.push(l);
+
+            l = new Layer();
+            l.colour = Colour.white();
+            l.addPoint(new Vector2(4));
+            l.addPoint(new Vector2(6, 9));
+            this._layers.push(l);*/
+            var layer = new Layer();
+            layer.colour = colour;
+            for (var _i = 0, points_1 = points; _i < points_1.length; _i++) {
+                var p = points_1[_i];
+                layer.addPoint(p);
+            }
+            this._layers.push(layer);
         };
         // TODO // refactor this abomination
         Texture.prototype.draw = function (_x, _y, rotation, width, height, fit) {
@@ -301,7 +330,6 @@ var MG;
                 points[2].y += vec.y + height / 2;
                 points[3].x += vec.x + width / 2;
                 points[3].y += vec.y + height / 2;
-                // ctx.fillStyle = 'purple';
                 MG.ctx.fillStyle = _this._baseColour.hex();
                 var path = new Path2D();
                 path.moveTo(points[0].x, points[0].y);
@@ -369,6 +397,7 @@ var MG;
                     console.warn('Repeated texture rendering is not yet implemented');
                 // 26/10/2021 - 1851: TODO // implment repeat functionality, if needed, otherwise remove option (?)
             }
+            // draw object centre for debugging
             MG.ctx.fillStyle = 'orange';
             MG.ctx.fillRect(_x, _y, 5, 5);
         };
@@ -432,6 +461,54 @@ var MG;
         return Utilities;
     }());
     MG.Utilities = Utilities;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var BaseComponent = /** @class */ (function () {
+        function BaseComponent(name) {
+            this.name = name;
+        }
+        Object.defineProperty(BaseComponent.prototype, "owner", {
+            get: function () {
+                return this._owner;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        BaseComponent.prototype.setOwner = function (obj) {
+            this._owner = obj;
+        };
+        BaseComponent.prototype.load = function () {
+        };
+        BaseComponent.prototype.update = function (deltaTime) {
+        };
+        BaseComponent.prototype.render = function () {
+        };
+        return BaseComponent;
+    }());
+    MG.BaseComponent = BaseComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var SpriteComponent = /** @class */ (function (_super) {
+        __extends(SpriteComponent, _super);
+        function SpriteComponent(name, textureName, width, height) {
+            if (width === void 0) { width = 100; }
+            var _this = _super.call(this, name) || this;
+            _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
+            return _this;
+        }
+        SpriteComponent.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            this._sprite.update(deltaTime);
+        };
+        SpriteComponent.prototype.render = function () {
+            _super.prototype.render.call(this);
+            this._sprite.draw();
+        };
+        return SpriteComponent;
+    }(MG.BaseComponent));
+    MG.SpriteComponent = SpriteComponent;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {

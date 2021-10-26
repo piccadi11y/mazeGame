@@ -13,9 +13,11 @@ namespace MG {
             this._height = height;
 
             this._currentTexture = TextureManager.getTexture(textureName);
+
+            // TODO // add animation/multiple frame support
         }
 
-        public update (): void {
+        public update (deltaTime: number): void {
 
         }
 
