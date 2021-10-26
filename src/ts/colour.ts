@@ -47,8 +47,8 @@ namespace MG {
         }
 
         public hex (bAlpha: boolean = false): string {
-            if (bAlpha) return '#' + this._r.toString(16) + this._g.toString(16) + this._b.toString(16) + this._a.toString(16);
-            return '#' + this._r.toString(16) + this._g.toString(16) + this._b.toString(16);
+            if (bAlpha) return '#' + (this._r>0?this._r.toString(16):'00') + (this._g>0?this._g.toString(16):'00') + (this._b>0?this._b.toString(16):'00') + (this._a>0?this._a.toString(16):'00');
+            return '#' + (this._r>0?this._r.toString(16):'00') + (this._g>0?this._g.toString(16):'00') + (this._b>0?this._b.toString(16):'00');
         }
 
         public static white () {

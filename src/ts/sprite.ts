@@ -6,12 +6,13 @@ namespace MG {
         private _height: number;
         private _currentTexture: Texture;
 
+        private _tempLoc: Vector2 = new Vector2(500, 200);
+
         public constructor (width: number, height: number, textureName: string) {
             this._width = width;
             this._height = height;
 
-            //this._currentTexture = TextureManager[textureName] // or something
-            this._currentTexture = new Texture(this._width, this._height);
+            this._currentTexture = TextureManager.getTexture(textureName);
         }
 
         public update (): void {
@@ -19,7 +20,8 @@ namespace MG {
         }
 
         public draw (): void {
-            this._currentTexture.draw(0, 0);
+            // TODO // take in this object's location at some point too, and time
+            this._currentTexture.draw(this._tempLoc.x, this._tempLoc.y, 30, this._width, this._height);
         }
     }
 }

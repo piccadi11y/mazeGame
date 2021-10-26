@@ -15,7 +15,13 @@ namespace MG {
         public Start (): void {
 
             InputHandler.Initialise();
-            this._sprite = new Sprite(200, 200, '');
+            TextureManager.addTexture(new Texture('testTex', 10, 10, Colour.blue()));
+            let texTemp = TextureManager.getTexture('testTex');
+            texTemp.addLayer();
+            console.log('testTex', texTemp);
+            texTemp = undefined;
+            TextureManager.releaseTexture('testTex');
+            this._sprite = new Sprite(200, 200, 'testTex');
 
             this.MainLoop();
         }
