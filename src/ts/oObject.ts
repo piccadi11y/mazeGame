@@ -78,6 +78,11 @@ namespace MG {
             component.setOwner(this);
         }
 
+        public getComponent (name: string): BaseComponent {
+            for (let e of this._components) if (e.name === name) return e;
+            return undefined;
+        }
+
         public update (deltaTime: number): void {
             this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
 
@@ -87,10 +92,10 @@ namespace MG {
         }
 
 
-        public render (): void {
-            for (let c of this._components) c.render(this._worldTransform);
+        public render (camera: Camera): void {
+            for (let c of this._components) c.render(this._worldTransform, camera);
 
-            for (let c of this._children) c.render();
+            for (let c of this._children) c.render(camera);
         }
 
         private updateWorldTransform (parentWorldTransform: Transform): void {

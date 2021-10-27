@@ -4,6 +4,7 @@ namespace MG {
 
         private _canvas: HTMLCanvasElement;
         private _testObject: oObject;
+        private _camera: oObject;
 
         private FRAME_TIME: number = 0;
         private LAST_FRAME: number = 0;
@@ -22,26 +23,18 @@ namespace MG {
             let texTemp = TextureManager.getTexture('testTex');
             texTemp.addLayer([new Vector2(9), new Vector2(3,5)], Colour.red());
             texTemp.addLayer([new Vector2(4), new Vector2(6,9)], Colour.white());
-            TextureManager.addTexture(new Texture('testChildTexture', 3, 3, Colour.green()));
-            texTemp = TextureManager.getTexture('testChildTexture');
-            texTemp.addLayer([new Vector2(2, 0), new Vector2(1), new Vector2(0, 2), new Vector2(2)], new Colour(255, 255, 0));
-            texTemp.addLayer([Vector2.Zero], new Colour(255, 0, 255));
             texTemp = undefined;
             TextureManager.releaseTexture('testTex');
-            TextureManager.releaseTexture('testChildTexture');
-            this._testObject = new oObject(0, 'testObject');
+            this._testObject = new oObject(1, 'testObject');
             this._testObject.addComponent(new SpriteComponent('testSprite', 'testTex', 200))
             this._testObject.position = new Vector2(500, 300);
-            this._testObject.addChild(new oObject(1, 'testChild'));
-            let child: oObject = this._testObject.getObjectByName('testChild');
-            child.addComponent(new SpriteComponent('testChildSprite', 'testChildTexture', 100));
-            child.rotation = 45;
-            child.position.x = 250;
-            this._testObject.addChild(new oObject(2, 'child^2'));
-            child = this._testObject.getObjectByName('child^2')
-            child.addComponent(new SpriteComponent('child^2Sprite', 'testChildTexture', 50));
-            child.rotation = -135;
-            child.position.x = 450;
+
+            this._camera = new oObject(0, 'camera')
+            let cc: CameraComponent = new CameraComponent('cameraComponent', this._canvas.width, this._canvas.height)
+            this._camera.addComponent(cc);
+            cc.setTarget(this._testObject);
+
+
 
             this.MainLoop();
         }
@@ -54,9 +47,10 @@ namespace MG {
             ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
 
-            this._testObject.rotation += 90 * this.FRAME_TIME;
             this._testObject.update(this.FRAME_TIME);
-            this._testObject.render();
+            this._camera.update(this.FRAME_TIME);
+
+            this._testObject.render((this._camera.getComponent('cameraComponent') as CameraComponent).camera);
 
             let fps = Math.round(1 / this.FRAME_TIME);
             ctx.fillStyle = 'red';
@@ -72,6 +66,8 @@ namespace MG {
 
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
+
+            if (this._camera) (this._camera.getComponent('cameraComponent') as CameraComponent).handleResize(this._canvas.width, this._canvas.height);
 
         }
     }

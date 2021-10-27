@@ -19,6 +19,34 @@ window.onload = function () {
 };
 var MG;
 (function (MG) {
+    var Camera = /** @class */ (function () {
+        function Camera() {
+            this._view = new MG.Transform();
+        }
+        Object.defineProperty(Camera.prototype, "view", {
+            get: function () {
+                var nV = new MG.Transform();
+                nV.copyFrom(this._view);
+                nV.position.x -= this._screenWidth / 2;
+                nV.position.y -= this._screenHeight / 2;
+                return nV;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Camera.prototype.resizeScreen = function (width, height) {
+            this._screenWidth = width;
+            this._screenHeight = height;
+        };
+        Camera.prototype.update = function (deltaTime, view) {
+            this._view.copyFrom(view);
+        };
+        return Camera;
+    }());
+    MG.Camera = Camera;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Colour = /** @class */ (function () {
         function Colour(r, g, b, a) {
             if (r === void 0) { r = 255; }
@@ -112,26 +140,15 @@ var MG;
             var texTemp = MG.TextureManager.getTexture('testTex');
             texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
             texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
-            MG.TextureManager.addTexture(new MG.Texture('testChildTexture', 3, 3, MG.Colour.green()));
-            texTemp = MG.TextureManager.getTexture('testChildTexture');
-            texTemp.addLayer([new MG.Vector2(2, 0), new MG.Vector2(1), new MG.Vector2(0, 2), new MG.Vector2(2)], new MG.Colour(255, 255, 0));
-            texTemp.addLayer([MG.Vector2.Zero], new MG.Colour(255, 0, 255));
             texTemp = undefined;
             MG.TextureManager.releaseTexture('testTex');
-            MG.TextureManager.releaseTexture('testChildTexture');
-            this._testObject = new MG.oObject(0, 'testObject');
+            this._testObject = new MG.oObject(1, 'testObject');
             this._testObject.addComponent(new MG.SpriteComponent('testSprite', 'testTex', 200));
             this._testObject.position = new MG.Vector2(500, 300);
-            this._testObject.addChild(new MG.oObject(1, 'testChild'));
-            var child = this._testObject.getObjectByName('testChild');
-            child.addComponent(new MG.SpriteComponent('testChildSprite', 'testChildTexture', 100));
-            child.rotation = 45;
-            child.position.x = 250;
-            this._testObject.addChild(new MG.oObject(2, 'child^2'));
-            child = this._testObject.getObjectByName('child^2');
-            child.addComponent(new MG.SpriteComponent('child^2Sprite', 'testChildTexture', 50));
-            child.rotation = -135;
-            child.position.x = 450;
+            this._camera = new MG.oObject(0, 'camera');
+            var cc = new MG.CameraComponent('cameraComponent', this._canvas.width, this._canvas.height);
+            this._camera.addComponent(cc);
+            cc.setTarget(this._testObject);
             this.MainLoop();
         };
         Engine.prototype.MainLoop = function () {
@@ -139,9 +156,9 @@ var MG;
             this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            this._testObject.rotation += 90 * this.FRAME_TIME;
             this._testObject.update(this.FRAME_TIME);
-            this._testObject.render();
+            this._camera.update(this.FRAME_TIME);
+            this._testObject.render(this._camera.getComponent('cameraComponent').camera);
             var fps = Math.round(1 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'red';
             MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
@@ -153,6 +170,8 @@ var MG;
                 return;
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
+            if (this._camera)
+                this._camera.getComponent('cameraComponent').handleResize(this._canvas.width, this._canvas.height);
         };
         return Engine;
     }());
@@ -312,6 +331,14 @@ var MG;
             this._components.push(component);
             component.setOwner(this);
         };
+        oObject.prototype.getComponent = function (name) {
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var e = _a[_i];
+                if (e.name === name)
+                    return e;
+            }
+            return undefined;
+        };
         oObject.prototype.update = function (deltaTime) {
             this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
@@ -323,14 +350,14 @@ var MG;
                 c.update(deltaTime);
             }
         };
-        oObject.prototype.render = function () {
+        oObject.prototype.render = function (camera) {
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var c = _a[_i];
-                c.render(this._worldTransform);
+                c.render(this._worldTransform, camera);
             }
             for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
                 var c = _c[_b];
-                c.render();
+                c.render(camera);
             }
         };
         oObject.prototype.updateWorldTransform = function (parentWorldTransform) {
@@ -361,9 +388,9 @@ var MG;
         }
         Sprite.prototype.update = function (deltaTime) {
         };
-        Sprite.prototype.draw = function (transform) {
+        Sprite.prototype.draw = function (transform, camera) {
             // TODO // take in this object's location at some point too, and time
-            this._currentTexture.draw(transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
+            this._currentTexture.draw(camera, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         };
         return Sprite;
     }());
@@ -429,12 +456,12 @@ var MG;
             this._layers.push(layer);
         };
         // TODO // refactor this abomination
-        Texture.prototype.draw = function (_x, _y, rotation, width, height, fit) {
+        Texture.prototype.draw = function (camera, _x, _y, rotation, width, height, fit) {
             var _this = this;
             if (rotation === void 0) { rotation = 0; }
             if (fit === void 0) { fit = TextureFit.STRETCH; }
-            var x = _x - (width ? width : this._width) / 2;
-            var y = _y - (height ? height : this._height) / 2;
+            var x = _x - (width ? width : this._width) / 2 - camera.view.position.x;
+            var y = _y - (height ? height : this._height) / 2 - camera.view.position.y;
             var drawBaseRect = function (vec, width, height, rot) {
                 var normalised = new MG.Vector2(-(width / 2), -(height / 2));
                 var points = [new MG.Vector2(normalised.x, normalised.y), new MG.Vector2(normalised.x + width, normalised.y), new MG.Vector2(normalised.x + width, normalised.y + height), new MG.Vector2(normalised.x, normalised.y + height)];
@@ -496,14 +523,14 @@ var MG;
                             points[1] = MG.Vector2.rotate(points[1], rotation);
                             points[2] = MG.Vector2.rotate(points[2], rotation);
                             points[3] = MG.Vector2.rotate(points[3], rotation);
-                            points[0].x += _x;
-                            points[0].y += _y;
-                            points[1].x += _x;
-                            points[1].y += _y;
-                            points[2].x += _x;
-                            points[2].y += _y;
-                            points[3].x += _x;
-                            points[3].y += _y;
+                            points[0].x += _x - camera.view.position.x;
+                            points[0].y += _y - camera.view.position.y;
+                            points[1].x += _x - camera.view.position.x;
+                            points[1].y += _y - camera.view.position.y;
+                            points[2].x += _x - camera.view.position.x;
+                            points[2].y += _y - camera.view.position.y;
+                            points[3].x += _x - camera.view.position.x;
+                            points[3].y += _y - camera.view.position.y;
                             path.moveTo(points[0].x, points[0].y);
                             path.lineTo(points[1].x, points[1].y);
                             path.lineTo(points[2].x, points[2].y);
@@ -519,7 +546,7 @@ var MG;
             }
             // draw object centre for debugging
             MG.ctx.fillStyle = 'orange';
-            MG.ctx.fillRect(_x - 2.5, _y - 2.5, 5, 5);
+            MG.ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
         };
         return Texture;
     }());
@@ -637,11 +664,45 @@ var MG;
         };
         BaseComponent.prototype.update = function (deltaTime) {
         };
-        BaseComponent.prototype.render = function (transform) {
+        BaseComponent.prototype.render = function (transform, camera) {
         };
         return BaseComponent;
     }());
     MG.BaseComponent = BaseComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var CameraComponent = /** @class */ (function (_super) {
+        __extends(CameraComponent, _super);
+        function CameraComponent(name, width, height) {
+            var _this = _super.call(this, name) || this;
+            _this._camera = new MG.Camera();
+            _this._target = undefined;
+            _this._camera.resizeScreen(width, height);
+            return _this;
+        }
+        Object.defineProperty(CameraComponent.prototype, "camera", {
+            get: function () {
+                return this._camera;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CameraComponent.prototype.setTarget = function (target) {
+            this._target = target;
+        };
+        CameraComponent.prototype.handleResize = function (width, height) {
+            this._camera.resizeScreen(width, height);
+        };
+        CameraComponent.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            if (this._target !== undefined)
+                this._owner.worldTransform.copyFrom(this._target.worldTransform);
+            this._camera.update(deltaTime, this._owner.worldTransform);
+        };
+        return CameraComponent;
+    }(MG.BaseComponent));
+    MG.CameraComponent = CameraComponent;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -657,9 +718,9 @@ var MG;
             _super.prototype.update.call(this, deltaTime);
             this._sprite.update(deltaTime);
         };
-        SpriteComponent.prototype.render = function (transform) {
-            _super.prototype.render.call(this, transform);
-            this._sprite.draw(transform);
+        SpriteComponent.prototype.render = function (transform, camera) {
+            _super.prototype.render.call(this, transform, camera);
+            this._sprite.draw(transform, camera);
         };
         return SpriteComponent;
     }(MG.BaseComponent));
