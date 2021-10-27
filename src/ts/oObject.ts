@@ -41,7 +41,7 @@ namespace MG {
         }
 
         public set position (pos: Vector2) {
-            this._transform.position.CopyFrom(pos);
+            this._transform.position.copyFrom(pos);
         }
 
         public get worldTransform (): Transform {

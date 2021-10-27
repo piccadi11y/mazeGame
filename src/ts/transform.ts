@@ -23,7 +23,7 @@ namespace MG {
 
         public copyFrom (transform: Transform): void {
             this._rotation = transform.rotation;
-            this._position.CopyFrom(transform.position);
+            this._position.copyFrom(transform.position);
         }
     }
 

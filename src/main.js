@@ -137,6 +137,7 @@ var MG;
         Engine.prototype.Start = function () {
             MG.InputHandler.Initialise();
             MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
+            MG.TextureManager.addTexture(new MG.Texture('testTexCentre', 1, 1, MG.Colour.green()));
             var texTemp = MG.TextureManager.getTexture('testTex');
             texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
             texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
@@ -145,6 +146,8 @@ var MG;
             this._testObject = new MG.oObject(1, 'testObject');
             this._testObject.addComponent(new MG.SpriteComponent('testSprite', 'testTex', 200));
             this._testObject.position = new MG.Vector2(500, 300);
+            this._centreObject = new MG.oObject(2, 'centreObject');
+            this._centreObject.addComponent(new MG.SpriteComponent('centreSprite', 'testTexCentre', 50));
             this._camera = new MG.oObject(0, 'camera');
             var cc = new MG.CameraComponent('cameraComponent', this._canvas.width, this._canvas.height);
             this._camera.addComponent(cc);
@@ -156,9 +159,26 @@ var MG;
             this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+            // obviously not production ready movement logic, but good enough for testing
+            var xDir = (function () {
+                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
+                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
+                return aR - aL;
+            })();
+            var yDir = (function () {
+                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
+                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
+                return aD - aU;
+            })();
+            var velX = xDir * 50 * this.FRAME_TIME;
+            var velY = yDir * 50 * this.FRAME_TIME;
+            this._testObject.position.x += velX;
+            this._testObject.position.y += velY;
             this._testObject.update(this.FRAME_TIME);
+            this._centreObject.update(this.FRAME_TIME);
             this._camera.update(this.FRAME_TIME);
             this._testObject.render(this._camera.getComponent('cameraComponent').camera);
+            this._centreObject.render(this._camera.getComponent('cameraComponent').camera);
             var fps = Math.round(1 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'red';
             MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
@@ -179,6 +199,19 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var Keys;
+    (function (Keys) {
+        Keys["ARROW_LEFT"] = "ArrowLeft";
+        Keys["ARROW_RIGHT"] = "ArrowRight";
+        Keys["ARROW_UP"] = "ArrowUp";
+        Keys["ARROW_DOWN"] = "ArrowDown";
+        Keys["W"] = "w";
+        Keys["A"] = "a";
+        Keys["S"] = "a";
+        Keys["D"] = "d";
+        Keys["ESCAPE"] = "Escape";
+        Keys["ENTER"] = "Enter";
+    })(Keys = MG.Keys || (MG.Keys = {}));
     var InputHandler = /** @class */ (function () {
         function InputHandler() {
         }
@@ -218,6 +251,9 @@ var MG;
                 return;
             var k = new MG.KeyState(key);
             this._keys[key] = k;
+        };
+        InputHandler.getKey = function (name) {
+            return this._keys[name];
         };
         InputHandler._keys = {};
         return InputHandler;
@@ -293,7 +329,7 @@ var MG;
                 return this._transform.position;
             },
             set: function (pos) {
-                this._transform.position.CopyFrom(pos);
+                this._transform.position.copyFrom(pos);
             },
             enumerable: false,
             configurable: true
@@ -613,7 +649,7 @@ var MG;
         });
         Transform.prototype.copyFrom = function (transform) {
             this._rotation = transform.rotation;
-            this._position.CopyFrom(transform.position);
+            this._position.copyFrom(transform.position);
         };
         return Transform;
     }());
@@ -768,10 +804,10 @@ var MG;
             enumerable: false,
             configurable: true
         });
-        Vector2.prototype.ToArray = function () {
+        Vector2.prototype.toArray = function () {
             return [this._x, this._y];
         };
-        Vector2.prototype.CopyFrom = function (vector) {
+        Vector2.prototype.copyFrom = function (vector) {
             this._x = vector._x;
             this._y = vector._y;
         };

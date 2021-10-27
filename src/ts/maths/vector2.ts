@@ -34,11 +34,11 @@ namespace MG {
             return new Vector2(1, 1);
         }
 
-        public ToArray (): number[] {
+        public toArray (): number[] {
             return [this._x, this._y];
         }
 
-        public CopyFrom (vector: Vector2): void {
+        public copyFrom (vector: Vector2): void {
             this._x = vector._x;
             this._y = vector._y;
         }

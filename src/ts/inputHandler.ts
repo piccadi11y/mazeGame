@@ -1,5 +1,18 @@
 namespace MG {
 
+    export enum Keys {
+        ARROW_LEFT = 'ArrowLeft',
+        ARROW_RIGHT = 'ArrowRight',
+        ARROW_UP = 'ArrowUp',
+        ARROW_DOWN = 'ArrowDown',
+        W = 'w',
+        A = 'a',
+        S = 'a',
+        D = 'd',
+        ESCAPE = 'Escape',
+        ENTER = 'Enter'
+    }
+
     export class InputHandler {
 
         private static _keys: {[key:string]: KeyState} = {};
@@ -40,6 +53,10 @@ namespace MG {
             if (this._keys[key] !== undefined) return;
             let k = new KeyState(key);
             this._keys[key] = k;
+        }
+
+        public static getKey (name: string): KeyState {
+            return this._keys[name];
         }
     }
 }
