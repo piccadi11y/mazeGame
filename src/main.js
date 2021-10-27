@@ -113,7 +113,9 @@ var MG;
             console.log('testTex', texTemp);
             texTemp = undefined;
             MG.TextureManager.releaseTexture('testTex');
-            this._spriteComponent = new MG.SpriteComponent('testSprite', 'testTex', 300);
+            this._testObject = new MG.oObject(0, 'testObject');
+            this._testObject.addComponent(new MG.SpriteComponent('testSprite', 'testTex', 200));
+            this._testObject.position = new MG.Vector2(200, 200);
             this.MainLoop();
         };
         Engine.prototype.MainLoop = function () {
@@ -123,7 +125,9 @@ var MG;
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
             MG.ctx.fillStyle = 'green';
             MG.ctx.fillRect(10, 10, 200, 200);
-            this._spriteComponent.render();
+            // this._spriteComponent.render(100, 20);
+            this._testObject.rotation += 1;
+            this._testObject.render();
             requestAnimationFrame(function () { return _this.MainLoop(); });
         };
         Engine.prototype.Resize = function () {
@@ -212,8 +216,98 @@ var MG;
 var MG;
 (function (MG) {
     var oObject = /** @class */ (function () {
-        function oObject() {
+        function oObject(id, name) {
+            this._children = [];
+            this._components = [];
+            this._transform = new MG.Transform();
+            this._id = id;
+            this._name = name;
         }
+        Object.defineProperty(oObject.prototype, "id", {
+            get: function () {
+                return this._id;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "parent", {
+            get: function () {
+                return this._parent;
+            },
+            set: function (parent) {
+                this._parent = parent;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "rotation", {
+            get: function () {
+                return this._transform.rotation;
+            },
+            set: function (degrees) {
+                this._transform.rotation = degrees;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "position", {
+            get: function () {
+                return this._transform.position;
+            },
+            set: function (pos) {
+                this._transform.position.CopyFrom(pos);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        oObject.prototype.addChild = function (child) {
+            child.parent = this;
+            this._children.push(child);
+        };
+        oObject.prototype.removeChild = function (child) {
+            var index = this._children.indexOf(child);
+            if (index !== -1) {
+                child.parent = undefined;
+                this._children.splice(index, 1);
+            }
+        };
+        oObject.prototype.getObjectByName = function (name) {
+            if (this._name === name)
+                return this;
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                var result = child.getObjectByName(name);
+                if (result !== undefined)
+                    return result;
+            }
+            return undefined;
+        };
+        oObject.prototype.addComponent = function (component) {
+            this._components.push(component);
+            component.setOwner(this);
+        };
+        oObject.prototype.update = function (deltaTime) {
+            // this._localMatrix = this.transform.GetTransformationMatrix();
+            // this.UpdateWorldMatrix((this._parent !== undefined) ? this._parent.worldMatrix : undefined);
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var c = _a[_i];
+                c.update(deltaTime);
+            }
+            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
+                var c = _c[_b];
+                c.update(deltaTime);
+            }
+        };
+        oObject.prototype.render = function () {
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var c = _a[_i];
+                c.render(this._transform);
+            }
+            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
+                var c = _c[_b];
+                c.render();
+            }
+        };
         return oObject;
     }());
     MG.oObject = oObject;
@@ -222,7 +316,6 @@ var MG;
 (function (MG) {
     var Sprite = /** @class */ (function () {
         function Sprite(width, height, textureName) {
-            this._tempLoc = new MG.Vector2(500, 200);
             this._width = width;
             this._height = height;
             this._currentTexture = MG.TextureManager.getTexture(textureName);
@@ -230,9 +323,9 @@ var MG;
         }
         Sprite.prototype.update = function (deltaTime) {
         };
-        Sprite.prototype.draw = function () {
+        Sprite.prototype.draw = function (transform) {
             // TODO // take in this object's location at some point too, and time
-            this._currentTexture.draw(this._tempLoc.x, this._tempLoc.y, 30, this._width, this._height);
+            this._currentTexture.draw(transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         };
         return Sprite;
     }());
@@ -289,17 +382,6 @@ var MG;
             configurable: true
         });
         Texture.prototype.addLayer = function (points, colour) {
-            /*let l = new Layer();
-            l.colour = Colour.red();
-            l.addPoint(new Vector2(9));
-            l.addPoint(new Vector2(3, 5));
-            this._layers.push(l);
-
-            l = new Layer();
-            l.colour = Colour.white();
-            l.addPoint(new Vector2(4));
-            l.addPoint(new Vector2(6, 9));
-            this._layers.push(l);*/
             var layer = new Layer();
             layer.colour = colour;
             for (var _i = 0, points_1 = points; _i < points_1.length; _i++) {
@@ -399,7 +481,7 @@ var MG;
             }
             // draw object centre for debugging
             MG.ctx.fillStyle = 'orange';
-            MG.ctx.fillRect(_x, _y, 5, 5);
+            MG.ctx.fillRect(_x - 2.5, _y - 2.5, 5, 5);
         };
         return Texture;
     }());
@@ -436,6 +518,38 @@ var MG;
         return TextureManager;
     }());
     MG.TextureManager = TextureManager;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Transform = /** @class */ (function () {
+        function Transform() {
+            this._position = MG.Vector2.Zero;
+            this._rotation = 0;
+        }
+        Object.defineProperty(Transform.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Transform.prototype, "rotation", {
+            get: function () {
+                return this._rotation;
+            },
+            set: function (degrees) {
+                this._rotation = degrees;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Transform.prototype.copyFrom = function (transform) {
+            this._rotation = transform.rotation;
+            this._position.CopyFrom(transform.position);
+        };
+        return Transform;
+    }());
+    MG.Transform = Transform;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -482,7 +596,7 @@ var MG;
         };
         BaseComponent.prototype.update = function (deltaTime) {
         };
-        BaseComponent.prototype.render = function () {
+        BaseComponent.prototype.render = function (transform) {
         };
         return BaseComponent;
     }());
@@ -502,9 +616,9 @@ var MG;
             _super.prototype.update.call(this, deltaTime);
             this._sprite.update(deltaTime);
         };
-        SpriteComponent.prototype.render = function () {
-            _super.prototype.render.call(this);
-            this._sprite.draw();
+        SpriteComponent.prototype.render = function (transform) {
+            _super.prototype.render.call(this, transform);
+            this._sprite.draw(transform);
         };
         return SpriteComponent;
     }(MG.BaseComponent));

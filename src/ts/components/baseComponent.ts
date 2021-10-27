@@ -26,7 +26,7 @@ namespace MG {
 
         }
 
-        public render (): void {
+        public render (transform: Transform): void {
             
         }
 

@@ -6,7 +6,6 @@ namespace MG {
         private _height: number;
         private _currentTexture: Texture;
 
-        private _tempLoc: Vector2 = new Vector2(500, 200);
 
         public constructor (width: number, height: number, textureName: string) {
             this._width = width;
@@ -21,9 +20,9 @@ namespace MG {
 
         }
 
-        public draw (): void {
+        public draw (transform: Transform): void {
             // TODO // take in this object's location at some point too, and time
-            this._currentTexture.draw(this._tempLoc.x, this._tempLoc.y, 30, this._width, this._height);
+            this._currentTexture.draw(transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         }
     }
 }

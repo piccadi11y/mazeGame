@@ -4,6 +4,7 @@ namespace MG {
 
         private _canvas: HTMLCanvasElement;
         private _spriteComponent: SpriteComponent;
+        private _testObject: oObject;
 
         public constructor (canvasID?: string) {
             window.onresize = ()=>this.Resize();
@@ -22,7 +23,9 @@ namespace MG {
             console.log('testTex', texTemp);
             texTemp = undefined;
             TextureManager.releaseTexture('testTex');
-            this._spriteComponent = new SpriteComponent('testSprite', 'testTex', 300);
+            this._testObject = new oObject(0, 'testObject');
+            this._testObject.addComponent(new SpriteComponent('testSprite', 'testTex', 200))
+            this._testObject.position = new Vector2(200, 200);
 
             this.MainLoop();
         }
@@ -37,7 +40,9 @@ namespace MG {
             ctx.fillStyle = 'green';
             ctx.fillRect(10, 10, 200, 200);
 
-            this._spriteComponent.render();
+            // this._spriteComponent.render(100, 20);
+            this._testObject.rotation += 1;
+            this._testObject.render();
 
 
             requestAnimationFrame(()=>this.MainLoop());

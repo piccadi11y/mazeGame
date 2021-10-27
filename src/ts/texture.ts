@@ -150,7 +150,7 @@ namespace MG {
             }
             // draw object centre for debugging
             ctx.fillStyle = 'orange';
-            ctx.fillRect(_x,_y,5,5);
+            ctx.fillRect(_x - 2.5, _y - 2.5 ,5,5);
         }
     }
     

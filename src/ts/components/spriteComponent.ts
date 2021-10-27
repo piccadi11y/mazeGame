@@ -16,10 +16,10 @@ namespace MG {
             this._sprite.update(deltaTime);
         }
 
-        public render (): void {
-            super.render();
+        public render (transform: Transform): void {
+            super.render(transform);
 
-            this._sprite.draw();
+            this._sprite.draw(transform);
         }
     }
 }
