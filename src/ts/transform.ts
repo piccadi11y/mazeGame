@@ -9,6 +9,10 @@ namespace MG {
             return this._position;
         }
 
+        public set position (pos: Vector2) {
+            this._position = pos;
+        }
+
         public get rotation (): number {
             return this._rotation;
         }

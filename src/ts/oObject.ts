@@ -8,6 +8,7 @@ namespace MG {
         private _parent: oObject;
         private _components: BaseComponent[] = [];
         private _transform: Transform = new Transform();
+        private _worldTransform: Transform = new Transform();
         private _name: string;
 
         public constructor (id: number, name: string) {
@@ -43,6 +44,10 @@ namespace MG {
             this._transform.position.CopyFrom(pos);
         }
 
+        public get worldTransform (): Transform {
+            return this._worldTransform;
+        }
+
 
         public addChild (child: oObject) {
             child.parent = this;
@@ -74,8 +79,7 @@ namespace MG {
         }
 
         public update (deltaTime: number): void {
-            // this._localMatrix = this.transform.GetTransformationMatrix();
-            // this.UpdateWorldMatrix((this._parent !== undefined) ? this._parent.worldMatrix : undefined);
+            this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
 
             for (let c of this._components) c.update(deltaTime);
 
@@ -84,9 +88,22 @@ namespace MG {
 
 
         public render (): void {
-            for (let c of this._components) c.render(this._transform);
+            for (let c of this._components) c.render(this._worldTransform);
 
             for (let c of this._children) c.render();
+        }
+
+        private updateWorldTransform (parentWorldTransform: Transform): void {
+
+            if (parentWorldTransform !== undefined ) {
+                let trans: Transform = new Transform();
+                trans.copyFrom(this._transform);
+                trans.rotation += parentWorldTransform.rotation;
+                trans.position = Vector2.rotate(trans.position, parentWorldTransform.rotation);
+                trans.position.x += parentWorldTransform.position.x;
+                trans.position.y += parentWorldTransform.position.y;
+                this._worldTransform.copyFrom(trans);
+            } else this._worldTransform.copyFrom(this._transform);
         }
     }
 }
