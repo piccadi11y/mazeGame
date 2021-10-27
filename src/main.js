@@ -100,6 +100,8 @@ var MG;
     var Engine = /** @class */ (function () {
         function Engine(canvasID) {
             var _this = this;
+            this.FRAME_TIME = 0;
+            this.LAST_FRAME = 0;
             window.onresize = function () { return _this.Resize(); };
             this._canvas = MG.Utilities.Initialise(canvasID);
             this.Resize();
@@ -125,15 +127,25 @@ var MG;
             child.addComponent(new MG.SpriteComponent('testChildSprite', 'testChildTexture', 100));
             child.rotation = 45;
             child.position.x = 250;
+            this._testObject.addChild(new MG.oObject(2, 'child^2'));
+            child = this._testObject.getObjectByName('child^2');
+            child.addComponent(new MG.SpriteComponent('child^2Sprite', 'testChildTexture', 50));
+            child.rotation = -135;
+            child.position.x = 450;
             this.MainLoop();
         };
         Engine.prototype.MainLoop = function () {
             var _this = this;
+            this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            this._testObject.rotation += 1;
-            this._testObject.update(0);
+            this._testObject.rotation += 90 * this.FRAME_TIME;
+            this._testObject.update(this.FRAME_TIME);
             this._testObject.render();
+            var fps = Math.round(1 / this.FRAME_TIME);
+            MG.ctx.fillStyle = 'red';
+            MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
+            this.LAST_FRAME = performance.now();
             requestAnimationFrame(function () { return _this.MainLoop(); });
         };
         Engine.prototype.Resize = function () {
