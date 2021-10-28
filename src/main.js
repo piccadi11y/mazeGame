@@ -132,58 +132,45 @@ var MG;
             this.LAST_FRAME = 0;
             window.onresize = function () { return _this.Resize(); };
             this._canvas = MG.Utilities.Initialise(canvasID);
+            // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
             this.Resize();
         }
         Engine.prototype.Start = function () {
             MG.InputHandler.Initialise();
+            // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
             MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
-            MG.TextureManager.addTexture(new MG.Texture('testTexCentre', 1, 1, MG.Colour.green()));
             var texTemp = MG.TextureManager.getTexture('testTex');
             texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
             texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
             texTemp = undefined;
             MG.TextureManager.releaseTexture('testTex');
-            this._testObject = new MG.oObject(1, 'testObject');
+            this._testObject = new MG.oObject(0, 'testObject');
             this._testObject.addComponent(new MG.SpriteComponent('testSprite', 'testTex', 200));
             this._testObject.position = new MG.Vector2(500, 300);
-            this._centreObject = new MG.oObject(2, 'centreObject');
-            this._centreObject.addComponent(new MG.SpriteComponent('centreSprite', 'testTexCentre', 50));
-            this._camera = new MG.oObject(0, 'camera');
+            this._camera = new MG.oObject(1, 'camera');
             var cc = new MG.CameraComponent('cameraComponent', this._canvas.width, this._canvas.height);
             this._camera.addComponent(cc);
             cc.setTarget(this._testObject);
-            this.MainLoop();
+            this._testLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
+            this._testLevel.addCamera(this._camera);
+            this._testLevel.setPlayer(this._testObject);
+            this._testLevel.load();
+            this.mainLoop();
         };
-        Engine.prototype.MainLoop = function () {
+        Engine.prototype.mainLoop = function () {
             var _this = this;
             this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
+            // clear
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            // obviously not production ready movement logic, but good enough for testing
-            var xDir = (function () {
-                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
-                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
-                return aR - aL;
-            })();
-            var yDir = (function () {
-                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
-                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
-                return aD - aU;
-            })();
-            var velX = xDir * 50 * this.FRAME_TIME;
-            var velY = yDir * 50 * this.FRAME_TIME;
-            this._testObject.position.x += velX;
-            this._testObject.position.y += velY;
-            this._testObject.update(this.FRAME_TIME);
-            this._centreObject.update(this.FRAME_TIME);
-            this._camera.update(this.FRAME_TIME);
-            this._testObject.render(this._camera.getComponent('cameraComponent').camera);
-            this._centreObject.render(this._camera.getComponent('cameraComponent').camera);
+            this._testLevel.update(this.FRAME_TIME);
+            this._testLevel.render();
+            // ui bits
             var fps = Math.round(1 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'red';
             MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
             this.LAST_FRAME = performance.now();
-            requestAnimationFrame(function () { return _this.MainLoop(); });
+            requestAnimationFrame(function () { return _this.mainLoop(); });
         };
         Engine.prototype.Resize = function () {
             if (this._canvas === undefined)
@@ -833,8 +820,64 @@ var MG;
 var MG;
 (function (MG) {
     var Level = /** @class */ (function () {
-        function Level() {
+        function Level(name, width, height, gridSize, colour) {
+            this._transform = new MG.Transform(); // TODO // this will be relevant later when the engine supports multiple levels/streaming
+            this._spawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
+            this._name = name;
+            this._width = width;
+            this._height = height;
+            this._gridSize = gridSize;
+            this._baseColour = colour;
+            this._rootObject = new MG.oObject(2, '_ROOT_');
         }
+        Level.prototype.load = function () {
+            MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
+            this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
+            MG.TextureManager.addTexture(new MG.Texture('testTexCentre', 1, 1, MG.Colour.green()));
+            var oTemp = new MG.oObject(3, 'centreObject');
+            oTemp.addComponent(new MG.SpriteComponent('centreSprite', 'testTexCentre', 50));
+            this._rootObject.addChild(oTemp);
+            oTemp = new MG.oObject(4, 'centreObject2');
+            oTemp.addComponent(new MG.SpriteComponent('centreSprite2', 'testTexCentre', 50));
+            oTemp.position.x = 200;
+            oTemp.position.y = 100;
+            this._rootObject.addChild(oTemp);
+        };
+        // in future support multiple cameras (in level), for now, just set camera that follows player through levels
+        Level.prototype.addCamera = function (camera) {
+            this._activeCamera = camera.getComponent('cameraComponent');
+        };
+        Level.prototype.setPlayer = function (player) {
+            this._playerObject = player;
+        };
+        Level.prototype.update = function (deltaTime) {
+            // obviously not production ready movement logic, but good enough for testing
+            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
+            var xDir = (function () {
+                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
+                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
+                return aR - aL;
+            })();
+            var yDir = (function () {
+                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
+                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
+                return aD - aU;
+            })();
+            var velX = xDir * 100 * deltaTime;
+            var velY = yDir * 100 * deltaTime;
+            this._playerObject.position.x += velX;
+            this._playerObject.position.y += velY;
+            this._rootObject.update(deltaTime);
+            this._playerObject.update(deltaTime);
+            this._activeCamera.update(deltaTime);
+        };
+        Level.prototype.render = function () {
+            // render level
+            this._baseTexture.draw(this._transform, this._activeCamera.camera);
+            // render objects
+            this._rootObject.render(this._activeCamera.camera);
+            this._playerObject.render(this._activeCamera.camera);
+        };
         return Level;
     }());
     MG.Level = Level;
