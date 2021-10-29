@@ -3,7 +3,7 @@ namespace MG {
     export class Engine {
 
         private _canvas: HTMLCanvasElement;
-        private _testObject: oObject;
+        private _playerObject: PlayerObject;
         private _camera: oObject;
 
         private _testLevel: Level;
@@ -30,19 +30,25 @@ namespace MG {
             texTemp.addLayer([new Vector2(4), new Vector2(6,9)], Colour.white());
             texTemp = undefined;
             TextureManager.releaseTexture('testTex');
-            this._testObject = new oObject(0, 'testObject');
-            this._testObject.addComponent(new SpriteComponent('testSprite', 'testTex', 200))
-            this._testObject.position = new Vector2(500, 300);
+            this._playerObject = new PlayerObject(0, 'testObject');
+            this._playerObject.addComponent(new SpriteComponent('testPlayerSprite', 'testTex', 200))
+            this._playerObject.position = new Vector2(-300, 0);
+            this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
 
             this._camera = new oObject(1, 'camera')
             let cc: CameraComponent = new CameraComponent('cameraComponent', this._canvas.width, this._canvas.height)
             this._camera.addComponent(cc);
-            cc.setTarget(this._testObject);
+            cc.setTarget(this._playerObject);
 
             this._testLevel = new Level('testLevel', 1000, 1000, 50, Colour.white());
             this._testLevel.addCamera(this._camera);
-            this._testLevel.setPlayer(this._testObject);
+            this._testLevel.setPlayer(this._playerObject);
             this._testLevel.load();
+
+            TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
+
+            this._playerObject.currentLevel = this._testLevel;
+
 
             this.mainLoop();
         }

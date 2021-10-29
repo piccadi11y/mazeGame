@@ -10,6 +10,10 @@ namespace MG {
             this._sprite = new Sprite(width, height!==undefined?height:width, textureName);
         }
 
+        public get dimensions (): Vector2 {
+            return new Vector2(this._sprite.width, this._sprite.height);
+        }
+
         public update (deltaTime: number): void {
             super.update(deltaTime);
 

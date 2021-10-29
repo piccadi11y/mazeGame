@@ -144,17 +144,20 @@ var MG;
             texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
             texTemp = undefined;
             MG.TextureManager.releaseTexture('testTex');
-            this._testObject = new MG.oObject(0, 'testObject');
-            this._testObject.addComponent(new MG.SpriteComponent('testSprite', 'testTex', 200));
-            this._testObject.position = new MG.Vector2(500, 300);
+            this._playerObject = new MG.PlayerObject(0, 'testObject');
+            this._playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', 'testTex', 200));
+            this._playerObject.position = new MG.Vector2(-300, 0);
+            this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
             this._camera = new MG.oObject(1, 'camera');
             var cc = new MG.CameraComponent('cameraComponent', this._canvas.width, this._canvas.height);
             this._camera.addComponent(cc);
-            cc.setTarget(this._testObject);
+            cc.setTarget(this._playerObject);
             this._testLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
             this._testLevel.addCamera(this._camera);
-            this._testLevel.setPlayer(this._testObject);
+            this._testLevel.setPlayer(this._playerObject);
             this._testLevel.load();
+            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
+            this._playerObject.currentLevel = this._testLevel;
             this.mainLoop();
         };
         Engine.prototype.mainLoop = function () {
@@ -276,17 +279,29 @@ var MG;
 var MG;
 (function (MG) {
     var oObject = /** @class */ (function () {
-        function oObject(id, name) {
+        function oObject(id, name, level) {
+            if (level === void 0) { level = undefined; }
             this._children = [];
             this._components = [];
+            this._collisionComponent = undefined;
             this._transform = new MG.Transform();
             this._worldTransform = new MG.Transform();
+            // don't bother updating collisions if so
+            this._bIsStatic = true;
             this._id = id;
             this._name = name;
+            this._level = level;
         }
         Object.defineProperty(oObject.prototype, "id", {
             get: function () {
                 return this._id;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "name", {
+            get: function () {
+                return this._name;
             },
             enumerable: false,
             configurable: true
@@ -328,6 +343,37 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(oObject.prototype, "level", {
+            get: function () {
+                return this._level;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "isStatic", {
+            get: function () {
+                return this._bIsStatic;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "children", {
+            get: function () {
+                return this._children;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "collisionComponent", {
+            get: function () {
+                return this._collisionComponent;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        oObject.prototype.setIsStatic = function (bIsStatic) {
+            this._bIsStatic = bIsStatic;
+        };
         oObject.prototype.addChild = function (child) {
             child.parent = this;
             this._children.push(child);
@@ -338,6 +384,25 @@ var MG;
                 child.parent = undefined;
                 this._children.splice(index, 1);
             }
+        };
+        oObject.prototype.enableCollisionFromSprite = function (spriteName, bIsStatic) {
+            if (bIsStatic === void 0) { bIsStatic = true; }
+            var dimensions = this.getComponent(spriteName).dimensions;
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', dimensions.x, dimensions.y, this._worldTransform !== undefined ? this._worldTransform : this._transform);
+            this._bIsStatic = bIsStatic;
+            this._collisionComponent.setOwner(this);
+        };
+        oObject.prototype.enableCollision = function (width, height, bIsStatic) {
+            if (bIsStatic === void 0) { bIsStatic = true; }
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform);
+            this._bIsStatic = bIsStatic;
+            this._collisionComponent.setOwner(this);
+        };
+        oObject.prototype.disableCollision = function () {
+            // TODO // necessary?
+            delete this._collisionComponent;
+            this._collisionComponent = undefined;
+            this._bIsStatic = true;
         };
         oObject.prototype.getObjectByName = function (name) {
             if (this._name === name)
@@ -364,6 +429,10 @@ var MG;
         };
         oObject.prototype.update = function (deltaTime) {
             this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
+            if (this._collisionComponent !== undefined && this._bIsStatic === false) {
+                this._collisionComponent.updateTransform(this._worldTransform !== undefined ? this._worldTransform : this._transform);
+                // TODO // check collisions against other objects?
+            }
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var c = _a[_i];
                 c.update(deltaTime);
@@ -373,14 +442,22 @@ var MG;
                 c.update(deltaTime);
             }
         };
-        oObject.prototype.render = function (camera) {
+        oObject.prototype.render = function (camera, bDrawDebugs) {
+            if (bDrawDebugs === void 0) { bDrawDebugs = false; }
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var c = _a[_i];
                 c.render(this._worldTransform, camera);
             }
             for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
                 var c = _c[_b];
-                c.render(camera);
+                c.render(camera, bDrawDebugs);
+            }
+            if (bDrawDebugs) {
+                // collision
+                if (this._collisionComponent !== undefined) {
+                    var tex = MG.TextureManager.getTexture('collisionDebug');
+                    tex.draw(this._level.activeCamera.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                }
             }
         };
         oObject.prototype.updateWorldTransform = function (parentWorldTransform) {
@@ -402,6 +479,104 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var PlayerObject = /** @class */ (function (_super) {
+        __extends(PlayerObject, _super);
+        function PlayerObject() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Object.defineProperty(PlayerObject.prototype, "currentLevel", {
+            get: function () {
+                return this._level;
+            },
+            set: function (level) {
+                this._level = level;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        PlayerObject.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            // TODO // this needs to be seperated into seperate functions, handlers for the keypresses that modify the x and y vels (stored as privs) to be applied rather than running each frame
+            // obviously not production ready movement logic, but good enough for testing
+            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
+            var xDir = (function () {
+                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
+                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
+                return aR - aL;
+            })();
+            var yDir = (function () {
+                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
+                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
+                return aD - aU;
+            })();
+            var velX = xDir * 100 * deltaTime;
+            var velY = yDir * 100 * deltaTime;
+            // TODO // move this to it's own function to handle movement safely, that checks collisions and modifies the class' priv vel x and y
+            if (this._collisionComponent !== undefined) {
+                for (var _i = 0, _a = this._level.rootObject.children; _i < _a.length; _i++) {
+                    var o = _a[_i];
+                    if (o.collisionComponent === undefined)
+                        break;
+                    var result = this._collisionComponent.checkColliding(o.collisionComponent);
+                    if (result !== undefined) {
+                        // TODO // move this logic into a dedicated handle collision function?
+                        // TODO // modify movement logic so the player doesn't get stuck on corners     --------------------------------------------------------------------- FIX!!
+                        // perhaps check location + movement, so that the player never gets the chance to get stuck on a corner?
+                        switch (result.collisionSide) {
+                            case MG.CollisionSide.X_NEG:
+                                if (velX < 0)
+                                    velX = 0;
+                                break;
+                            case MG.CollisionSide.X_POS:
+                                if (velX > 0)
+                                    velX = 0;
+                                break;
+                            case MG.CollisionSide.Y_NEG:
+                                if (velY < 0)
+                                    velY = 0;
+                                break;
+                            case MG.CollisionSide.Y_POS:
+                                if (velY > 0)
+                                    velY = 0;
+                                break;
+                            case MG.CollisionSide.XY_NEG:
+                                if (velX < 0)
+                                    velX = 0;
+                                if (velY < 0)
+                                    velY = 0;
+                                break;
+                            case MG.CollisionSide.XY_POS:
+                                if (velX > 0)
+                                    velX = 0;
+                                if (velY > 0)
+                                    velY = 0;
+                                break;
+                            case MG.CollisionSide.X_NEG_Y:
+                                if (velX < 0)
+                                    velX = 0;
+                                if (velY > 0)
+                                    velY = 0;
+                                break;
+                            case MG.CollisionSide.Y_NEG_X:
+                                if (velX > 0)
+                                    velX = 0;
+                                if (velY < 0)
+                                    velY = 0;
+                                break;
+                        }
+                        // TODO // if applicable, call objects' corresponding on collision/hit functions
+                    }
+                }
+            }
+            this.position.x += velX;
+            this.position.y += velY;
+        };
+        return PlayerObject;
+    }(MG.oObject));
+    MG.PlayerObject = PlayerObject;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Sprite = /** @class */ (function () {
         function Sprite(width, height, textureName) {
             this._width = width;
@@ -409,6 +584,20 @@ var MG;
             this._currentTexture = MG.TextureManager.getTexture(textureName);
             // TODO // add animation/multiple frame support
         }
+        Object.defineProperty(Sprite.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Sprite.prototype.update = function (deltaTime) {
         };
         Sprite.prototype.draw = function (transform, camera) {
@@ -729,6 +918,109 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var CollisionSide;
+    (function (CollisionSide) {
+        CollisionSide[CollisionSide["X_POS"] = 1] = "X_POS";
+        CollisionSide[CollisionSide["X_NEG"] = 2] = "X_NEG";
+        CollisionSide[CollisionSide["Y_NEG"] = 4] = "Y_NEG";
+        CollisionSide[CollisionSide["Y_POS"] = 8] = "Y_POS";
+        CollisionSide[CollisionSide["SUM"] = 15] = "SUM";
+        CollisionSide[CollisionSide["XY_NEG"] = 6] = "XY_NEG";
+        CollisionSide[CollisionSide["X_NEG_Y"] = 10] = "X_NEG_Y";
+        CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
+        CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
+    })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
+    var CollisionResult = /** @class */ (function () {
+        function CollisionResult(a, b, side) {
+            this.objectA = a;
+            this.objectB = b;
+            this.collisionSide = side;
+        }
+        return CollisionResult;
+    }());
+    MG.CollisionResult = CollisionResult;
+    var CollisionComponent = /** @class */ (function (_super) {
+        __extends(CollisionComponent, _super);
+        function CollisionComponent(name, width, height, transform) {
+            var _this = _super.call(this, name) || this;
+            _this._transform = new MG.Transform();
+            _this._width = width;
+            _this._height = height;
+            _this._transform = transform;
+            return _this;
+        }
+        Object.defineProperty(CollisionComponent.prototype, "transform", {
+            get: function () {
+                return this._transform;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CollisionComponent.prototype.updateTransform = function (transform) {
+            this._transform.copyFrom(transform);
+        };
+        CollisionComponent.prototype.checkColliding = function (collisionObject) {
+            // TODO // enable collision checking for rotated objects
+            var leftA, leftB;
+            var rightA, rightB;
+            var topA, topB;
+            var bottomA, bottomB;
+            leftA = this._transform.position.x - this._width / 2;
+            rightA = leftA + this._width;
+            topA = this._transform.position.y - this._height / 2;
+            bottomA = topA + this._height;
+            leftB = collisionObject.transform.position.x - collisionObject.width / 2;
+            rightB = leftB + collisionObject.width;
+            topB = collisionObject.transform.position.y - collisionObject.height / 2;
+            bottomB = topB + collisionObject.height;
+            if (bottomA <= topB)
+                return undefined;
+            if (topA >= bottomB)
+                return undefined;
+            if (rightA <= leftB)
+                return undefined;
+            if (leftA >= rightB)
+                return undefined;
+            var side = CollisionSide.SUM;
+            // TODO // I'm sure this derives from bit shifting binary or something...
+            if (bottomA > collisionObject.transform.position.y) {
+                // then it can't be Y_POS
+                side -= CollisionSide.Y_POS;
+            }
+            if (topA < collisionObject.transform.position.y) {
+                // then it can't be Y_NEG
+                side -= CollisionSide.Y_NEG;
+            }
+            if (rightA > collisionObject.transform.position.x) {
+                // then it can't be X_POS
+                side -= CollisionSide.X_POS;
+            }
+            if (leftA < collisionObject.transform.position.x) {
+                // then it can't be X_NEG
+                side -= CollisionSide.X_NEG;
+            }
+            return new CollisionResult(this.owner, collisionObject.owner, side);
+        };
+        return CollisionComponent;
+    }(MG.BaseComponent));
+    MG.CollisionComponent = CollisionComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var SpriteComponent = /** @class */ (function (_super) {
         __extends(SpriteComponent, _super);
         function SpriteComponent(name, textureName, width, height) {
@@ -737,6 +1029,13 @@ var MG;
             _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
             return _this;
         }
+        Object.defineProperty(SpriteComponent.prototype, "dimensions", {
+            get: function () {
+                return new MG.Vector2(this._sprite.width, this._sprite.height);
+            },
+            enumerable: false,
+            configurable: true
+        });
         SpriteComponent.prototype.update = function (deltaTime) {
             _super.prototype.update.call(this, deltaTime);
             this._sprite.update(deltaTime);
@@ -828,19 +1127,45 @@ var MG;
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new MG.oObject(2, '_ROOT_');
+            this._rootObject = new MG.oObject(2, '_ROOT_', this);
         }
+        Object.defineProperty(Level.prototype, "activeCamera", {
+            get: function () {
+                return this._activeCamera;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Level.prototype.load = function () {
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
             MG.TextureManager.addTexture(new MG.Texture('testTexCentre', 1, 1, MG.Colour.green()));
-            var oTemp = new MG.oObject(3, 'centreObject');
+            var oTemp = new MG.oObject(3, 'centreObject', this);
             oTemp.addComponent(new MG.SpriteComponent('centreSprite', 'testTexCentre', 50));
+            oTemp.enableCollisionFromSprite('centreSprite');
             this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject(4, 'centreObject2');
+            oTemp = new MG.oObject(4, 'centreObject2', this);
             oTemp.addComponent(new MG.SpriteComponent('centreSprite2', 'testTexCentre', 50));
+            oTemp.enableCollisionFromSprite('centreSprite2');
             oTemp.position.x = 200;
             oTemp.position.y = 100;
+            this._rootObject.addChild(oTemp);
+            // add level border collisions
+            oTemp = new MG.oObject(5, 'levelCollisionObject_L', this);
+            oTemp.enableCollision(5, this._height);
+            oTemp.position.x = -502.5;
+            this._rootObject.addChild(oTemp);
+            oTemp = new MG.oObject(6, 'levelCollisionObject_R', this);
+            oTemp.enableCollision(5, this._height);
+            oTemp.position.x = 502.5;
+            this._rootObject.addChild(oTemp);
+            oTemp = new MG.oObject(7, 'levelCollisionObject_T', this);
+            oTemp.enableCollision(this._width, 5);
+            oTemp.position.y = -502.5;
+            this._rootObject.addChild(oTemp);
+            oTemp = new MG.oObject(8, 'levelCollisionObject_B', this);
+            oTemp.enableCollision(this._width, 5);
+            oTemp.position.y = 502.5;
             this._rootObject.addChild(oTemp);
         };
         // in future support multiple cameras (in level), for now, just set camera that follows player through levels
@@ -849,24 +1174,17 @@ var MG;
         };
         Level.prototype.setPlayer = function (player) {
             this._playerObject = player;
+            // TODO // maybe move this into the player or somewhere else at a later date to be handled by something else
+            this._playerObject.currentLevel = this;
         };
+        Object.defineProperty(Level.prototype, "rootObject", {
+            get: function () {
+                return this._rootObject;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Level.prototype.update = function (deltaTime) {
-            // obviously not production ready movement logic, but good enough for testing
-            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
-            var xDir = (function () {
-                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
-                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
-                return aR - aL;
-            })();
-            var yDir = (function () {
-                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
-                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
-                return aD - aU;
-            })();
-            var velX = xDir * 100 * deltaTime;
-            var velY = yDir * 100 * deltaTime;
-            this._playerObject.position.x += velX;
-            this._playerObject.position.y += velY;
             this._rootObject.update(deltaTime);
             this._playerObject.update(deltaTime);
             this._activeCamera.update(deltaTime);

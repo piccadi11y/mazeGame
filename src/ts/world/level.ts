@@ -12,7 +12,7 @@ namespace MG {
         private _baseTexture: Sprite;
 
         private _rootObject: oObject;
-        private _playerObject: oObject;
+        private _playerObject: PlayerObject;
         private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
         private _activeCamera: CameraComponent;
 
@@ -22,7 +22,11 @@ namespace MG {
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new oObject(2, '_ROOT_')
+            this._rootObject = new oObject(2, '_ROOT_', this);
+        }
+
+        public get activeCamera (): CameraComponent {
+            return this._activeCamera;
         }
 
         public load () {
@@ -31,13 +35,36 @@ namespace MG {
 
 
             TextureManager.addTexture(new Texture('testTexCentre', 1, 1, Colour.green()));
-            let oTemp = new oObject(3, 'centreObject');
+            let oTemp = new oObject(3, 'centreObject', this);
             oTemp.addComponent(new SpriteComponent('centreSprite', 'testTexCentre', 50));
+            oTemp.enableCollisionFromSprite('centreSprite');
             this._rootObject.addChild(oTemp);
-            oTemp = new oObject(4, 'centreObject2');
+            oTemp = new oObject(4, 'centreObject2', this);
             oTemp.addComponent(new SpriteComponent('centreSprite2', 'testTexCentre', 50));
+            oTemp.enableCollisionFromSprite('centreSprite2');
             oTemp.position.x = 200;
             oTemp.position.y = 100;
+            this._rootObject.addChild(oTemp);
+
+            // add level border collisions
+            oTemp = new oObject(5, 'levelCollisionObject_L', this);
+            oTemp.enableCollision(5, this._height);
+            oTemp.position.x = -502.5;
+            this._rootObject.addChild(oTemp);
+
+            oTemp = new oObject(6, 'levelCollisionObject_R', this);
+            oTemp.enableCollision(5, this._height);
+            oTemp.position.x = 502.5;
+            this._rootObject.addChild(oTemp);
+
+            oTemp = new oObject(7, 'levelCollisionObject_T', this);
+            oTemp.enableCollision(this._width, 5);
+            oTemp.position.y = -502.5;
+            this._rootObject.addChild(oTemp);
+
+            oTemp = new oObject(8, 'levelCollisionObject_B', this);
+            oTemp.enableCollision(this._width, 5);
+            oTemp.position.y = 502.5;
             this._rootObject.addChild(oTemp);
         }
 
@@ -46,29 +73,18 @@ namespace MG {
             this._activeCamera = (camera.getComponent('cameraComponent') as CameraComponent);
         }
 
-        public setPlayer (player: oObject): void {
+        public setPlayer (player: PlayerObject): void {
             this._playerObject = player;
+
+            // TODO // maybe move this into the player or somewhere else at a later date to be handled by something else
+            this._playerObject.currentLevel = this;
+        }
+
+        public get rootObject (): oObject {
+            return this._rootObject;
         }
 
         public update (deltaTime: number): void {
-            // obviously not production ready movement logic, but good enough for testing
-            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
-            let xDir = (() => {
-                let aR = InputHandler.getKey(Keys.ARROW_RIGHT).state === State.PRESSED? 1 : 0;
-                let aL = InputHandler.getKey(Keys.ARROW_LEFT).state === State.PRESSED? 1 : 0;
-                return aR - aL;
-            })()
-            let yDir = (() => {
-                let aU = InputHandler.getKey(Keys.ARROW_UP).state === State.PRESSED? 1 : 0;
-                let aD = InputHandler.getKey(Keys.ARROW_DOWN).state === State.PRESSED? 1 : 0;
-                return aD - aU;
-            })()
-            let velX = xDir * 100 * deltaTime;
-            let velY = yDir * 100 * deltaTime;
-
-            this._playerObject.position.x += velX;
-            this._playerObject.position.y += velY;
-
 
             this._rootObject.update(deltaTime);
             this._playerObject.update(deltaTime);

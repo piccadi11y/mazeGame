@@ -16,6 +16,14 @@ namespace MG {
             // TODO // add animation/multiple frame support
         }
 
+        public get width (): number {
+            return this._width;
+        }
+
+        public get height (): number {
+            return this._height;
+        }
+
         public update (deltaTime: number): void {
 
         }
