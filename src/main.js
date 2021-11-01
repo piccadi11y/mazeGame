@@ -482,7 +482,10 @@ var MG;
     var PlayerObject = /** @class */ (function (_super) {
         __extends(PlayerObject, _super);
         function PlayerObject() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._movement = MG.Vector2.Zero;
+            _this._maxSpeed = 150;
+            return _this;
         }
         Object.defineProperty(PlayerObject.prototype, "currentLevel", {
             get: function () {
@@ -509,42 +512,44 @@ var MG;
                 var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
                 return aD - aU;
             })();
-            var velX = xDir * 100 * deltaTime;
-            var velY = yDir * 100 * deltaTime;
-            // TODO // move this to it's own function to handle movement safely, that checks collisions and modifies the class' priv vel x and y
-            if (this._collisionComponent !== undefined && (velX !== 0.0 || velY !== 0.0)) {
+            this._movement.x = xDir * (yDir * yDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
+            this._movement.y = yDir * (xDir * xDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
+            this.consumeMovement();
+        };
+        PlayerObject.prototype.consumeMovement = function () {
+            if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 for (var _i = 0, _a = this._level.rootObject.children; _i < _a.length; _i++) {
                     var o = _a[_i];
                     if (o.collisionComponent === undefined)
                         break;
-                    var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(velX, velY));
+                    var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
                     if (result !== undefined) {
                         // TODO // move this logic into a dedicated handle collision/consume movement function?
                         switch (result.side) {
                             case MG.CollisionSide.X_NEG:
-                                if (velX < 0)
-                                    velX = 0;
+                                if (this._movement.x < 0)
+                                    this._movement.x = 0;
                                 break;
                             case MG.CollisionSide.X_POS:
-                                if (velX > 0)
-                                    velX = 0;
+                                if (this._movement.x > 0)
+                                    this._movement.x = 0;
                                 break;
                             case MG.CollisionSide.Y_NEG:
-                                if (velY < 0)
-                                    velY = 0;
+                                if (this._movement.y < 0)
+                                    this._movement.y = 0;
                                 break;
                             case MG.CollisionSide.Y_POS:
-                                if (velY > 0)
-                                    velY = 0;
+                                if (this._movement.y > 0)
+                                    this._movement.y = 0;
                                 break;
                         }
-                        console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', MG.CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
+                        // console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
                         // TODO // if applicable, call objects' corresponding on collision/hit functions
                     }
                 }
             }
-            this.position.x += velX;
-            this.position.y += velY;
+            this.position.x += this._movement.x;
+            this.position.y += this._movement.y;
         };
         return PlayerObject;
     }(MG.oObject));
