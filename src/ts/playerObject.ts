@@ -34,26 +34,30 @@ namespace MG {
 
     
             // TODO // move this to it's own function to handle movement safely, that checks collisions and modifies the class' priv vel x and y
-            if (this._collisionComponent !== undefined) {
+            if (this._collisionComponent !== undefined && (velX !== 0.0 || velY !== 0.0)) {
                 for (let o of this._level.rootObject.children) {
                     if (o.collisionComponent === undefined) break;
 
-                    let result: CollisionResult = this._collisionComponent.checkColliding(o.collisionComponent);
+                    let result: CollisionResult = this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(velX, velY));
                     if (result !== undefined) {
-                        // TODO // move this logic into a dedicated handle collision function?
+                        // TODO // move this logic into a dedicated handle collision/consume movement function?
 
-                        // TODO // modify movement logic so the player doesn't get stuck on corners     --------------------------------------------------------------------- FIX!!
-                        // perhaps check location + movement, so that the player never gets the chance to get stuck on a corner?
-                        switch (result.collisionSide) {
-                            case CollisionSide.X_NEG: if (velX < 0) velX = 0; break;
-                            case CollisionSide.X_POS: if (velX > 0) velX = 0; break;
-                            case CollisionSide.Y_NEG: if (velY < 0) velY = 0; break;
-                            case CollisionSide.Y_POS: if (velY > 0) velY = 0; break;
-                            case CollisionSide.XY_NEG: if (velX < 0) velX = 0; if (velY < 0) velY = 0; break;
-                            case CollisionSide.XY_POS: if (velX > 0) velX = 0; if (velY > 0) velY = 0; break;
-                            case CollisionSide.X_NEG_Y: if (velX < 0) velX = 0; if ( velY > 0) velY = 0; break;
-                            case CollisionSide.Y_NEG_X: if (velX > 0) velX = 0; if (velY < 0) velY = 0; break;
+                        switch (result.side) {
+                            case CollisionSide.X_NEG: 
+                                if (velX < 0) velX = 0;
+                                break;
+                            case CollisionSide.X_POS:
+                                if (velX > 0) velX = 0;
+                                break;
+                            case CollisionSide.Y_NEG:
+                                if (velY < 0) velY = 0;
+                                break;
+                            case CollisionSide.Y_POS:
+                                if (velY > 0) velY = 0;
+                                break;
                         }
+
+                        console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
 
                         // TODO // if applicable, call objects' corresponding on collision/hit functions
                     }

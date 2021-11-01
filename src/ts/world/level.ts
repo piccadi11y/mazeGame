@@ -48,23 +48,23 @@ namespace MG {
 
             // add level border collisions
             oTemp = new oObject(5, 'levelCollisionObject_L', this);
-            oTemp.enableCollision(5, this._height);
-            oTemp.position.x = -502.5;
+            oTemp.enableCollision(10, this._height);
+            oTemp.position.x = -505;
             this._rootObject.addChild(oTemp);
 
             oTemp = new oObject(6, 'levelCollisionObject_R', this);
-            oTemp.enableCollision(5, this._height);
-            oTemp.position.x = 502.5;
+            oTemp.enableCollision(10, this._height);
+            oTemp.position.x = 505;
             this._rootObject.addChild(oTemp);
 
             oTemp = new oObject(7, 'levelCollisionObject_T', this);
-            oTemp.enableCollision(this._width, 5);
-            oTemp.position.y = -502.5;
+            oTemp.enableCollision(this._width, 10);
+            oTemp.position.y = -505;
             this._rootObject.addChild(oTemp);
 
             oTemp = new oObject(8, 'levelCollisionObject_B', this);
-            oTemp.enableCollision(this._width, 5);
-            oTemp.position.y = 502.5;
+            oTemp.enableCollision(this._width, 10);
+            oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
         }
 

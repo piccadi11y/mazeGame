@@ -512,17 +512,15 @@ var MG;
             var velX = xDir * 100 * deltaTime;
             var velY = yDir * 100 * deltaTime;
             // TODO // move this to it's own function to handle movement safely, that checks collisions and modifies the class' priv vel x and y
-            if (this._collisionComponent !== undefined) {
+            if (this._collisionComponent !== undefined && (velX !== 0.0 || velY !== 0.0)) {
                 for (var _i = 0, _a = this._level.rootObject.children; _i < _a.length; _i++) {
                     var o = _a[_i];
                     if (o.collisionComponent === undefined)
                         break;
-                    var result = this._collisionComponent.checkColliding(o.collisionComponent);
+                    var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(velX, velY));
                     if (result !== undefined) {
-                        // TODO // move this logic into a dedicated handle collision function?
-                        // TODO // modify movement logic so the player doesn't get stuck on corners     --------------------------------------------------------------------- FIX!!
-                        // perhaps check location + movement, so that the player never gets the chance to get stuck on a corner?
-                        switch (result.collisionSide) {
+                        // TODO // move this logic into a dedicated handle collision/consume movement function?
+                        switch (result.side) {
                             case MG.CollisionSide.X_NEG:
                                 if (velX < 0)
                                     velX = 0;
@@ -539,31 +537,8 @@ var MG;
                                 if (velY > 0)
                                     velY = 0;
                                 break;
-                            case MG.CollisionSide.XY_NEG:
-                                if (velX < 0)
-                                    velX = 0;
-                                if (velY < 0)
-                                    velY = 0;
-                                break;
-                            case MG.CollisionSide.XY_POS:
-                                if (velX > 0)
-                                    velX = 0;
-                                if (velY > 0)
-                                    velY = 0;
-                                break;
-                            case MG.CollisionSide.X_NEG_Y:
-                                if (velX < 0)
-                                    velX = 0;
-                                if (velY > 0)
-                                    velY = 0;
-                                break;
-                            case MG.CollisionSide.Y_NEG_X:
-                                if (velX > 0)
-                                    velX = 0;
-                                if (velY < 0)
-                                    velY = 0;
-                                break;
                         }
+                        console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', MG.CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
                         // TODO // if applicable, call objects' corresponding on collision/hit functions
                     }
                 }
@@ -931,11 +906,38 @@ var MG;
         CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
     })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
     var CollisionResult = /** @class */ (function () {
-        function CollisionResult(a, b, side) {
+        function CollisionResult(a, b, side, separation) {
             this.objectA = a;
             this.objectB = b;
-            this.collisionSide = side;
+            this._rawSide = side;
+            this.separation = separation;
+            this._calculatedSide = this.calculateSide();
         }
+        CollisionResult.prototype.calculateSide = function () {
+            // calculate probable side based off separation
+            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
+                return this._rawSide;
+            switch (this._rawSide) {
+                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
+                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
+                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
+                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
+            }
+        };
+        Object.defineProperty(CollisionResult.prototype, "rawSide", {
+            get: function () {
+                return this._rawSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionResult.prototype, "side", {
+            get: function () {
+                return this._calculatedSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
         return CollisionResult;
     }());
     MG.CollisionResult = CollisionResult;
@@ -973,16 +975,17 @@ var MG;
         CollisionComponent.prototype.updateTransform = function (transform) {
             this._transform.copyFrom(transform);
         };
-        CollisionComponent.prototype.checkColliding = function (collisionObject) {
+        CollisionComponent.prototype.checkColliding = function (collisionObject, movement) {
             // TODO // enable collision checking for rotated objects
+            if (movement === void 0) { movement = MG.Vector2.Zero; }
             var leftA, leftB;
             var rightA, rightB;
             var topA, topB;
             var bottomA, bottomB;
-            leftA = this._transform.position.x - this._width / 2;
-            rightA = leftA + this._width;
-            topA = this._transform.position.y - this._height / 2;
-            bottomA = topA + this._height;
+            leftA = this._transform.position.x - this._width / 2 + movement.x;
+            rightA = leftA + this._width + movement.y;
+            topA = this._transform.position.y - this._height / 2 + movement.x;
+            bottomA = topA + this._height + movement.y;
             leftB = collisionObject.transform.position.x - collisionObject.width / 2;
             rightB = leftB + collisionObject.width;
             topB = collisionObject.transform.position.y - collisionObject.height / 2;
@@ -996,7 +999,7 @@ var MG;
             if (leftA >= rightB)
                 return undefined;
             var side = CollisionSide.SUM;
-            // TODO // I'm sure this derives from bit shifting binary or something...
+            // TODO? // I'm sure this derives from bit shifting binary or something...
             if (bottomA > collisionObject.transform.position.y) {
                 // then it can't be Y_POS
                 side -= CollisionSide.Y_POS;
@@ -1013,7 +1016,18 @@ var MG;
                 // then it can't be X_NEG
                 side -= CollisionSide.X_NEG;
             }
-            return new CollisionResult(this.owner, collisionObject.owner, side);
+            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
+            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
+            var sepX, sepY;
+            if (rightA - leftB < rightB - leftA)
+                sepX = rightA - leftB;
+            else
+                sepX = rightB - leftA;
+            if (bottomA - topB < bottomB - topA)
+                sepY = bottomA - topB;
+            else
+                sepY = bottomB - topA;
+            return new CollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY));
         };
         return CollisionComponent;
     }(MG.BaseComponent));
@@ -1152,20 +1166,20 @@ var MG;
             this._rootObject.addChild(oTemp);
             // add level border collisions
             oTemp = new MG.oObject(5, 'levelCollisionObject_L', this);
-            oTemp.enableCollision(5, this._height);
-            oTemp.position.x = -502.5;
+            oTemp.enableCollision(10, this._height);
+            oTemp.position.x = -505;
             this._rootObject.addChild(oTemp);
             oTemp = new MG.oObject(6, 'levelCollisionObject_R', this);
-            oTemp.enableCollision(5, this._height);
-            oTemp.position.x = 502.5;
+            oTemp.enableCollision(10, this._height);
+            oTemp.position.x = 505;
             this._rootObject.addChild(oTemp);
             oTemp = new MG.oObject(7, 'levelCollisionObject_T', this);
-            oTemp.enableCollision(this._width, 5);
-            oTemp.position.y = -502.5;
+            oTemp.enableCollision(this._width, 10);
+            oTemp.position.y = -505;
             this._rootObject.addChild(oTemp);
             oTemp = new MG.oObject(8, 'levelCollisionObject_B', this);
-            oTemp.enableCollision(this._width, 5);
-            oTemp.position.y = 502.5;
+            oTemp.enableCollision(this._width, 10);
+            oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
         };
         // in future support multiple cameras (in level), for now, just set camera that follows player through levels

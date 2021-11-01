@@ -15,12 +15,38 @@ namespace MG {
     export class CollisionResult {
         public objectA: oObject;
         public objectB: oObject;
-        public collisionSide: CollisionSide;
+        private _rawSide: CollisionSide;
+        private _calculatedSide: CollisionSide;
+        public separation: Vector2;
 
-        public constructor (a: oObject, b: oObject, side: CollisionSide) {
+        public constructor (a: oObject, b: oObject, side: CollisionSide, separation) {
             this.objectA = a;
             this.objectB = b;
-            this.collisionSide = side;
+            this._rawSide = side;
+            this.separation = separation;
+
+            this._calculatedSide = this.calculateSide();
+        }
+
+        private calculateSide (): CollisionSide {
+            // calculate probable side based off separation
+            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG) return this._rawSide;
+
+            switch (this._rawSide) {
+                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
+                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
+                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
+                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
+            }
+
+        }
+
+        public get rawSide (): CollisionSide {
+            return this._rawSide;
+        }
+
+        public get side (): CollisionSide {
+            return this._calculatedSide;
         }
     }
 
@@ -54,7 +80,7 @@ namespace MG {
             this._transform.copyFrom(transform)
         }
 
-        public checkColliding (collisionObject: CollisionComponent): CollisionResult {
+        public checkColliding (collisionObject: CollisionComponent, movement: Vector2 = Vector2.Zero): CollisionResult {
             // TODO // enable collision checking for rotated objects
 
             let leftA, leftB: number;
@@ -62,10 +88,10 @@ namespace MG {
             let topA, topB: number;
             let bottomA, bottomB: number;
 
-            leftA = this._transform.position.x - this._width/2;
-            rightA = leftA + this._width;
-            topA = this._transform.position.y - this._height/2;
-            bottomA = topA + this._height;
+            leftA = this._transform.position.x - this._width/2 + movement.x;
+            rightA = leftA + this._width + movement.y;
+            topA = this._transform.position.y - this._height/2 + movement.x;
+            bottomA = topA + this._height + movement.y;
 
             leftB = collisionObject.transform.position.x - collisionObject.width/2;
             rightB = leftB + collisionObject.width;
@@ -80,7 +106,7 @@ namespace MG {
 
             let side: CollisionSide = CollisionSide.SUM;
 
-            // TODO // I'm sure this derives from bit shifting binary or something...
+            // TODO? // I'm sure this derives from bit shifting binary or something...
             if (bottomA > collisionObject.transform.position.y) {
                 // then it can't be Y_POS
                 side -= CollisionSide.Y_POS;
@@ -98,7 +124,16 @@ namespace MG {
                 side -= CollisionSide.X_NEG;
             }
 
-            return new CollisionResult(this.owner, collisionObject.owner, side);
+
+            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
+            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
+            let sepX, sepY: number;
+            if (rightA - leftB < rightB - leftA) sepX = rightA - leftB;
+            else sepX = rightB - leftA;
+            if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
+            else sepY = bottomB - topA;
+
+            return new CollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY));
         }
     }
 }
