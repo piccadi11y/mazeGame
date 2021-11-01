@@ -35,7 +35,6 @@ namespace MG {
 
             this.consumeMovement();
             
-
         }
 
         private consumeMovement (): void {
@@ -45,8 +44,7 @@ namespace MG {
                 
                     let result: CollisionResult = this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y));
                     if (result !== undefined) {
-                        // TODO // move this logic into a dedicated handle collision/consume movement function?
-                    
+
                         switch (result.side) {
                             case CollisionSide.X_NEG: 
                                 if (this._movement.x < 0) this._movement.x = 0;
@@ -61,8 +59,6 @@ namespace MG {
                                 if (this._movement.y > 0) this._movement.y = 0;
                                 break;
                         }
-                    
-                        // console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
                     
                         // TODO // if applicable, call objects' corresponding on collision/hit functions
                     }

@@ -19,6 +19,237 @@ window.onload = function () {
 };
 var MG;
 (function (MG) {
+    var BaseComponent = /** @class */ (function () {
+        function BaseComponent(name) {
+            this.name = name;
+        }
+        Object.defineProperty(BaseComponent.prototype, "owner", {
+            get: function () {
+                return this._owner;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        BaseComponent.prototype.setOwner = function (obj) {
+            this._owner = obj;
+        };
+        BaseComponent.prototype.load = function () {
+        };
+        BaseComponent.prototype.update = function (deltaTime) {
+        };
+        BaseComponent.prototype.render = function (transform, camera) {
+        };
+        return BaseComponent;
+    }());
+    MG.BaseComponent = BaseComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var CameraComponent = /** @class */ (function (_super) {
+        __extends(CameraComponent, _super);
+        function CameraComponent(name, width, height) {
+            var _this = _super.call(this, name) || this;
+            _this._camera = new MG.Camera();
+            _this._target = undefined;
+            _this._camera.resizeScreen(width, height);
+            return _this;
+        }
+        Object.defineProperty(CameraComponent.prototype, "camera", {
+            get: function () {
+                return this._camera;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CameraComponent.prototype.setTarget = function (target) {
+            this._target = target;
+        };
+        CameraComponent.prototype.handleResize = function (width, height) {
+            this._camera.resizeScreen(width, height);
+        };
+        CameraComponent.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            if (this._target !== undefined)
+                this._owner.worldTransform.copyFrom(this._target.worldTransform);
+            this._camera.update(deltaTime, this._owner.worldTransform);
+        };
+        return CameraComponent;
+    }(MG.BaseComponent));
+    MG.CameraComponent = CameraComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var CollisionSide;
+    (function (CollisionSide) {
+        CollisionSide[CollisionSide["X_POS"] = 1] = "X_POS";
+        CollisionSide[CollisionSide["X_NEG"] = 2] = "X_NEG";
+        CollisionSide[CollisionSide["Y_NEG"] = 4] = "Y_NEG";
+        CollisionSide[CollisionSide["Y_POS"] = 8] = "Y_POS";
+        CollisionSide[CollisionSide["SUM"] = 15] = "SUM";
+        CollisionSide[CollisionSide["XY_NEG"] = 6] = "XY_NEG";
+        CollisionSide[CollisionSide["X_NEG_Y"] = 10] = "X_NEG_Y";
+        CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
+        CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
+    })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
+    var CollisionResult = /** @class */ (function () {
+        function CollisionResult(a, b, side, separation) {
+            this.objectA = a;
+            this.objectB = b;
+            this._rawSide = side;
+            this.separation = separation;
+            this._calculatedSide = this.calculateSide();
+        }
+        CollisionResult.prototype.calculateSide = function () {
+            // calculate probable side based off separation
+            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
+                return this._rawSide;
+            switch (this._rawSide) {
+                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
+                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
+                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
+                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
+            }
+        };
+        Object.defineProperty(CollisionResult.prototype, "rawSide", {
+            get: function () {
+                return this._rawSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionResult.prototype, "side", {
+            get: function () {
+                return this._calculatedSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return CollisionResult;
+    }());
+    MG.CollisionResult = CollisionResult;
+    var CollisionComponent = /** @class */ (function (_super) {
+        __extends(CollisionComponent, _super);
+        function CollisionComponent(name, width, height, transform) {
+            var _this = _super.call(this, name) || this;
+            _this._transform = new MG.Transform();
+            _this._width = width;
+            _this._height = height;
+            _this._transform = transform;
+            return _this;
+        }
+        Object.defineProperty(CollisionComponent.prototype, "transform", {
+            get: function () {
+                return this._transform;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CollisionComponent.prototype.updateTransform = function (transform) {
+            this._transform.copyFrom(transform);
+        };
+        CollisionComponent.prototype.checkColliding = function (collisionObject, movement) {
+            // TODO // enable collision checking for rotated objects
+            if (movement === void 0) { movement = MG.Vector2.Zero; }
+            var leftA, leftB;
+            var rightA, rightB;
+            var topA, topB;
+            var bottomA, bottomB;
+            leftA = this._transform.position.x - this._width / 2 + movement.x;
+            rightA = leftA + this._width + movement.y;
+            topA = this._transform.position.y - this._height / 2 + movement.x;
+            bottomA = topA + this._height + movement.y;
+            leftB = collisionObject.transform.position.x - collisionObject.width / 2;
+            rightB = leftB + collisionObject.width;
+            topB = collisionObject.transform.position.y - collisionObject.height / 2;
+            bottomB = topB + collisionObject.height;
+            if (bottomA <= topB)
+                return undefined;
+            if (topA >= bottomB)
+                return undefined;
+            if (rightA <= leftB)
+                return undefined;
+            if (leftA >= rightB)
+                return undefined;
+            var side = CollisionSide.SUM;
+            // TODO? // I'm sure this derives from bit shifting binary or something...
+            if (bottomA > collisionObject.transform.position.y) {
+                // then it can't be Y_POS
+                side -= CollisionSide.Y_POS;
+            }
+            if (topA < collisionObject.transform.position.y) {
+                // then it can't be Y_NEG
+                side -= CollisionSide.Y_NEG;
+            }
+            if (rightA > collisionObject.transform.position.x) {
+                // then it can't be X_POS
+                side -= CollisionSide.X_POS;
+            }
+            if (leftA < collisionObject.transform.position.x) {
+                // then it can't be X_NEG
+                side -= CollisionSide.X_NEG;
+            }
+            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
+            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
+            var sepX, sepY;
+            if (rightA - leftB < rightB - leftA)
+                sepX = rightA - leftB;
+            else
+                sepX = rightB - leftA;
+            if (bottomA - topB < bottomB - topA)
+                sepY = bottomA - topB;
+            else
+                sepY = bottomB - topA;
+            return new CollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY));
+        };
+        return CollisionComponent;
+    }(MG.BaseComponent));
+    MG.CollisionComponent = CollisionComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var SpriteComponent = /** @class */ (function (_super) {
+        __extends(SpriteComponent, _super);
+        function SpriteComponent(name, textureName, width, height) {
+            if (width === void 0) { width = 100; }
+            var _this = _super.call(this, name) || this;
+            _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
+            return _this;
+        }
+        Object.defineProperty(SpriteComponent.prototype, "dimensions", {
+            get: function () {
+                return new MG.Vector2(this._sprite.width, this._sprite.height);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        SpriteComponent.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            this._sprite.update(deltaTime);
+        };
+        SpriteComponent.prototype.render = function (transform, camera) {
+            _super.prototype.render.call(this, transform, camera);
+            this._sprite.draw(transform, camera);
+        };
+        return SpriteComponent;
+    }(MG.BaseComponent));
+    MG.SpriteComponent = SpriteComponent;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Camera = /** @class */ (function () {
         function Camera() {
             this._view = new MG.Transform();
@@ -44,84 +275,6 @@ var MG;
         return Camera;
     }());
     MG.Camera = Camera;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var Colour = /** @class */ (function () {
-        function Colour(r, g, b, a) {
-            if (r === void 0) { r = 255; }
-            if (g === void 0) { g = 255; }
-            if (b === void 0) { b = 255; }
-            if (a === void 0) { a = 255; }
-            this._r = r;
-            this._g = g;
-            this._b = b;
-            this._a = a;
-        }
-        Object.defineProperty(Colour.prototype, "r", {
-            get: function () {
-                return this._r;
-            },
-            set: function (value) {
-                this._r = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Colour.prototype, "g", {
-            get: function () {
-                return this._g;
-            },
-            set: function (value) {
-                this._g = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Colour.prototype, "b", {
-            get: function () {
-                return this._b;
-            },
-            set: function (value) {
-                this._b = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Colour.prototype, "a", {
-            get: function () {
-                return this._a;
-            },
-            set: function (value) {
-                this._a = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Colour.prototype.hex = function (bAlpha) {
-            if (bAlpha === void 0) { bAlpha = false; }
-            if (bAlpha)
-                return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00') + (this._a > 0 ? this._a.toString(16) : '00');
-            return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00');
-        };
-        Colour.white = function () {
-            return new Colour(255, 255, 255, 255);
-        };
-        Colour.black = function () {
-            return new Colour(0, 0, 0, 255);
-        };
-        Colour.red = function () {
-            return new Colour(255, 0, 0, 255);
-        };
-        Colour.green = function () {
-            return new Colour(0, 255, 0, 255);
-        };
-        Colour.blue = function () {
-            return new Colour(0, 0, 255, 255);
-        };
-        return Colour;
-    }());
-    MG.Colour = Colour;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -524,7 +677,6 @@ var MG;
                         break;
                     var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
                     if (result !== undefined) {
-                        // TODO // move this logic into a dedicated handle collision/consume movement function?
                         switch (result.side) {
                             case MG.CollisionSide.X_NEG:
                                 if (this._movement.x < 0)
@@ -543,7 +695,6 @@ var MG;
                                     this._movement.y = 0;
                                 break;
                         }
-                        // console.log(result.objectA.name, 'colliding with', result.objectB.name, 'on side', CollisionSide[result.side], 'with a separation of', result.separation.x, result.separation.y);
                         // TODO // if applicable, call objects' corresponding on collision/hit functions
                     }
                 }
@@ -554,6 +705,109 @@ var MG;
         return PlayerObject;
     }(MG.oObject));
     MG.PlayerObject = PlayerObject;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Utilities = /** @class */ (function () {
+        function Utilities() {
+        }
+        Utilities.Initialise = function (id) {
+            var canvas;
+            if (id !== undefined) {
+                canvas = document.getElementById(id);
+                if (canvas === undefined)
+                    throw new Error('Cannot find a canvas element named' + id);
+            }
+            else {
+                canvas = document.createElement('canvas');
+                document.body.appendChild(canvas);
+            }
+            MG.ctx = canvas.getContext('2d');
+            if (MG.ctx === undefined)
+                throw new Error('Unable to initialise');
+            return canvas;
+        };
+        return Utilities;
+    }());
+    MG.Utilities = Utilities;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Colour = /** @class */ (function () {
+        function Colour(r, g, b, a) {
+            if (r === void 0) { r = 255; }
+            if (g === void 0) { g = 255; }
+            if (b === void 0) { b = 255; }
+            if (a === void 0) { a = 255; }
+            this._r = r;
+            this._g = g;
+            this._b = b;
+            this._a = a;
+        }
+        Object.defineProperty(Colour.prototype, "r", {
+            get: function () {
+                return this._r;
+            },
+            set: function (value) {
+                this._r = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "g", {
+            get: function () {
+                return this._g;
+            },
+            set: function (value) {
+                this._g = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "b", {
+            get: function () {
+                return this._b;
+            },
+            set: function (value) {
+                this._b = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Colour.prototype, "a", {
+            get: function () {
+                return this._a;
+            },
+            set: function (value) {
+                this._a = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Colour.prototype.hex = function (bAlpha) {
+            if (bAlpha === void 0) { bAlpha = false; }
+            if (bAlpha)
+                return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00') + (this._a > 0 ? this._a.toString(16) : '00');
+            return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00');
+        };
+        Colour.white = function () {
+            return new Colour(255, 255, 255, 255);
+        };
+        Colour.black = function () {
+            return new Colour(0, 0, 0, 255);
+        };
+        Colour.red = function () {
+            return new Colour(255, 0, 0, 255);
+        };
+        Colour.green = function () {
+            return new Colour(0, 255, 0, 255);
+        };
+        Colour.blue = function () {
+            return new Colour(0, 0, 255, 255);
+        };
+        return Colour;
+    }());
+    MG.Colour = Colour;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -778,297 +1032,6 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
-    var Transform = /** @class */ (function () {
-        function Transform() {
-            this._position = MG.Vector2.Zero;
-            this._rotation = 0;
-        }
-        Object.defineProperty(Transform.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            set: function (pos) {
-                this._position = pos;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Transform.prototype, "rotation", {
-            get: function () {
-                return this._rotation;
-            },
-            set: function (degrees) {
-                this._rotation = degrees;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Transform.prototype.copyFrom = function (transform) {
-            this._rotation = transform.rotation;
-            this._position.copyFrom(transform.position);
-        };
-        return Transform;
-    }());
-    MG.Transform = Transform;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var Utilities = /** @class */ (function () {
-        function Utilities() {
-        }
-        Utilities.Initialise = function (id) {
-            var canvas;
-            if (id !== undefined) {
-                canvas = document.getElementById(id);
-                if (canvas === undefined)
-                    throw new Error('Cannot find a canvas element named' + id);
-            }
-            else {
-                canvas = document.createElement('canvas');
-                document.body.appendChild(canvas);
-            }
-            MG.ctx = canvas.getContext('2d');
-            if (MG.ctx === undefined)
-                throw new Error('Unable to initialise');
-            return canvas;
-        };
-        return Utilities;
-    }());
-    MG.Utilities = Utilities;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var BaseComponent = /** @class */ (function () {
-        function BaseComponent(name) {
-            this.name = name;
-        }
-        Object.defineProperty(BaseComponent.prototype, "owner", {
-            get: function () {
-                return this._owner;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        BaseComponent.prototype.setOwner = function (obj) {
-            this._owner = obj;
-        };
-        BaseComponent.prototype.load = function () {
-        };
-        BaseComponent.prototype.update = function (deltaTime) {
-        };
-        BaseComponent.prototype.render = function (transform, camera) {
-        };
-        return BaseComponent;
-    }());
-    MG.BaseComponent = BaseComponent;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var CameraComponent = /** @class */ (function (_super) {
-        __extends(CameraComponent, _super);
-        function CameraComponent(name, width, height) {
-            var _this = _super.call(this, name) || this;
-            _this._camera = new MG.Camera();
-            _this._target = undefined;
-            _this._camera.resizeScreen(width, height);
-            return _this;
-        }
-        Object.defineProperty(CameraComponent.prototype, "camera", {
-            get: function () {
-                return this._camera;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        CameraComponent.prototype.setTarget = function (target) {
-            this._target = target;
-        };
-        CameraComponent.prototype.handleResize = function (width, height) {
-            this._camera.resizeScreen(width, height);
-        };
-        CameraComponent.prototype.update = function (deltaTime) {
-            _super.prototype.update.call(this, deltaTime);
-            if (this._target !== undefined)
-                this._owner.worldTransform.copyFrom(this._target.worldTransform);
-            this._camera.update(deltaTime, this._owner.worldTransform);
-        };
-        return CameraComponent;
-    }(MG.BaseComponent));
-    MG.CameraComponent = CameraComponent;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var CollisionSide;
-    (function (CollisionSide) {
-        CollisionSide[CollisionSide["X_POS"] = 1] = "X_POS";
-        CollisionSide[CollisionSide["X_NEG"] = 2] = "X_NEG";
-        CollisionSide[CollisionSide["Y_NEG"] = 4] = "Y_NEG";
-        CollisionSide[CollisionSide["Y_POS"] = 8] = "Y_POS";
-        CollisionSide[CollisionSide["SUM"] = 15] = "SUM";
-        CollisionSide[CollisionSide["XY_NEG"] = 6] = "XY_NEG";
-        CollisionSide[CollisionSide["X_NEG_Y"] = 10] = "X_NEG_Y";
-        CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
-        CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
-    })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
-    var CollisionResult = /** @class */ (function () {
-        function CollisionResult(a, b, side, separation) {
-            this.objectA = a;
-            this.objectB = b;
-            this._rawSide = side;
-            this.separation = separation;
-            this._calculatedSide = this.calculateSide();
-        }
-        CollisionResult.prototype.calculateSide = function () {
-            // calculate probable side based off separation
-            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
-                return this._rawSide;
-            switch (this._rawSide) {
-                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
-                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
-                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
-                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
-            }
-        };
-        Object.defineProperty(CollisionResult.prototype, "rawSide", {
-            get: function () {
-                return this._rawSide;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionResult.prototype, "side", {
-            get: function () {
-                return this._calculatedSide;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        return CollisionResult;
-    }());
-    MG.CollisionResult = CollisionResult;
-    var CollisionComponent = /** @class */ (function (_super) {
-        __extends(CollisionComponent, _super);
-        function CollisionComponent(name, width, height, transform) {
-            var _this = _super.call(this, name) || this;
-            _this._transform = new MG.Transform();
-            _this._width = width;
-            _this._height = height;
-            _this._transform = transform;
-            return _this;
-        }
-        Object.defineProperty(CollisionComponent.prototype, "transform", {
-            get: function () {
-                return this._transform;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionComponent.prototype, "width", {
-            get: function () {
-                return this._width;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionComponent.prototype, "height", {
-            get: function () {
-                return this._height;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        CollisionComponent.prototype.updateTransform = function (transform) {
-            this._transform.copyFrom(transform);
-        };
-        CollisionComponent.prototype.checkColliding = function (collisionObject, movement) {
-            // TODO // enable collision checking for rotated objects
-            if (movement === void 0) { movement = MG.Vector2.Zero; }
-            var leftA, leftB;
-            var rightA, rightB;
-            var topA, topB;
-            var bottomA, bottomB;
-            leftA = this._transform.position.x - this._width / 2 + movement.x;
-            rightA = leftA + this._width + movement.y;
-            topA = this._transform.position.y - this._height / 2 + movement.x;
-            bottomA = topA + this._height + movement.y;
-            leftB = collisionObject.transform.position.x - collisionObject.width / 2;
-            rightB = leftB + collisionObject.width;
-            topB = collisionObject.transform.position.y - collisionObject.height / 2;
-            bottomB = topB + collisionObject.height;
-            if (bottomA <= topB)
-                return undefined;
-            if (topA >= bottomB)
-                return undefined;
-            if (rightA <= leftB)
-                return undefined;
-            if (leftA >= rightB)
-                return undefined;
-            var side = CollisionSide.SUM;
-            // TODO? // I'm sure this derives from bit shifting binary or something...
-            if (bottomA > collisionObject.transform.position.y) {
-                // then it can't be Y_POS
-                side -= CollisionSide.Y_POS;
-            }
-            if (topA < collisionObject.transform.position.y) {
-                // then it can't be Y_NEG
-                side -= CollisionSide.Y_NEG;
-            }
-            if (rightA > collisionObject.transform.position.x) {
-                // then it can't be X_POS
-                side -= CollisionSide.X_POS;
-            }
-            if (leftA < collisionObject.transform.position.x) {
-                // then it can't be X_NEG
-                side -= CollisionSide.X_NEG;
-            }
-            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
-            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
-            var sepX, sepY;
-            if (rightA - leftB < rightB - leftA)
-                sepX = rightA - leftB;
-            else
-                sepX = rightB - leftA;
-            if (bottomA - topB < bottomB - topA)
-                sepY = bottomA - topB;
-            else
-                sepY = bottomB - topA;
-            return new CollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY));
-        };
-        return CollisionComponent;
-    }(MG.BaseComponent));
-    MG.CollisionComponent = CollisionComponent;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var SpriteComponent = /** @class */ (function (_super) {
-        __extends(SpriteComponent, _super);
-        function SpriteComponent(name, textureName, width, height) {
-            if (width === void 0) { width = 100; }
-            var _this = _super.call(this, name) || this;
-            _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
-            return _this;
-        }
-        Object.defineProperty(SpriteComponent.prototype, "dimensions", {
-            get: function () {
-                return new MG.Vector2(this._sprite.width, this._sprite.height);
-            },
-            enumerable: false,
-            configurable: true
-        });
-        SpriteComponent.prototype.update = function (deltaTime) {
-            _super.prototype.update.call(this, deltaTime);
-            this._sprite.update(deltaTime);
-        };
-        SpriteComponent.prototype.render = function (transform, camera) {
-            _super.prototype.render.call(this, transform, camera);
-            this._sprite.draw(transform, camera);
-        };
-        return SpriteComponent;
-    }(MG.BaseComponent));
-    MG.SpriteComponent = SpriteComponent;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
     var Vector2 = /** @class */ (function () {
         function Vector2(x, y) {
             if (x === void 0) { x = 0; }
@@ -1218,4 +1181,39 @@ var MG;
         return Level;
     }());
     MG.Level = Level;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Transform = /** @class */ (function () {
+        function Transform() {
+            this._position = MG.Vector2.Zero;
+            this._rotation = 0;
+        }
+        Object.defineProperty(Transform.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            set: function (pos) {
+                this._position = pos;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Transform.prototype, "rotation", {
+            get: function () {
+                return this._rotation;
+            },
+            set: function (degrees) {
+                this._rotation = degrees;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Transform.prototype.copyFrom = function (transform) {
+            this._rotation = transform.rotation;
+            this._position.copyFrom(transform.position);
+        };
+        return Transform;
+    }());
+    MG.Transform = Transform;
 })(MG || (MG = {}));
