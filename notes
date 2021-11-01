@@ -52,3 +52,15 @@ game's mechanics
     - rotation based off either mouse location or movement direction (dependant on other mechanics)
     - interact
     - ...
+
+
+
+next/current steps:
+    - enable use of engine outside engine structure/start building game independent of engine source
+    - build basic UI functionality
+    - game state
+    - spawn points
+    - death/restart loop
+    - level tiles
+    - reassess...
+    - proc gen?
