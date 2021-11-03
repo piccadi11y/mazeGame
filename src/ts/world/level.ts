@@ -14,7 +14,7 @@ namespace MG {
         private _rootObject: oObject;
         private _playerObject: PlayerObject;
         private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
-        private _activeCamera: CameraComponent;
+        private _activeCamera: CameraObject;
 
         public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour) {
             this._name = name;
@@ -25,7 +25,7 @@ namespace MG {
             this._rootObject = new oObject(2, '_ROOT_', this);
         }
 
-        public get activeCamera (): CameraComponent {
+        public get activeCamera (): CameraObject {
             return this._activeCamera;
         }
 
@@ -66,11 +66,14 @@ namespace MG {
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
+
+            // load from obj
+
         }
 
         // in future support multiple cameras (in level), for now, just set camera that follows player through levels
-        public addCamera (camera: oObject): void {
-            this._activeCamera = (camera.getComponent('cameraComponent') as CameraComponent);
+        public addCamera (camera: CameraObject): void {
+            this._activeCamera = camera
         }
 
         public setPlayer (player: PlayerObject): void {
@@ -94,11 +97,11 @@ namespace MG {
 
         public render (): void {
             // render level
-            this._baseTexture.draw(this._transform, this._activeCamera.camera);
+            this._baseTexture.draw(this._transform, this._activeCamera.cameraComponent.camera);
 
             // render objects
-            this._rootObject.render(this._activeCamera.camera);
-            this._playerObject.render(this._activeCamera.camera);
+            this._rootObject.render(this._activeCamera.cameraComponent.camera);
+            this._playerObject.render(this._activeCamera.cameraComponent.camera);
 
         }
 

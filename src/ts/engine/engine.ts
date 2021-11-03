@@ -4,7 +4,7 @@ namespace MG {
 
         private _canvas: HTMLCanvasElement;
         private _playerObject: PlayerObject;
-        private _camera: oObject;
+        private _camera: CameraObject;
 
         private _testLevel: Level;
 
@@ -13,7 +13,7 @@ namespace MG {
 
         public constructor (canvasID?: string) {
             window.onresize = ()=>this.Resize();
-            this._canvas = Utilities.Initialise(canvasID);
+            this._canvas = Utilities.initialise(canvasID);
 
             // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
             this.Resize();
@@ -22,7 +22,8 @@ namespace MG {
 
         public Start (): void {
 
-            InputHandler.Initialise();
+            InputHandler.initialise();
+            LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
             TextureManager.addTexture(new Texture('testTex', 10, 10, Colour.blue()));
             let texTemp = TextureManager.getTexture('testTex');
@@ -35,10 +36,9 @@ namespace MG {
             this._playerObject.position = new Vector2(-300, 0);
             this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
 
-            this._camera = new oObject(1, 'camera')
-            let cc: CameraComponent = new CameraComponent('cameraComponent', this._canvas.width, this._canvas.height)
-            this._camera.addComponent(cc);
-            cc.setTarget(this._playerObject);
+            
+            this._camera = new CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
+            this._camera.cameraComponent.setTarget(this._playerObject);
 
             this._testLevel = new Level('testLevel', 1000, 1000, 50, Colour.white());
             this._testLevel.addCamera(this._camera);
@@ -80,7 +80,7 @@ namespace MG {
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
 
-            if (this._camera) (this._camera.getComponent('cameraComponent') as CameraComponent).handleResize(this._canvas.width, this._canvas.height);
+            if (this._camera) this._camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
 
         }
     }

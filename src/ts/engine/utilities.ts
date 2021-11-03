@@ -4,7 +4,7 @@ namespace MG {
 
     export class Utilities {
 
-        public static Initialise (id?:string): HTMLCanvasElement {
+        public static initialise (id?:string): HTMLCanvasElement {
             let canvas: HTMLCanvasElement;
             
             if (id !== undefined) {

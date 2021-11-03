@@ -17,6 +17,14 @@ window.onload = function () {
     var engine = new MG.Engine('GameCanvas');
     engine.Start();
 };
+var Assets;
+(function (Assets) {
+    var Objects;
+    (function (Objects) {
+        Objects.e = 'oof';
+    })(Objects = Assets.Objects || (Assets.Objects = {}));
+})(Assets || (Assets = {}));
+console.log(Assets.Objects.e);
 var MG;
 (function (MG) {
     var BaseComponent = /** @class */ (function () {
@@ -278,159 +286,6 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
-    var Engine = /** @class */ (function () {
-        function Engine(canvasID) {
-            var _this = this;
-            this.FRAME_TIME = 0;
-            this.LAST_FRAME = 0;
-            window.onresize = function () { return _this.Resize(); };
-            this._canvas = MG.Utilities.Initialise(canvasID);
-            // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
-            this.Resize();
-        }
-        Engine.prototype.Start = function () {
-            MG.InputHandler.Initialise();
-            // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
-            MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
-            var texTemp = MG.TextureManager.getTexture('testTex');
-            texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
-            texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
-            texTemp = undefined;
-            MG.TextureManager.releaseTexture('testTex');
-            this._playerObject = new MG.PlayerObject(0, 'testObject');
-            this._playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', 'testTex', 200));
-            this._playerObject.position = new MG.Vector2(-300, 0);
-            this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
-            this._camera = new MG.oObject(1, 'camera');
-            var cc = new MG.CameraComponent('cameraComponent', this._canvas.width, this._canvas.height);
-            this._camera.addComponent(cc);
-            cc.setTarget(this._playerObject);
-            this._testLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
-            this._testLevel.addCamera(this._camera);
-            this._testLevel.setPlayer(this._playerObject);
-            this._testLevel.load();
-            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
-            this._playerObject.currentLevel = this._testLevel;
-            this.mainLoop();
-        };
-        Engine.prototype.mainLoop = function () {
-            var _this = this;
-            this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
-            // clear
-            MG.ctx.fillStyle = 'black';
-            MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            this._testLevel.update(this.FRAME_TIME);
-            this._testLevel.render();
-            // ui bits
-            var fps = Math.round(1 / this.FRAME_TIME);
-            MG.ctx.fillStyle = 'red';
-            MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
-            this.LAST_FRAME = performance.now();
-            requestAnimationFrame(function () { return _this.mainLoop(); });
-        };
-        Engine.prototype.Resize = function () {
-            if (this._canvas === undefined)
-                return;
-            this._canvas.width = this._canvas.clientWidth;
-            this._canvas.height = this._canvas.clientHeight;
-            if (this._camera)
-                this._camera.getComponent('cameraComponent').handleResize(this._canvas.width, this._canvas.height);
-        };
-        return Engine;
-    }());
-    MG.Engine = Engine;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var Keys;
-    (function (Keys) {
-        Keys["ARROW_LEFT"] = "ArrowLeft";
-        Keys["ARROW_RIGHT"] = "ArrowRight";
-        Keys["ARROW_UP"] = "ArrowUp";
-        Keys["ARROW_DOWN"] = "ArrowDown";
-        Keys["W"] = "w";
-        Keys["A"] = "a";
-        Keys["S"] = "a";
-        Keys["D"] = "d";
-        Keys["ESCAPE"] = "Escape";
-        Keys["ENTER"] = "Enter";
-    })(Keys = MG.Keys || (MG.Keys = {}));
-    var InputHandler = /** @class */ (function () {
-        function InputHandler() {
-        }
-        InputHandler.Initialise = function () {
-            var _this = this;
-            window.addEventListener('keyup', function (e) { return _this.HandleKeyUp(e); });
-            window.addEventListener('keydown', function (e) { return _this.HandleKeyDown(e); });
-            this.RegisterKey('ArrowLeft');
-            this.RegisterKey('ArrowRight');
-            this.RegisterKey('ArrowUp');
-            this.RegisterKey('ArrowDown');
-            this.RegisterKey('w');
-            this.RegisterKey('a');
-            this.RegisterKey('a');
-            this.RegisterKey('d');
-            this.RegisterKey('Escape');
-            this.RegisterKey('Enter');
-        };
-        InputHandler.HandleKeyUp = function (e) {
-            if (this._keys[e.key] === undefined)
-                return;
-            if (this._keys[e.key].state === MG.State.RELEASED)
-                return;
-            this._keys[e.key].state = MG.State.RELEASED;
-            // console.log(e.key, this._keys[e.key].state);
-        };
-        InputHandler.HandleKeyDown = function (e) {
-            if (this._keys[e.key] === undefined)
-                return;
-            if (this._keys[e.key].state === MG.State.PRESSED)
-                return;
-            this._keys[e.key].state = MG.State.PRESSED;
-            // console.log(e.key, this._keys[e.key].state);
-        };
-        InputHandler.RegisterKey = function (key) {
-            if (this._keys[key] !== undefined)
-                return;
-            var k = new MG.KeyState(key);
-            this._keys[key] = k;
-        };
-        InputHandler.getKey = function (name) {
-            return this._keys[name];
-        };
-        InputHandler._keys = {};
-        return InputHandler;
-    }());
-    MG.InputHandler = InputHandler;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var State;
-    (function (State) {
-        State[State["PRESSED"] = 0] = "PRESSED";
-        State[State["RELEASED"] = 1] = "RELEASED";
-    })(State = MG.State || (MG.State = {}));
-    var KeyState = /** @class */ (function () {
-        function KeyState(key) {
-            this._state = State.RELEASED;
-            this._key = key;
-        }
-        Object.defineProperty(KeyState.prototype, "state", {
-            get: function () {
-                return this._state;
-            },
-            set: function (value) {
-                this._state = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        return KeyState;
-    }());
-    MG.KeyState = KeyState;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
     var oObject = /** @class */ (function () {
         function oObject(id, name, level) {
             if (level === void 0) { level = undefined; }
@@ -609,7 +464,7 @@ var MG;
                 // collision
                 if (this._collisionComponent !== undefined) {
                     var tex = MG.TextureManager.getTexture('collisionDebug');
-                    tex.draw(this._level.activeCamera.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(this._level.activeCamera.cameraComponent.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             }
         };
@@ -629,6 +484,199 @@ var MG;
         return oObject;
     }());
     MG.oObject = oObject;
+})(MG || (MG = {}));
+/// <reference path="oObject.ts"/>
+var MG;
+(function (MG) {
+    var CameraObject = /** @class */ (function (_super) {
+        __extends(CameraObject, _super);
+        function CameraObject(id, name, width, height) {
+            var _this = _super.call(this, id, name, undefined) || this;
+            _this._cameraComponent = new MG.CameraComponent(name + '_cameraComponent', width, height);
+            _this._cameraComponent.setOwner(_this);
+            return _this;
+        }
+        Object.defineProperty(CameraObject.prototype, "cameraComponent", {
+            get: function () {
+                return this._cameraComponent;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CameraObject.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            this._cameraComponent.update(deltaTime);
+        };
+        return CameraObject;
+    }(MG.oObject));
+    MG.CameraObject = CameraObject;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Engine = /** @class */ (function () {
+        function Engine(canvasID) {
+            var _this = this;
+            this.FRAME_TIME = 0;
+            this.LAST_FRAME = 0;
+            window.onresize = function () { return _this.Resize(); };
+            this._canvas = MG.Utilities.initialise(canvasID);
+            // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
+            this.Resize();
+        }
+        Engine.prototype.Start = function () {
+            MG.InputHandler.initialise();
+            MG.LevelManager.initialise();
+            // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
+            MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
+            var texTemp = MG.TextureManager.getTexture('testTex');
+            texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
+            texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
+            texTemp = undefined;
+            MG.TextureManager.releaseTexture('testTex');
+            this._playerObject = new MG.PlayerObject(0, 'testObject');
+            this._playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', 'testTex', 200));
+            this._playerObject.position = new MG.Vector2(-300, 0);
+            this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
+            // old camera
+            // this._camera = new oObject(1, 'camera')
+            // let cc: CameraComponent = new CameraComponent('cameraComponent', this._canvas.width, this._canvas.height)
+            // this._camera.addComponent(cc);
+            // cc.setTarget(this._playerObject);
+            // new camera
+            this._camera = new MG.CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
+            this._camera.cameraComponent.setTarget(this._playerObject);
+            this._testLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
+            this._testLevel.addCamera(this._camera);
+            this._testLevel.setPlayer(this._playerObject);
+            this._testLevel.load();
+            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
+            this._playerObject.currentLevel = this._testLevel;
+            this.mainLoop();
+        };
+        Engine.prototype.mainLoop = function () {
+            var _this = this;
+            this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
+            // clear
+            MG.ctx.fillStyle = 'black';
+            MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+            this._testLevel.update(this.FRAME_TIME);
+            this._testLevel.render();
+            // ui bits
+            var fps = Math.round(1 / this.FRAME_TIME);
+            MG.ctx.fillStyle = 'red';
+            MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
+            this.LAST_FRAME = performance.now();
+            requestAnimationFrame(function () { return _this.mainLoop(); });
+        };
+        Engine.prototype.Resize = function () {
+            if (this._canvas === undefined)
+                return;
+            this._canvas.width = this._canvas.clientWidth;
+            this._canvas.height = this._canvas.clientHeight;
+            if (this._camera)
+                this._camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
+        };
+        return Engine;
+    }());
+    MG.Engine = Engine;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var GameState = /** @class */ (function () {
+        function GameState() {
+        }
+        return GameState;
+    }());
+    MG.GameState = GameState;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Keys;
+    (function (Keys) {
+        Keys["ARROW_LEFT"] = "ArrowLeft";
+        Keys["ARROW_RIGHT"] = "ArrowRight";
+        Keys["ARROW_UP"] = "ArrowUp";
+        Keys["ARROW_DOWN"] = "ArrowDown";
+        Keys["W"] = "w";
+        Keys["A"] = "a";
+        Keys["S"] = "a";
+        Keys["D"] = "d";
+        Keys["ESCAPE"] = "Escape";
+        Keys["ENTER"] = "Enter";
+    })(Keys = MG.Keys || (MG.Keys = {}));
+    var InputHandler = /** @class */ (function () {
+        function InputHandler() {
+        }
+        InputHandler.initialise = function () {
+            var _this = this;
+            window.addEventListener('keyup', function (e) { return _this.handleKeyUp(e); });
+            window.addEventListener('keydown', function (e) { return _this.handleKeyDown(e); });
+            this.registerKey('ArrowLeft');
+            this.registerKey('ArrowRight');
+            this.registerKey('ArrowUp');
+            this.registerKey('ArrowDown');
+            this.registerKey('w');
+            this.registerKey('a');
+            this.registerKey('a');
+            this.registerKey('d');
+            this.registerKey('Escape');
+            this.registerKey('Enter');
+        };
+        InputHandler.handleKeyUp = function (e) {
+            if (this._keys[e.key] === undefined)
+                return;
+            if (this._keys[e.key].state === MG.State.RELEASED)
+                return;
+            this._keys[e.key].state = MG.State.RELEASED;
+            // console.log(e.key, this._keys[e.key].state);
+        };
+        InputHandler.handleKeyDown = function (e) {
+            if (this._keys[e.key] === undefined)
+                return;
+            if (this._keys[e.key].state === MG.State.PRESSED)
+                return;
+            this._keys[e.key].state = MG.State.PRESSED;
+            // console.log(e.key, this._keys[e.key].state);
+        };
+        InputHandler.registerKey = function (key) {
+            if (this._keys[key] !== undefined)
+                return;
+            var k = new MG.KeyState(key);
+            this._keys[key] = k;
+        };
+        InputHandler.getKey = function (name) {
+            return this._keys[name];
+        };
+        InputHandler._keys = {};
+        return InputHandler;
+    }());
+    MG.InputHandler = InputHandler;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var State;
+    (function (State) {
+        State[State["PRESSED"] = 0] = "PRESSED";
+        State[State["RELEASED"] = 1] = "RELEASED";
+    })(State = MG.State || (MG.State = {}));
+    var KeyState = /** @class */ (function () {
+        function KeyState(key) {
+            this._state = State.RELEASED;
+            this._key = key;
+        }
+        Object.defineProperty(KeyState.prototype, "state", {
+            get: function () {
+                return this._state;
+            },
+            set: function (value) {
+                this._state = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return KeyState;
+    }());
+    MG.KeyState = KeyState;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -711,7 +759,7 @@ var MG;
     var Utilities = /** @class */ (function () {
         function Utilities() {
         }
-        Utilities.Initialise = function (id) {
+        Utilities.initialise = function (id) {
             var canvas;
             if (id !== undefined) {
                 canvas = document.getElementById(id);
@@ -1149,10 +1197,11 @@ var MG;
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
+            // load from obj
         };
         // in future support multiple cameras (in level), for now, just set camera that follows player through levels
         Level.prototype.addCamera = function (camera) {
-            this._activeCamera = camera.getComponent('cameraComponent');
+            this._activeCamera = camera;
         };
         Level.prototype.setPlayer = function (player) {
             this._playerObject = player;
@@ -1173,14 +1222,25 @@ var MG;
         };
         Level.prototype.render = function () {
             // render level
-            this._baseTexture.draw(this._transform, this._activeCamera.camera);
+            this._baseTexture.draw(this._transform, this._activeCamera.cameraComponent.camera);
             // render objects
-            this._rootObject.render(this._activeCamera.camera);
-            this._playerObject.render(this._activeCamera.camera);
+            this._rootObject.render(this._activeCamera.cameraComponent.camera);
+            this._playerObject.render(this._activeCamera.cameraComponent.camera);
         };
         return Level;
     }());
     MG.Level = Level;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var LevelManager = /** @class */ (function () {
+        function LevelManager() {
+        }
+        LevelManager.initialise = function () {
+        };
+        return LevelManager;
+    }());
+    MG.LevelManager = LevelManager;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {

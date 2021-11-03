@@ -156,7 +156,7 @@ namespace MG {
                 // collision
                 if (this._collisionComponent !== undefined) {
                     let tex: Texture = TextureManager.getTexture('collisionDebug');
-                    tex.draw(this._level.activeCamera.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(this._level.activeCamera.cameraComponent.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             
             }
