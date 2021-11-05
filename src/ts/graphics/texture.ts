@@ -152,6 +152,20 @@ namespace MG {
             ctx.fillStyle = 'orange';
             ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
         }
+
+        public static load (data: object): Texture {
+            let temp: Texture = new Texture(data['name'], data['width'], data['height'], new Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']))
+            if (data['layers'] !== undefined) {
+                for (let l of data['layers']) {
+                    let tempPoints: Vector2[] = [];
+                    for (let p of l['points']) {
+                        tempPoints.push(new Vector2(p['x'], p['y']))
+                    }
+                    temp.addLayer(tempPoints, new Colour(l['colour']['r'], l['colour']['g'], l['colour']['b']))
+                }
+            }
+            return temp;
+        }
     }
     
 }

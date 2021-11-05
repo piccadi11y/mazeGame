@@ -13,18 +13,48 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-window.onload = function () {
-    var engine = new MG.Engine('GameCanvas');
-    engine.Start();
-};
 var Assets;
 (function (Assets) {
     var Objects;
     (function (Objects) {
         Objects.e = 'oof';
+        Objects.defaultObject = {
+            "name": "defaultObject"
+        };
     })(Objects = Assets.Objects || (Assets.Objects = {}));
 })(Assets || (Assets = {}));
-console.log(Assets.Objects.e);
+(function (Assets) {
+    var Textures;
+    (function (Textures) {
+        Textures.defaultPlayerTexture = {
+            "name": "defaultPlayerTexture",
+            "width": 10,
+            "height": 10,
+            "baseColour": { "r": 0, "g": 0, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 0, "b": 0 },
+                    "points": [
+                        { "x": 9, "y": 9 },
+                        { "x": 3, "y": 5 }
+                    ]
+                },
+                {
+                    "colour": { "r": 255, "g": 255, "b": 255 },
+                    "points": [
+                        { "x": 4, "y": 4 },
+                        { "x": 6, "y": 9 }
+                    ]
+                }
+            ]
+        };
+    })(Textures = Assets.Textures || (Assets.Textures = {}));
+})(Assets || (Assets = {}));
+// console.log(Assets.Textures.defaultPlayerTexture);
+window.onload = function () {
+    var engine = new MG.Engine('GameCanvas');
+    engine.Start();
+};
 var MG;
 (function (MG) {
     var BaseComponent = /** @class */ (function () {
@@ -464,7 +494,7 @@ var MG;
                 // collision
                 if (this._collisionComponent !== undefined) {
                     var tex = MG.TextureManager.getTexture('collisionDebug');
-                    tex.draw(this._level.activeCamera.cameraComponent.camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             }
         };
@@ -516,41 +546,38 @@ var MG;
     var Engine = /** @class */ (function () {
         function Engine(canvasID) {
             var _this = this;
+            // private _playerObject: PlayerObject;
+            // private _camera: CameraObject;
+            // private _testLevel: Level;
             this.FRAME_TIME = 0;
             this.LAST_FRAME = 0;
             window.onresize = function () { return _this.Resize(); };
             this._canvas = MG.Utilities.initialise(canvasID);
             // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
-            this.Resize();
         }
         Engine.prototype.Start = function () {
             MG.InputHandler.initialise();
             MG.LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
-            MG.TextureManager.addTexture(new MG.Texture('testTex', 10, 10, MG.Colour.blue()));
-            var texTemp = MG.TextureManager.getTexture('testTex');
-            texTemp.addLayer([new MG.Vector2(9), new MG.Vector2(3, 5)], MG.Colour.red());
-            texTemp.addLayer([new MG.Vector2(4), new MG.Vector2(6, 9)], MG.Colour.white());
+            /*TextureManager.addTexture(new Texture('testTex', 10, 10, Colour.blue()));
+            let texTemp = TextureManager.getTexture('testTex');
+            texTemp.addLayer([new Vector2(9), new Vector2(3,5)], Colour.red());
+            texTemp.addLayer([new Vector2(4), new Vector2(6,9)], Colour.white());
             texTemp = undefined;
-            MG.TextureManager.releaseTexture('testTex');
-            this._playerObject = new MG.PlayerObject(0, 'testObject');
-            this._playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', 'testTex', 200));
-            this._playerObject.position = new MG.Vector2(-300, 0);
-            this._playerObject.enableCollisionFromSprite('testPlayerSprite', false);
-            // old camera
-            // this._camera = new oObject(1, 'camera')
-            // let cc: CameraComponent = new CameraComponent('cameraComponent', this._canvas.width, this._canvas.height)
-            // this._camera.addComponent(cc);
-            // cc.setTarget(this._playerObject);
-            // new camera
-            this._camera = new MG.CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
-            this._camera.cameraComponent.setTarget(this._playerObject);
-            this._testLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
-            this._testLevel.addCamera(this._camera);
-            this._testLevel.setPlayer(this._playerObject);
-            this._testLevel.load();
+            TextureManager.releaseTexture('testTex');*/
+            MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.defaultPlayerTexture));
+            var playerObject = new MG.PlayerObject(0, 'testObject');
+            playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200));
+            playerObject.position = new MG.Vector2(-300, 0);
+            playerObject.enableCollisionFromSprite('testPlayerSprite', false);
+            // console.log(Texture.load(Assets.Textures.defaultPlayerTexture));
+            var camera = new MG.CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
+            camera.cameraComponent.setTarget(playerObject);
+            MG.LevelManager.player = playerObject;
+            MG.LevelManager.camera = camera;
+            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
-            this._playerObject.currentLevel = this._testLevel;
+            this.Resize();
             this.mainLoop();
         };
         Engine.prototype.mainLoop = function () {
@@ -559,8 +586,8 @@ var MG;
             // clear
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            this._testLevel.update(this.FRAME_TIME);
-            this._testLevel.render();
+            MG.LevelManager.update(this.FRAME_TIME);
+            MG.LevelManager.render();
             // ui bits
             var fps = Math.round(1 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'red';
@@ -573,8 +600,8 @@ var MG;
                 return;
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
-            if (this._camera)
-                this._camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
+            if (MG.LevelManager.camera)
+                MG.LevelManager.camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
         };
         return Engine;
     }());
@@ -582,9 +609,35 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var InputMode;
+    (function (InputMode) {
+        InputMode[InputMode["UI"] = 0] = "UI";
+        InputMode[InputMode["GAME"] = 1] = "GAME";
+    })(InputMode || (InputMode = {}));
     var GameState = /** @class */ (function () {
         function GameState() {
+            this._inputMode = InputMode.UI;
         }
+        Object.defineProperty(GameState.prototype, "player", {
+            get: function () {
+                return this._player;
+            },
+            set: function (player) {
+                this._player = player;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(GameState.prototype, "camera", {
+            get: function () {
+                return this._activeCamera;
+            },
+            set: function (camera) {
+                this._activeCamera = camera;
+            },
+            enumerable: false,
+            configurable: true
+        });
         return GameState;
     }());
     MG.GameState = GameState;
@@ -1042,6 +1095,21 @@ var MG;
             MG.ctx.fillStyle = 'orange';
             MG.ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
         };
+        Texture.load = function (data) {
+            var temp = new Texture(data['name'], data['width'], data['height'], new MG.Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']));
+            if (data['layers'] !== undefined) {
+                for (var _i = 0, _a = data['layers']; _i < _a.length; _i++) {
+                    var l = _a[_i];
+                    var tempPoints = [];
+                    for (var _b = 0, _c = l['points']; _b < _c.length; _b++) {
+                        var p = _c[_b];
+                        tempPoints.push(new MG.Vector2(p['x'], p['y']));
+                    }
+                    temp.addLayer(tempPoints, new MG.Colour(l['colour']['r'], l['colour']['g'], l['colour']['b']));
+                }
+            }
+            return temp;
+        };
         return Texture;
     }());
     MG.Texture = Texture;
@@ -1159,13 +1227,6 @@ var MG;
             this._baseColour = colour;
             this._rootObject = new MG.oObject(2, '_ROOT_', this);
         }
-        Object.defineProperty(Level.prototype, "activeCamera", {
-            get: function () {
-                return this._activeCamera;
-            },
-            enumerable: false,
-            configurable: true
-        });
         Level.prototype.load = function () {
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
@@ -1199,15 +1260,6 @@ var MG;
             this._rootObject.addChild(oTemp);
             // load from obj
         };
-        // in future support multiple cameras (in level), for now, just set camera that follows player through levels
-        Level.prototype.addCamera = function (camera) {
-            this._activeCamera = camera;
-        };
-        Level.prototype.setPlayer = function (player) {
-            this._playerObject = player;
-            // TODO // maybe move this into the player or somewhere else at a later date to be handled by something else
-            this._playerObject.currentLevel = this;
-        };
         Object.defineProperty(Level.prototype, "rootObject", {
             get: function () {
                 return this._rootObject;
@@ -1217,15 +1269,12 @@ var MG;
         });
         Level.prototype.update = function (deltaTime) {
             this._rootObject.update(deltaTime);
-            this._playerObject.update(deltaTime);
-            this._activeCamera.update(deltaTime);
         };
         Level.prototype.render = function () {
             // render level
-            this._baseTexture.draw(this._transform, this._activeCamera.cameraComponent.camera);
+            this._baseTexture.draw(this._transform, MG.LevelManager.camera.cameraComponent.camera);
             // render objects
-            this._rootObject.render(this._activeCamera.cameraComponent.camera);
-            this._playerObject.render(this._activeCamera.cameraComponent.camera);
+            this._rootObject.render(MG.LevelManager.camera.cameraComponent.camera);
         };
         return Level;
     }());
@@ -1237,7 +1286,50 @@ var MG;
         function LevelManager() {
         }
         LevelManager.initialise = function () {
+            this._gameState = new MG.GameState();
         };
+        Object.defineProperty(LevelManager, "currentLevel", {
+            get: function () {
+                return this._currentLevel;
+            },
+            set: function (level) {
+                this._currentLevel = level;
+                this._currentLevel.load();
+                this._gameState.player.currentLevel = this._currentLevel;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        LevelManager.update = function (deltaTime) {
+            this._currentLevel.update(deltaTime);
+            this._gameState.player.update(deltaTime);
+            this._gameState.camera.update(deltaTime);
+        };
+        LevelManager.render = function () {
+            this._currentLevel.render();
+            this._gameState.player.render(this.camera.cameraComponent.camera);
+        };
+        Object.defineProperty(LevelManager, "player", {
+            get: function () {
+                return this._gameState.player;
+            },
+            set: function (player) {
+                this._gameState.player = player;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(LevelManager, "camera", {
+            get: function () {
+                // console.log('gamestate:', this._gameState);
+                return this._gameState.camera;
+            },
+            set: function (camera) {
+                this._gameState.camera = camera;
+            },
+            enumerable: false,
+            configurable: true
+        });
         return LevelManager;
     }());
     MG.LevelManager = LevelManager;
