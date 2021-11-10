@@ -9,8 +9,8 @@ namespace MG {
 
         private constructor() {}
 
-        public static initialise (): void {
-            this._gameState = new GameState();
+        public static initialise (maxObjects: number = 10): void {
+            this._gameState = new GameState(maxObjects);
         }
 
 
@@ -35,21 +35,21 @@ namespace MG {
             this._gameState.player.render(this.camera.cameraComponent.camera);
         }
 
-        public static set player (player: PlayerObject) {
-            this._gameState.player = player;
-        }
-
         public static get player (): PlayerObject {
             return this._gameState.player;
-        }
-
-        public static set camera (camera: CameraObject) {
-            this._gameState.camera = camera;
         }
 
         public static get camera (): CameraObject {
             // console.log('gamestate:', this._gameState);
             return this._gameState.camera;
+        }
+
+        public static registerObject (o: oObject, id: number = undefined): number {
+            return this._gameState.registerObject(o, id);
+        }
+
+        public static deregisterObject (oID: number): void {
+            this._gameState.deregisterObject(oID);
         }
     }
 }

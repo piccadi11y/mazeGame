@@ -24,26 +24,21 @@ namespace MG {
             InputHandler.initialise();
             LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
-            /*TextureManager.addTexture(new Texture('testTex', 10, 10, Colour.blue()));
-            let texTemp = TextureManager.getTexture('testTex');
-            texTemp.addLayer([new Vector2(9), new Vector2(3,5)], Colour.red());
-            texTemp.addLayer([new Vector2(4), new Vector2(6,9)], Colour.white());
-            texTemp = undefined;
-            TextureManager.releaseTexture('testTex');*/
+            
             TextureManager.addTexture(Texture.load(Assets.Textures.defaultPlayerTexture))
-            let playerObject: PlayerObject = new PlayerObject(0, 'testObject');
+            // TODO // perhaps load all textures at start; create a function in textureManager to create all textures contained in Assets.Textures so all everything else has to do is worry about referencing them but never creating them
+            let playerObject: PlayerObject = new PlayerObject('player');
             playerObject.addComponent(new SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200))
             playerObject.position = new Vector2(-300, 0);
             playerObject.enableCollisionFromSprite('testPlayerSprite', false);
 
-            // console.log(Texture.load(Assets.Textures.defaultPlayerTexture));
 
             
-            let camera: CameraObject = new CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
+            let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
 
-            LevelManager.player = playerObject;
-            LevelManager.camera = camera;
+            // LevelManager.player = playerObject;
+            // LevelManager.camera = camera;
 
             LevelManager.currentLevel = new Level('testLevel', 1000, 1000, 50, Colour.white());
 

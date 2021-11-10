@@ -16,12 +16,20 @@ namespace MG {
         // don't bother updating collisions if so
         private _bIsStatic: boolean = true;
 
-        public constructor (id: number, name: string, level: Level = undefined) {
-            this._id = id;
+        /**
+         * @param name The object's name
+         * @param level The level the object is associated with, if applicable
+         * @param id The object's id. Leave empty unless intentionally overriding built-in id assignment
+         */
+        public constructor (name: string, level: Level = undefined, id: number = undefined) {
+            this._id = LevelManager.registerObject(this, id);
             this._name = name;
             this._level = level;
 
+
+            console.log('Object \'', this._name, '\' has been created with id:', this._id);
         }
+
 
         public get id (): number {
             return this._id;
@@ -133,12 +141,32 @@ namespace MG {
             return undefined;
         }
 
+        // TODO // provide overriding load functionality for all classes inheriting from oObject
+        public static load (data: object, level: Level): oObject {
+            let obj: oObject = new oObject(data['name'], level);
+
+            // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
+            for (let cD of data['components']) {
+                switch (cD['type']) {
+                    case 'sprite':
+                        obj.addComponent(new SpriteComponent(cD['name'], cD['texture'], cD['width'], cD['height']));
+                        break;
+                    case 'collision':
+                        if (cD['spriteName'] !== undefined) obj.enableCollisionFromSprite(cD['spriteName'], cD['isStatic']);
+                        else obj.enableCollision(cD['width'], cD['height'], cD['isStatic']);
+                        break;
+                }
+            }
+
+            return obj;
+        }
+
         public update (deltaTime: number): void {
             this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
 
             if (this._collisionComponent !== undefined && this._bIsStatic === false) {
                 this._collisionComponent.updateTransform(this._worldTransform!==undefined?this._worldTransform:this._transform);
-                // TODO // check collisions against other objects?
+                // TODO // check collisions against other objects? (as in other objects than the player against other non-player objects? maybe...)
             }
 
             for (let c of this._components) c.update(deltaTime);

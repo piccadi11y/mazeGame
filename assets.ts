@@ -1,8 +1,23 @@
 namespace Assets.Objects {
     export let e: string = 'oof';
 
-    export const defaultObject: object = {
-        "name":"defaultObject"
+    export const testLevelCentre: object = {
+        "name":"testLevelCentre",
+        "components": [
+            {
+                "type": "sprite",
+                "name": "centreSprite",
+                "texture": "testObjectTexture",
+                "width": 50
+            },
+            {
+                "type": "collision",
+                "spriteName": "centreSprite",
+                "width": undefined,
+                "height": undefined,
+                "isStatic": true
+            }
+        ]
     }
 }
 
@@ -29,6 +44,15 @@ namespace Assets.Textures {
             }
         ]
     }
+    export const testObjectTexture: object = {
+        "name":"testObjectTexture",
+        "width": 1,
+        "height": 1,
+        "baseColour": {"r": 0,"g": 255,"b": 0},
+        "layers": undefined
+    }
 }
 
-// console.log(Assets.Textures.defaultPlayerTexture);
+namespace Assets.Levels {
+    // TODO // implement level loading
+}

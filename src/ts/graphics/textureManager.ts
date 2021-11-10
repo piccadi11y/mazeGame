@@ -22,12 +22,16 @@ namespace MG {
         }
 
         public static addTexture (texture: Texture): void {
-            TextureManager._textures[texture.name] = new TextureReferenceNode(texture);
+            if (TextureManager._textures[texture.name] === undefined) TextureManager._textures[texture.name] = new TextureReferenceNode(texture);
+            else console.warn('A texture by the name of', texture.name, 'already exists.');
         }
 
         public static releaseTexture (textureName: string): void {
             if (TextureManager._textures[textureName] === undefined) console.warn(`A texture named ${textureName} does not exist and therefore cannot be released.`)
             else TextureManager._textures[textureName].referenceCount--;
         }
+
+
+        // TODO // load all used textures from Assets.Textures
     }
 }

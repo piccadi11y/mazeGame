@@ -5,6 +5,10 @@ namespace MG {
         private _movement: Vector2 = Vector2.Zero;
         private _maxSpeed: number = 150;
 
+        public constructor (name: string) {
+            super(name, undefined, 0);
+        }
+
         public set currentLevel (level: Level) {
             this._level = level;
         }

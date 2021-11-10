@@ -18,8 +18,23 @@ var Assets;
     var Objects;
     (function (Objects) {
         Objects.e = 'oof';
-        Objects.defaultObject = {
-            "name": "defaultObject"
+        Objects.testLevelCentre = {
+            "name": "testLevelCentre",
+            "components": [
+                {
+                    "type": "sprite",
+                    "name": "centreSprite",
+                    "texture": "testObjectTexture",
+                    "width": 50
+                },
+                {
+                    "type": "collision",
+                    "spriteName": "centreSprite",
+                    "width": undefined,
+                    "height": undefined,
+                    "isStatic": true
+                }
+            ]
         };
     })(Objects = Assets.Objects || (Assets.Objects = {}));
 })(Assets || (Assets = {}));
@@ -48,9 +63,15 @@ var Assets;
                 }
             ]
         };
+        Textures.testObjectTexture = {
+            "name": "testObjectTexture",
+            "width": 1,
+            "height": 1,
+            "baseColour": { "r": 0, "g": 255, "b": 0 },
+            "layers": undefined
+        };
     })(Textures = Assets.Textures || (Assets.Textures = {}));
 })(Assets || (Assets = {}));
-// console.log(Assets.Textures.defaultPlayerTexture);
 window.onload = function () {
     var engine = new MG.Engine('GameCanvas');
     engine.Start();
@@ -317,8 +338,14 @@ var MG;
 var MG;
 (function (MG) {
     var oObject = /** @class */ (function () {
-        function oObject(id, name, level) {
+        /**
+         * @param name The object's name
+         * @param level The level the object is associated with, if applicable
+         * @param id The object's id. Leave empty unless intentionally overriding built-in id assignment
+         */
+        function oObject(name, level, id) {
             if (level === void 0) { level = undefined; }
+            if (id === void 0) { id = undefined; }
             this._children = [];
             this._components = [];
             this._collisionComponent = undefined;
@@ -326,9 +353,10 @@ var MG;
             this._worldTransform = new MG.Transform();
             // don't bother updating collisions if so
             this._bIsStatic = true;
-            this._id = id;
+            this._id = MG.LevelManager.registerObject(this, id);
             this._name = name;
             this._level = level;
+            console.log('Object \'', this._name, '\' has been created with id:', this._id);
         }
         Object.defineProperty(oObject.prototype, "id", {
             get: function () {
@@ -465,11 +493,31 @@ var MG;
             }
             return undefined;
         };
+        // TODO // provide overriding load functionality for all classes inheriting from oObject
+        oObject.load = function (data, level) {
+            var obj = new oObject(data['name'], level);
+            // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
+            for (var _i = 0, _a = data['components']; _i < _a.length; _i++) {
+                var cD = _a[_i];
+                switch (cD['type']) {
+                    case 'sprite':
+                        obj.addComponent(new MG.SpriteComponent(cD['name'], cD['texture'], cD['width'], cD['height']));
+                        break;
+                    case 'collision':
+                        if (cD['spriteName'] !== undefined)
+                            obj.enableCollisionFromSprite(cD['spriteName'], cD['isStatic']);
+                        else
+                            obj.enableCollision(cD['width'], cD['height'], cD['isStatic']);
+                        break;
+                }
+            }
+            return obj;
+        };
         oObject.prototype.update = function (deltaTime) {
             this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
             if (this._collisionComponent !== undefined && this._bIsStatic === false) {
                 this._collisionComponent.updateTransform(this._worldTransform !== undefined ? this._worldTransform : this._transform);
-                // TODO // check collisions against other objects?
+                // TODO // check collisions against other objects? (as in other objects than the player against other non-player objects? maybe...)
             }
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var c = _a[_i];
@@ -520,8 +568,8 @@ var MG;
 (function (MG) {
     var CameraObject = /** @class */ (function (_super) {
         __extends(CameraObject, _super);
-        function CameraObject(id, name, width, height) {
-            var _this = _super.call(this, id, name, undefined) || this;
+        function CameraObject(name, width, height) {
+            var _this = _super.call(this, name, undefined, 1) || this;
             _this._cameraComponent = new MG.CameraComponent(name + '_cameraComponent', width, height);
             _this._cameraComponent.setOwner(_this);
             return _this;
@@ -559,22 +607,16 @@ var MG;
             MG.InputHandler.initialise();
             MG.LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
-            /*TextureManager.addTexture(new Texture('testTex', 10, 10, Colour.blue()));
-            let texTemp = TextureManager.getTexture('testTex');
-            texTemp.addLayer([new Vector2(9), new Vector2(3,5)], Colour.red());
-            texTemp.addLayer([new Vector2(4), new Vector2(6,9)], Colour.white());
-            texTemp = undefined;
-            TextureManager.releaseTexture('testTex');*/
             MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.defaultPlayerTexture));
-            var playerObject = new MG.PlayerObject(0, 'testObject');
+            // TODO // perhaps load all textures at start; create a function in textureManager to create all textures contained in Assets.Textures so all everything else has to do is worry about referencing them but never creating them
+            var playerObject = new MG.PlayerObject('player');
             playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200));
             playerObject.position = new MG.Vector2(-300, 0);
             playerObject.enableCollisionFromSprite('testPlayerSprite', false);
-            // console.log(Texture.load(Assets.Textures.defaultPlayerTexture));
-            var camera = new MG.CameraObject(1, 'playerCamera', this._canvas.width, this._canvas.height);
+            var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
-            MG.LevelManager.player = playerObject;
-            MG.LevelManager.camera = camera;
+            // LevelManager.player = playerObject;
+            // LevelManager.camera = camera;
             MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
             this.Resize();
@@ -615,8 +657,11 @@ var MG;
         InputMode[InputMode["GAME"] = 1] = "GAME";
     })(InputMode || (InputMode = {}));
     var GameState = /** @class */ (function () {
-        function GameState() {
+        function GameState(maxObjects) {
             this._inputMode = InputMode.UI;
+            this._loadedObjects = {};
+            this._currentLoadedObjects = 0;
+            this._maxLoadedObjects = maxObjects;
         }
         Object.defineProperty(GameState.prototype, "player", {
             get: function () {
@@ -630,14 +675,47 @@ var MG;
         });
         Object.defineProperty(GameState.prototype, "camera", {
             get: function () {
-                return this._activeCamera;
+                return this._playerCamera;
             },
             set: function (camera) {
-                this._activeCamera = camera;
+                this._playerCamera = camera;
             },
             enumerable: false,
             configurable: true
         });
+        GameState.prototype.registerObject = function (obj, id) {
+            if (id === void 0) { id = undefined; }
+            if (id !== undefined) {
+                switch (id) {
+                    case 0:
+                        this._player = obj;
+                        break;
+                    case 1:
+                        this._playerCamera = obj;
+                        break;
+                }
+                this._loadedObjects[id] = obj;
+                this._currentLoadedObjects++;
+                return id;
+            }
+            if (this._currentLoadedObjects >= this._maxLoadedObjects) {
+                // object is still going to exist as the rest of the code can see/use it, but future logic requiring the use of id's will not consider it valid
+                console.warn('Maximum number of objects already loaded, consider', obj.name, 'unloaded');
+                return -1;
+            }
+            for (var i = 0; i < this._maxLoadedObjects; i++) {
+                if (this._loadedObjects[i] === undefined) {
+                    this._loadedObjects[i] = obj;
+                    this._currentLoadedObjects++;
+                    return i;
+                }
+            }
+            return -2; // fail state
+        };
+        GameState.prototype.deregisterObject = function (oID) {
+            this._loadedObjects[oID] = undefined;
+            this._currentLoadedObjects--;
+        };
         return GameState;
     }());
     MG.GameState = GameState;
@@ -735,8 +813,8 @@ var MG;
 (function (MG) {
     var PlayerObject = /** @class */ (function (_super) {
         __extends(PlayerObject, _super);
-        function PlayerObject() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
+        function PlayerObject(name) {
+            var _this = _super.call(this, name, undefined, 0) || this;
             _this._movement = MG.Vector2.Zero;
             _this._maxSpeed = 150;
             return _this;
@@ -1133,7 +1211,10 @@ var MG;
             return this._textures[textureName].texture;
         };
         TextureManager.addTexture = function (texture) {
-            TextureManager._textures[texture.name] = new TextureReferenceNode(texture);
+            if (TextureManager._textures[texture.name] === undefined)
+                TextureManager._textures[texture.name] = new TextureReferenceNode(texture);
+            else
+                console.warn('A texture by the name of', texture.name, 'already exists.');
         };
         TextureManager.releaseTexture = function (textureName) {
             if (TextureManager._textures[textureName] === undefined)
@@ -1225,36 +1306,33 @@ var MG;
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new MG.oObject(2, '_ROOT_', this);
+            this._rootObject = new MG.oObject('_ROOT_', this, 2);
         }
         Level.prototype.load = function () {
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
-            MG.TextureManager.addTexture(new MG.Texture('testTexCentre', 1, 1, MG.Colour.green()));
-            var oTemp = new MG.oObject(3, 'centreObject', this);
-            oTemp.addComponent(new MG.SpriteComponent('centreSprite', 'testTexCentre', 50));
-            oTemp.enableCollisionFromSprite('centreSprite');
+            // still loading this here as i haven't implemented texture loading on program start
+            MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.testObjectTexture));
+            var oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject(4, 'centreObject2', this);
-            oTemp.addComponent(new MG.SpriteComponent('centreSprite2', 'testTexCentre', 50));
-            oTemp.enableCollisionFromSprite('centreSprite2');
+            oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
             oTemp.position.x = 200;
             oTemp.position.y = 100;
             this._rootObject.addChild(oTemp);
-            // add level border collisions
-            oTemp = new MG.oObject(5, 'levelCollisionObject_L', this);
+            // add level border collisions      // logic can stay for now
+            oTemp = new MG.oObject('levelCollisionObject_L', this);
             oTemp.enableCollision(10, this._height);
             oTemp.position.x = -505;
             this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject(6, 'levelCollisionObject_R', this);
+            oTemp = new MG.oObject('levelCollisionObject_R', this);
             oTemp.enableCollision(10, this._height);
             oTemp.position.x = 505;
             this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject(7, 'levelCollisionObject_T', this);
+            oTemp = new MG.oObject('levelCollisionObject_T', this);
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = -505;
             this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject(8, 'levelCollisionObject_B', this);
+            oTemp = new MG.oObject('levelCollisionObject_B', this);
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
@@ -1285,8 +1363,9 @@ var MG;
     var LevelManager = /** @class */ (function () {
         function LevelManager() {
         }
-        LevelManager.initialise = function () {
-            this._gameState = new MG.GameState();
+        LevelManager.initialise = function (maxObjects) {
+            if (maxObjects === void 0) { maxObjects = 10; }
+            this._gameState = new MG.GameState(maxObjects);
         };
         Object.defineProperty(LevelManager, "currentLevel", {
             get: function () {
@@ -1313,9 +1392,6 @@ var MG;
             get: function () {
                 return this._gameState.player;
             },
-            set: function (player) {
-                this._gameState.player = player;
-            },
             enumerable: false,
             configurable: true
         });
@@ -1324,12 +1400,16 @@ var MG;
                 // console.log('gamestate:', this._gameState);
                 return this._gameState.camera;
             },
-            set: function (camera) {
-                this._gameState.camera = camera;
-            },
             enumerable: false,
             configurable: true
         });
+        LevelManager.registerObject = function (o, id) {
+            if (id === void 0) { id = undefined; }
+            return this._gameState.registerObject(o, id);
+        };
+        LevelManager.deregisterObject = function (oID) {
+            this._gameState.deregisterObject(oID);
+        };
         return LevelManager;
     }());
     MG.LevelManager = LevelManager;

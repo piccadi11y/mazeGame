@@ -20,43 +20,41 @@ namespace MG {
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new oObject(2, '_ROOT_', this);
+            this._rootObject = new oObject('_ROOT_', this, 2);
         }
 
         public load () {
             TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
             this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
 
-
-            TextureManager.addTexture(new Texture('testTexCentre', 1, 1, Colour.green()));
-            let oTemp = new oObject(3, 'centreObject', this);
-            oTemp.addComponent(new SpriteComponent('centreSprite', 'testTexCentre', 50));
-            oTemp.enableCollisionFromSprite('centreSprite');
+            // still loading this here as i haven't implemented texture loading on program start
+            TextureManager.addTexture(Texture.load(Assets.Textures.testObjectTexture))
+            let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
-            oTemp = new oObject(4, 'centreObject2', this);
-            oTemp.addComponent(new SpriteComponent('centreSprite2', 'testTexCentre', 50));
-            oTemp.enableCollisionFromSprite('centreSprite2');
+            oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             oTemp.position.x = 200;
             oTemp.position.y = 100;
             this._rootObject.addChild(oTemp);
 
-            // add level border collisions
-            oTemp = new oObject(5, 'levelCollisionObject_L', this);
+
+
+            // add level border collisions      // logic can stay for now
+            oTemp = new oObject('levelCollisionObject_L', this);
             oTemp.enableCollision(10, this._height);
             oTemp.position.x = -505;
             this._rootObject.addChild(oTemp);
 
-            oTemp = new oObject(6, 'levelCollisionObject_R', this);
+            oTemp = new oObject('levelCollisionObject_R', this);
             oTemp.enableCollision(10, this._height);
             oTemp.position.x = 505;
             this._rootObject.addChild(oTemp);
 
-            oTemp = new oObject(7, 'levelCollisionObject_T', this);
+            oTemp = new oObject('levelCollisionObject_T', this);
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = -505;
             this._rootObject.addChild(oTemp);
 
-            oTemp = new oObject(8, 'levelCollisionObject_B', this);
+            oTemp = new oObject('levelCollisionObject_B', this);
             oTemp.enableCollision(this._width, 10);
             oTemp.position.y = 505;
             this._rootObject.addChild(oTemp);
