@@ -607,6 +607,7 @@ var MG;
             MG.InputHandler.initialise();
             MG.LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
+            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
             MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.defaultPlayerTexture));
             // TODO // perhaps load all textures at start; create a function in textureManager to create all textures contained in Assets.Textures so all everything else has to do is worry about referencing them but never creating them
             var playerObject = new MG.PlayerObject('player');
@@ -617,8 +618,7 @@ var MG;
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.player = playerObject;
             // LevelManager.camera = camera;
-            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white());
-            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
+            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white(), [true, true, true, true]);
             this.Resize();
             this.mainLoop();
         };
@@ -1298,7 +1298,7 @@ var MG;
 var MG;
 (function (MG) {
     var Level = /** @class */ (function () {
-        function Level(name, width, height, gridSize, colour) {
+        function Level(name, width, height, gridSize, colour, levelCollisions) {
             this._transform = new MG.Transform(); // TODO // this will be relevant later when the engine supports multiple levels/streaming
             this._spawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
             this._name = name;
@@ -1307,7 +1307,36 @@ var MG;
             this._gridSize = gridSize;
             this._baseColour = colour;
             this._rootObject = new MG.oObject('_ROOT_', this, 2);
+            this._bBorderCollisions = levelCollisions;
         }
+        Level.prototype.generateBorderCollisions = function () {
+            var oTemp;
+            var borderWidth = 10;
+            if (this._bBorderCollisions[0]) {
+                oTemp = new MG.oObject('levelCollisionObject_T', this);
+                oTemp.enableCollision(this._width, borderWidth);
+                oTemp.position.y = -this._height / 2 - borderWidth / 2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[1]) {
+                oTemp = new MG.oObject('levelCollisionObject_R', this);
+                oTemp.enableCollision(borderWidth, this._height);
+                oTemp.position.x = this._width / 2 + borderWidth / 2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[2]) {
+                oTemp = new MG.oObject('levelCollisionObject_B', this);
+                oTemp.enableCollision(this._width, borderWidth);
+                oTemp.position.y = this._width / 2 + borderWidth / 2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[3]) {
+                oTemp = new MG.oObject('levelCollisionObject_L', this);
+                oTemp.enableCollision(borderWidth, this._height);
+                oTemp.position.x = -this._height / 2 - borderWidth / 2;
+                this._rootObject.addChild(oTemp);
+            }
+        };
         Level.prototype.load = function () {
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
@@ -1319,23 +1348,8 @@ var MG;
             oTemp.position.x = 200;
             oTemp.position.y = 100;
             this._rootObject.addChild(oTemp);
-            // add level border collisions      // logic can stay for now
-            oTemp = new MG.oObject('levelCollisionObject_L', this);
-            oTemp.enableCollision(10, this._height);
-            oTemp.position.x = -505;
-            this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject('levelCollisionObject_R', this);
-            oTemp.enableCollision(10, this._height);
-            oTemp.position.x = 505;
-            this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject('levelCollisionObject_T', this);
-            oTemp.enableCollision(this._width, 10);
-            oTemp.position.y = -505;
-            this._rootObject.addChild(oTemp);
-            oTemp = new MG.oObject('levelCollisionObject_B', this);
-            oTemp.enableCollision(this._width, 10);
-            oTemp.position.y = 505;
-            this._rootObject.addChild(oTemp);
+            // add level border collisions
+            this.generateBorderCollisions();
             // load from obj
         };
         Object.defineProperty(Level.prototype, "rootObject", {

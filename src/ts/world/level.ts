@@ -13,14 +13,46 @@ namespace MG {
 
         private _rootObject: oObject;
         private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
+        private _bBorderCollisions: boolean[];
 
-        public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour) {
+        public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour, levelCollisions?: boolean[]) {
             this._name = name;
             this._width = width;
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
             this._rootObject = new oObject('_ROOT_', this, 2);
+            this._bBorderCollisions = levelCollisions;
+        }
+
+        private generateBorderCollisions (): void {
+            let oTemp;
+            let borderWidth: number = 10;
+
+            if (this._bBorderCollisions[0]) {
+                oTemp = new oObject('levelCollisionObject_T', this);
+                oTemp.enableCollision(this._width, borderWidth);
+                oTemp.position.y = -this._height/2 - borderWidth/2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[1]) {
+                oTemp = new oObject('levelCollisionObject_R', this);
+                oTemp.enableCollision(borderWidth, this._height);
+                oTemp.position.x = this._width/2 + borderWidth/2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[2]) {
+                oTemp = new oObject('levelCollisionObject_B', this);
+                oTemp.enableCollision(this._width, borderWidth);
+                oTemp.position.y = this._width/2 + borderWidth/2;
+                this._rootObject.addChild(oTemp);
+            }
+            if (this._bBorderCollisions[3]) {
+                oTemp = new oObject('levelCollisionObject_L', this);
+                oTemp.enableCollision(borderWidth, this._height);
+                oTemp.position.x = -this._height/2 - borderWidth/2;
+                this._rootObject.addChild(oTemp);
+            }
         }
 
         public load () {
@@ -38,26 +70,9 @@ namespace MG {
 
 
 
-            // add level border collisions      // logic can stay for now
-            oTemp = new oObject('levelCollisionObject_L', this);
-            oTemp.enableCollision(10, this._height);
-            oTemp.position.x = -505;
-            this._rootObject.addChild(oTemp);
-
-            oTemp = new oObject('levelCollisionObject_R', this);
-            oTemp.enableCollision(10, this._height);
-            oTemp.position.x = 505;
-            this._rootObject.addChild(oTemp);
-
-            oTemp = new oObject('levelCollisionObject_T', this);
-            oTemp.enableCollision(this._width, 10);
-            oTemp.position.y = -505;
-            this._rootObject.addChild(oTemp);
-
-            oTemp = new oObject('levelCollisionObject_B', this);
-            oTemp.enableCollision(this._width, 10);
-            oTemp.position.y = 505;
-            this._rootObject.addChild(oTemp);
+            // add level border collisions
+            this.generateBorderCollisions();
+            
 
             // load from obj
 
