@@ -7,6 +7,7 @@ namespace MG {
         private _height: number;
         private _gridSize: number;
         private _transform: Transform = new Transform();    // TODO // this will be relevant later when the engine supports multiple levels/streaming
+        private _levelDetectionCollision: CollisionComponent;
 
         private _baseColour: Colour;
         private _baseTexture: Sprite;
@@ -30,6 +31,20 @@ namespace MG {
             this.generateBorderCollisions();
             TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
             this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
+
+            this._levelDetectionCollision = new CollisionComponent(`${this._name}_levelCollisionComponent`, this._width, this._height, this._transform, CollisionType.NON_BLOCKING);
+        }
+
+        public get name (): string {
+            return this._name;
+        }
+
+        public get centre (): Vector2 {
+            return this._transform.position;
+        }
+
+        public get collisionShape (): CollisionComponent {
+            return this._levelDetectionCollision;
         }
 
         private generateBorderCollisions (): void {
@@ -62,22 +77,6 @@ namespace MG {
             }
         }
 
-        /*public load () {
-            TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
-            this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
-
-
-            let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
-            this._rootObject.addChild(oTemp);
-            oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
-            oTemp.position.x = 200;
-            oTemp.position.y = 100;
-            this._rootObject.addChild(oTemp);            
-
-            // load from obj
-
-        }*/
-
         public static load (data: object): Level {
             let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
 
@@ -85,7 +84,6 @@ namespace MG {
 
             // spawn/create objects
             let oTemp: oObject;
-            console.log()
             for (let o of data['objects']) {
                 oTemp = oObject.load(o['obj'], level);
                 oTemp.position.x = o['x'];
@@ -96,8 +94,6 @@ namespace MG {
             return level;
         }
 
-
-
         public get rootObject (): oObject {
             return this._rootObject;
         }
@@ -106,6 +102,11 @@ namespace MG {
 
             this._rootObject.update(deltaTime);
 
+        }
+
+        public checkHasPlayer (point: Vector2): boolean {
+            if (this._levelDetectionCollision.checkPointWithin(point)) return true;
+            return false;
         }
 
         public render (): void {

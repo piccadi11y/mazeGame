@@ -48,7 +48,7 @@ namespace Assets.Textures {
         "name":"testObjectTexture",
         "width": 1,
         "height": 1,
-        "baseColour": {"r": 0,"g": 255,"b": 0},
+        "baseColour": {"r": 255,"g": 0,"b": 255},
         "layers": undefined
     }
 
@@ -59,7 +59,6 @@ namespace Assets.Textures {
 }
 
 namespace Assets.Levels {
-    // TODO // implement level loading
     export const testLevel: object = {
         "name": "testLevel",
         "width": 1000,
@@ -68,7 +67,7 @@ namespace Assets.Levels {
         "colour": "white",
         "xPos": 0,
         "yPos": 0,
-        "levelCollisions": [true, true, true, true],
+        "levelCollisions": [true, false, true, true],
         "tiles": [],
         "objects": [
             {
@@ -79,6 +78,52 @@ namespace Assets.Levels {
             {
                 "obj": Assets.Objects.testLevelCentre,
                 "x": 200,
+                "y": 100
+            }
+        ]
+    }
+    export const testLevel2: object = {
+        "name": "testLevel2",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "red",
+        "xPos": 1250,
+        "yPos": 0,
+        "levelCollisions": [true, true, false, false],
+        "tiles": [],
+        "objects": [
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": -200,
+                "y": 100
+            }
+        ]
+    }
+    export const testLevel3: object = {
+        "name": "testLevel3",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "green",
+        "xPos": 1250,
+        "yPos": 1000,
+        "levelCollisions": [false, true, true, true],
+        "tiles": [],
+        "objects": [
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": -200,
                 "y": 100
             }
         ]

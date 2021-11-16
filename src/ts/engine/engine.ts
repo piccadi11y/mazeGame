@@ -8,9 +8,10 @@ namespace MG {
         private LAST_FRAME: number = 0;
 
         public constructor (canvasID?: string) {
-            window.onresize = ()=>this.Resize();
+            window.onresize = ()=>this.resize();
+            document.addEventListener('contentAdded', e => this.resize());      // so when header/footer are loaded in canvas is resized
             this._canvas = Utilities.initialise(canvasID);
-
+            
             // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
         }
 
@@ -18,7 +19,7 @@ namespace MG {
         public Start (): void {
             TextureManager.load();
             InputHandler.initialise();
-            LevelManager.initialise();
+            LevelManager.initialise(100);
             
             TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
             let playerObject: PlayerObject = new PlayerObject('player');
@@ -29,9 +30,12 @@ namespace MG {
             let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
 
-            LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
+            // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
+            LevelManager.loadLevel(Assets.Levels.testLevel2);
+            LevelManager.loadLevel(Assets.Levels.testLevel3);
+            LevelManager.loadLevel(Assets.Levels.testLevel);
 
-            this.Resize();
+            this.resize();
             this.mainLoop();
         }
 
@@ -50,20 +54,27 @@ namespace MG {
             let fps = Math.round(1 / this.FRAME_TIME);
             ctx.fillStyle = 'red';
             ctx.fillText(`${this.FRAME_TIME}s | FPS: ${fps}`, 20, 20);
+            ctx.fillText(LevelManager.player.currentLevel?LevelManager.player.currentLevel.name:'the void', 20, 40);
+
+            let relPosX, relPosY: number;
+            if (LevelManager.player.currentLevel) {
+                relPosX = LevelManager.player.position.x < LevelManager.currentLevel.centre.x ? -1 : 1;
+                relPosY = LevelManager.player.position.y < LevelManager.currentLevel.centre.y ? -1 : 1;
+            }
+            ctx.fillText(`${relPosX}, ${relPosY}`, 20, 60);
 
 
             this.LAST_FRAME = performance.now();
             requestAnimationFrame(()=>this.mainLoop());
         }
 
-        private Resize (): void {
+        private resize (): void {
             if (this._canvas === undefined) return;
 
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
 
             if (LevelManager.camera) LevelManager.camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
-
         }
     }
 }

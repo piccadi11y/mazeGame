@@ -12,18 +12,25 @@ namespace MG {
         XY_POS = X_POS + Y_POS
     }
 
-    export class CollisionResult {
+    export enum CollisionType {
+        BLOCKING,
+        NON_BLOCKING
+    }
+
+    export class BoxCollisionResult {
         public objectA: oObject;
         public objectB: oObject;
         private _rawSide: CollisionSide;
         private _calculatedSide: CollisionSide;
         public separation: Vector2;
+        public type: CollisionType;
 
-        public constructor (a: oObject, b: oObject, side: CollisionSide, separation) {
+        public constructor (a: oObject, b: oObject, side: CollisionSide, separation, type: CollisionType) {
             this.objectA = a;
             this.objectB = b;
             this._rawSide = side;
             this.separation = separation;
+            this.type = type;
 
             this._calculatedSide = this.calculateSide();
         }
@@ -50,18 +57,24 @@ namespace MG {
         }
     }
 
+    export class PointInBoxResult {
+        private _placeholder: string = 'pibr_placeholder'
+    }
+
     export class CollisionComponent extends BaseComponent {
 
         private _transform: Transform = new Transform();
         private _width: number;
         private _height: number;
+        private _collisionType: CollisionType;
 
-        public constructor (name: string, width: number, height: number, transform: Transform) {
+        public constructor (name: string, width: number, height: number, transform: Transform, type: CollisionType) {
             super(name);
 
             this._width = width;
             this._height = height;
             this._transform = transform;
+            this._collisionType = type;
         }
 
         public get transform (): Transform {
@@ -75,12 +88,16 @@ namespace MG {
         public get height (): number {
             return this._height;
         }
+
+        public get collisionType (): CollisionType {
+            return this._collisionType;
+        }
         
         public updateTransform (transform: Transform): void {
             this._transform.copyFrom(transform)
         }
 
-        public checkColliding (collisionObject: CollisionComponent, movement: Vector2 = Vector2.Zero): CollisionResult {
+        public checkColliding (collisionObject: CollisionComponent, movement: Vector2 = Vector2.Zero): BoxCollisionResult {
             // TODO // enable collision checking for rotated objects
 
             let leftA, leftB: number;
@@ -133,7 +150,41 @@ namespace MG {
             if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
             else sepY = bottomB - topA;
 
-            return new CollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY));
+            return new BoxCollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY), collisionObject.collisionType);
+        }
+
+        public checkPointWithin (point: Vector2): PointInBoxResult {
+            let left: number = this._transform.position.x - this._width/2;
+            let right: number = left + this._width;
+            let top: number = this._transform.position.y - this._height/2;
+            let bottom: number = top + this._height;
+
+            if (point.x < left) return undefined;
+            if (point.x > right) return undefined;
+            if (point.y < top) return undefined;
+            if (point.y > bottom) return undefined;
+
+            return new PointInBoxResult();
+        }
+
+        public checkBoxContained (containingBox: CollisionComponent): boolean {
+            let leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB: number;
+
+            leftA = this._transform.position.x - this._width/2;
+            rightA = leftA + this._width;
+            topA = this._transform.position.y - this._height/2;
+            bottomA = topA + this._height;
+
+            leftB = containingBox.transform.position.x - containingBox.width/2;
+            rightB = leftB + containingBox.width;
+            topB = containingBox.transform.position.y - containingBox.height/2
+            bottomB = topB + containingBox.height;
+
+
+            if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB) return true;
+
+
+            return false;
         }
     }
 }

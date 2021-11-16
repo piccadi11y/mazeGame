@@ -67,7 +67,7 @@ var Assets;
             "name": "testObjectTexture",
             "width": 1,
             "height": 1,
-            "baseColour": { "r": 0, "g": 255, "b": 0 },
+            "baseColour": { "r": 255, "g": 0, "b": 255 },
             "layers": undefined
         };
         Textures.loadList = [
@@ -79,16 +79,15 @@ var Assets;
 (function (Assets) {
     var Levels;
     (function (Levels) {
-        // TODO // implement level loading
         Levels.testLevel = {
             "name": "testLevel",
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
-            "colour": { "r": 255, "g": 255, "b": 0 },
+            "colour": "white",
             "xPos": 0,
             "yPos": 0,
-            "levelCollisions": [true, true, true, true],
+            "levelCollisions": [true, false, true, true],
             "tiles": [],
             "objects": [
                 {
@@ -99,6 +98,52 @@ var Assets;
                 {
                     "obj": Assets.Objects.testLevelCentre,
                     "x": 200,
+                    "y": 100
+                }
+            ]
+        };
+        Levels.testLevel2 = {
+            "name": "testLevel2",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "red",
+            "xPos": 1250,
+            "yPos": 0,
+            "levelCollisions": [true, true, false, false],
+            "tiles": [],
+            "objects": [
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": -200,
+                    "y": 100
+                }
+            ]
+        };
+        Levels.testLevel3 = {
+            "name": "testLevel3",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "green",
+            "xPos": 1250,
+            "yPos": 1000,
+            "levelCollisions": [false, true, true, true],
+            "tiles": [],
+            "objects": [
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": -200,
                     "y": 100
                 }
             ]
@@ -183,15 +228,21 @@ var MG;
         CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
         CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
     })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
-    var CollisionResult = /** @class */ (function () {
-        function CollisionResult(a, b, side, separation) {
+    var CollisionType;
+    (function (CollisionType) {
+        CollisionType[CollisionType["BLOCKING"] = 0] = "BLOCKING";
+        CollisionType[CollisionType["NON_BLOCKING"] = 1] = "NON_BLOCKING";
+    })(CollisionType = MG.CollisionType || (MG.CollisionType = {}));
+    var BoxCollisionResult = /** @class */ (function () {
+        function BoxCollisionResult(a, b, side, separation, type) {
             this.objectA = a;
             this.objectB = b;
             this._rawSide = side;
             this.separation = separation;
+            this.type = type;
             this._calculatedSide = this.calculateSide();
         }
-        CollisionResult.prototype.calculateSide = function () {
+        BoxCollisionResult.prototype.calculateSide = function () {
             // calculate probable side based off separation
             if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
                 return this._rawSide;
@@ -202,31 +253,39 @@ var MG;
                 case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
             }
         };
-        Object.defineProperty(CollisionResult.prototype, "rawSide", {
+        Object.defineProperty(BoxCollisionResult.prototype, "rawSide", {
             get: function () {
                 return this._rawSide;
             },
             enumerable: false,
             configurable: true
         });
-        Object.defineProperty(CollisionResult.prototype, "side", {
+        Object.defineProperty(BoxCollisionResult.prototype, "side", {
             get: function () {
                 return this._calculatedSide;
             },
             enumerable: false,
             configurable: true
         });
-        return CollisionResult;
+        return BoxCollisionResult;
     }());
-    MG.CollisionResult = CollisionResult;
+    MG.BoxCollisionResult = BoxCollisionResult;
+    var PointInBoxResult = /** @class */ (function () {
+        function PointInBoxResult() {
+            this._placeholder = 'pibr_placeholder';
+        }
+        return PointInBoxResult;
+    }());
+    MG.PointInBoxResult = PointInBoxResult;
     var CollisionComponent = /** @class */ (function (_super) {
         __extends(CollisionComponent, _super);
-        function CollisionComponent(name, width, height, transform) {
+        function CollisionComponent(name, width, height, transform, type) {
             var _this = _super.call(this, name) || this;
             _this._transform = new MG.Transform();
             _this._width = width;
             _this._height = height;
             _this._transform = transform;
+            _this._collisionType = type;
             return _this;
         }
         Object.defineProperty(CollisionComponent.prototype, "transform", {
@@ -246,6 +305,13 @@ var MG;
         Object.defineProperty(CollisionComponent.prototype, "height", {
             get: function () {
                 return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "collisionType", {
+            get: function () {
+                return this._collisionType;
             },
             enumerable: false,
             configurable: true
@@ -305,7 +371,36 @@ var MG;
                 sepY = bottomA - topB;
             else
                 sepY = bottomB - topA;
-            return new CollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY));
+            return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
+        };
+        CollisionComponent.prototype.checkPointWithin = function (point) {
+            var left = this._transform.position.x - this._width / 2;
+            var right = left + this._width;
+            var top = this._transform.position.y - this._height / 2;
+            var bottom = top + this._height;
+            if (point.x < left)
+                return undefined;
+            if (point.x > right)
+                return undefined;
+            if (point.y < top)
+                return undefined;
+            if (point.y > bottom)
+                return undefined;
+            return new PointInBoxResult();
+        };
+        CollisionComponent.prototype.checkBoxContained = function (containingBox) {
+            var leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
+            leftA = this._transform.position.x - this._width / 2;
+            rightA = leftA + this._width;
+            topA = this._transform.position.y - this._height / 2;
+            bottomA = topA + this._height;
+            leftB = containingBox.transform.position.x - containingBox.width / 2;
+            rightB = leftB + containingBox.width;
+            topB = containingBox.transform.position.y - containingBox.height / 2;
+            bottomB = topB + containingBox.height;
+            if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB)
+                return true;
+            return false;
         };
         return CollisionComponent;
     }(MG.BaseComponent));
@@ -487,13 +582,13 @@ var MG;
         oObject.prototype.enableCollisionFromSprite = function (spriteName, bIsStatic) {
             if (bIsStatic === void 0) { bIsStatic = true; }
             var dimensions = this.getComponent(spriteName).dimensions;
-            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', dimensions.x, dimensions.y, this._worldTransform !== undefined ? this._worldTransform : this._transform);
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', dimensions.x, dimensions.y, this._worldTransform !== undefined ? this._worldTransform : this._transform, MG.CollisionType.BLOCKING);
             this._bIsStatic = bIsStatic;
             this._collisionComponent.setOwner(this);
         };
         oObject.prototype.enableCollision = function (width, height, bIsStatic) {
             if (bIsStatic === void 0) { bIsStatic = true; }
-            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform);
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform, MG.CollisionType.BLOCKING);
             this._bIsStatic = bIsStatic;
             this._collisionComponent.setOwner(this);
         };
@@ -627,33 +722,29 @@ var MG;
     var Engine = /** @class */ (function () {
         function Engine(canvasID) {
             var _this = this;
-            // private _playerObject: PlayerObject;
-            // private _camera: CameraObject;
-            // private _testLevel: Level;
             this.FRAME_TIME = 0;
             this.LAST_FRAME = 0;
-            window.onresize = function () { return _this.Resize(); };
+            window.onresize = function () { return _this.resize(); };
+            document.addEventListener('contentAdded', function (e) { return _this.resize(); }); // so when header/footer are loaded in canvas is resized
             this._canvas = MG.Utilities.initialise(canvasID);
             // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
         }
         Engine.prototype.Start = function () {
             MG.TextureManager.load();
             MG.InputHandler.initialise();
-            MG.LevelManager.initialise();
-            // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
+            MG.LevelManager.initialise(100);
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
-            // TODO // perhaps load all textures at start; create a function in textureManager to create all textures contained in Assets.Textures so all everything else has to do is worry about referencing them but never creating them
             var playerObject = new MG.PlayerObject('player');
             playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200));
             playerObject.position = new MG.Vector2(-300, 0);
             playerObject.enableCollisionFromSprite('testPlayerSprite', false);
             var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
-            // LevelManager.player = playerObject;
-            // LevelManager.camera = camera;
-            // LevelManager.currentLevel = new Level('testLevel', 1000, 1000, 50, Colour.white(), 0, 0, [true, true, true, true]);
-            MG.LevelManager.currentLevel = MG.Level.load(Assets.Levels.testLevel);
-            this.Resize();
+            // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel);
+            this.resize();
             this.mainLoop();
         };
         Engine.prototype.mainLoop = function () {
@@ -668,10 +759,17 @@ var MG;
             var fps = Math.round(1 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'red';
             MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
+            MG.ctx.fillText(MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void', 20, 40);
+            var relPosX, relPosY;
+            if (MG.LevelManager.player.currentLevel) {
+                relPosX = MG.LevelManager.player.position.x < MG.LevelManager.currentLevel.centre.x ? -1 : 1;
+                relPosY = MG.LevelManager.player.position.y < MG.LevelManager.currentLevel.centre.y ? -1 : 1;
+            }
+            MG.ctx.fillText(relPosX + ", " + relPosY, 20, 60);
             this.LAST_FRAME = performance.now();
             requestAnimationFrame(function () { return _this.mainLoop(); });
         };
-        Engine.prototype.Resize = function () {
+        Engine.prototype.resize = function () {
             if (this._canvas === undefined)
                 return;
             this._canvas.width = this._canvas.clientWidth;
@@ -883,13 +981,17 @@ var MG;
             this.consumeMovement();
         };
         PlayerObject.prototype.consumeMovement = function () {
-            if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
+            if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
+                // if we're in a level only check for the level's objects
+                //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 for (var _i = 0, _a = this._level.rootObject.children; _i < _a.length; _i++) {
                     var o = _a[_i];
                     if (o.collisionComponent === undefined)
                         break;
+                    // break out if all movement consumed
+                    // if (this._movement.x + this._movement.y == 0) break; // this won't work 
                     var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
-                    if (result !== undefined) {
+                    if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
                         switch (result.side) {
                             case MG.CollisionSide.X_NEG:
                                 if (this._movement.x < 0)
@@ -908,10 +1010,45 @@ var MG;
                                     this._movement.y = 0;
                                 break;
                         }
-                        // TODO // if applicable, call objects' corresponding on collision/hit functions
+                    }
+                }
+                //} else {
+            }
+            else {
+                // if we're not contained in one level, check all loaded level's objects
+                for (var _b = 0, _c = MG.LevelManager.loadedLevels; _b < _c.length; _b++) {
+                    var l = _c[_b];
+                    for (var _d = 0, _e = l.rootObject.children; _d < _e.length; _d++) {
+                        var o = _e[_d];
+                        if (o.collisionComponent === undefined)
+                            break;
+                        // break out if all movement consumed
+                        // if (this._movement.x + this._movement.y == 0) break; // this won't work 
+                        var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
+                        if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
+                            switch (result.side) {
+                                case MG.CollisionSide.X_NEG:
+                                    if (this._movement.x < 0)
+                                        this._movement.x = 0;
+                                    break;
+                                case MG.CollisionSide.X_POS:
+                                    if (this._movement.x > 0)
+                                        this._movement.x = 0;
+                                    break;
+                                case MG.CollisionSide.Y_NEG:
+                                    if (this._movement.y < 0)
+                                        this._movement.y = 0;
+                                    break;
+                                case MG.CollisionSide.Y_POS:
+                                    if (this._movement.y > 0)
+                                        this._movement.y = 0;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
+            // TODO // if applicable, call objects' corresponding on collision/hit functions
             this.position.x += this._movement.x;
             this.position.y += this._movement.y;
         };
@@ -1374,7 +1511,29 @@ var MG;
             this.generateBorderCollisions();
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
+            this._levelDetectionCollision = new MG.CollisionComponent(this._name + "_levelCollisionComponent", this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
         }
+        Object.defineProperty(Level.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Level.prototype, "centre", {
+            get: function () {
+                return this._transform.position;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Level.prototype, "collisionShape", {
+            get: function () {
+                return this._levelDetectionCollision;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Level.prototype.generateBorderCollisions = function () {
             var oTemp;
             var borderWidth = 10;
@@ -1403,21 +1562,6 @@ var MG;
                 this._rootObject.addChild(oTemp);
             }
         };
-        /*public load () {
-            TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
-            this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
-
-
-            let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
-            this._rootObject.addChild(oTemp);
-            oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
-            oTemp.position.x = 200;
-            oTemp.position.y = 100;
-            this._rootObject.addChild(oTemp);
-
-            // load from obj
-
-        }*/
         Level.load = function (data) {
             var level = new Level(data['name'], data['width'], data['height'], data['gridSize'], MG.Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
             // tile logic goes here
@@ -1441,6 +1585,11 @@ var MG;
         });
         Level.prototype.update = function (deltaTime) {
             this._rootObject.update(deltaTime);
+        };
+        Level.prototype.checkHasPlayer = function (point) {
+            if (this._levelDetectionCollision.checkPointWithin(point))
+                return true;
+            return false;
         };
         Level.prototype.render = function () {
             // render level
@@ -1468,18 +1617,45 @@ var MG;
             set: function (level) {
                 this._currentLevel = level;
                 // this._currentLevel.load();
+                // not sure this is the best place/way to set this, especially if I plan on updating this during game
                 this._gameState.player.currentLevel = this._currentLevel;
             },
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(LevelManager, "loadedLevels", {
+            get: function () {
+                return this._loadedLevels;
+            },
+            enumerable: false,
+            configurable: true
+        });
         LevelManager.update = function (deltaTime) {
-            this._currentLevel.update(deltaTime);
+            // this._currentLevel.update(deltaTime);
+            for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {
+                var l = _a[_i];
+                l.update(deltaTime);
+            }
             this._gameState.player.update(deltaTime);
             this._gameState.camera.update(deltaTime);
+            // handle current level detection
+            var cl = undefined;
+            for (var _b = 0, _c = this._loadedLevels; _b < _c.length; _b++) {
+                var l = _c[_b];
+                if (l.checkHasPlayer(this._gameState.player.position)) {
+                    cl = l;
+                    break;
+                }
+            }
+            this._currentLevel = cl;
+            this._gameState.player.currentLevel = cl;
         };
         LevelManager.render = function () {
-            this._currentLevel.render();
+            // this._currentLevel.render();
+            for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {
+                var l = _a[_i];
+                l.render();
+            }
             this._gameState.player.render(this.camera.cameraComponent.camera);
         };
         Object.defineProperty(LevelManager, "player", {
@@ -1504,6 +1680,12 @@ var MG;
         LevelManager.deregisterObject = function (oID) {
             this._gameState.deregisterObject(oID);
         };
+        LevelManager.loadLevel = function (level) {
+            var l = MG.Level.load(level);
+            LevelManager._loadedLevels.push(l);
+            LevelManager.currentLevel = l;
+        };
+        LevelManager._loadedLevels = [];
         return LevelManager;
     }());
     MG.LevelManager = LevelManager;

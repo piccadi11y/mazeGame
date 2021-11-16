@@ -42,32 +42,70 @@ namespace MG {
         }
 
         private consumeMovement (): void {
-            if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
-                for (let o of this._level.rootObject.children) {
-                    if (o.collisionComponent === undefined) break;
-                
-                    let result: CollisionResult = this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y));
-                    if (result !== undefined) {
+            if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
+                // if we're in a level only check for the level's objects
+                //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
+                    for (let o of this._level.rootObject.children) {
+                        if (o.collisionComponent === undefined) break;
 
-                        switch (result.side) {
-                            case CollisionSide.X_NEG: 
-                                if (this._movement.x < 0) this._movement.x = 0;
-                                break;
-                            case CollisionSide.X_POS:
-                                if (this._movement.x > 0) this._movement.x = 0;
-                                break;
-                            case CollisionSide.Y_NEG:
-                                if (this._movement.y < 0) this._movement.y = 0;
-                                break;
-                            case CollisionSide.Y_POS:
-                                if (this._movement.y > 0) this._movement.y = 0;
-                                break;
-                        }
+                        // break out if all movement consumed
+                        // if (this._movement.x + this._movement.y == 0) break; // this won't work 
                     
-                        // TODO // if applicable, call objects' corresponding on collision/hit functions
+                        let result: BoxCollisionResult = this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y));
+                        if (result !== undefined && result.type == CollisionType.BLOCKING) {
+
+                            switch (result.side) {
+                                case CollisionSide.X_NEG: 
+                                    if (this._movement.x < 0) this._movement.x = 0;
+                                    break;
+                                case CollisionSide.X_POS:
+                                    if (this._movement.x > 0) this._movement.x = 0;
+                                    break;
+                                case CollisionSide.Y_NEG:
+                                    if (this._movement.y < 0) this._movement.y = 0;
+                                    break;
+                                case CollisionSide.Y_POS:
+                                    if (this._movement.y > 0) this._movement.y = 0;
+                                    break;
+                            }
+                        
+                        }
+                    }
+                //} else {
+                
+            } else {
+                    // if we're not contained in one level, check all loaded level's objects
+                    for (let l of LevelManager.loadedLevels) {
+                        for (let o of l.rootObject.children) {
+                            if (o.collisionComponent === undefined) break;
+
+                            // break out if all movement consumed
+                            // if (this._movement.x + this._movement.y == 0) break; // this won't work // TODO // figure it out so it doesn't check all remaining objects if all movement is nullifiied
+                            
+                            let result: BoxCollisionResult = this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y));
+                            if (result !== undefined && result.type == CollisionType.BLOCKING) {
+
+                                switch (result.side) {
+                                    case CollisionSide.X_NEG: 
+                                        if (this._movement.x < 0) this._movement.x = 0;
+                                        break;
+                                    case CollisionSide.X_POS:
+                                        if (this._movement.x > 0) this._movement.x = 0;
+                                        break;
+                                    case CollisionSide.Y_NEG:
+                                        if (this._movement.y < 0) this._movement.y = 0;
+                                        break;
+                                    case CollisionSide.Y_POS:
+                                        if (this._movement.y > 0) this._movement.y = 0;
+                                        break;
+                                }
+                            
+                            }
+                        }
                     }
                 }
-            }
+                // TODO // if applicable, call objects' corresponding on collision/hit functions
+            
 
             this.position.x += this._movement.x;
             this.position.y += this._movement.y;
