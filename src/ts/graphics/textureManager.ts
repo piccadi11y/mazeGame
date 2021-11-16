@@ -33,5 +33,12 @@ namespace MG {
 
 
         // TODO // load all used textures from Assets.Textures
+        public static load (): void {
+            // console.log(Assets.Textures.loadList[0]);
+
+            for (let t of Assets.Textures.loadList) {
+                TextureManager.addTexture(Texture.load(t));
+            }
+        }
     }
 }

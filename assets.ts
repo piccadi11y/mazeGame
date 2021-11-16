@@ -51,8 +51,23 @@ namespace Assets.Textures {
         "baseColour": {"r": 0,"g": 255,"b": 0},
         "layers": undefined
     }
+
+    export const loadList: object[] = [
+        defaultPlayerTexture,
+        testObjectTexture
+    ]
 }
 
 namespace Assets.Levels {
     // TODO // implement level loading
+    export const testLevel: object = {
+        "name": "testLevel",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "white",
+        "xPos": 0,
+        "yPos": 0,
+        "levelCollisions": [true, true, true, true]
+    }
 }

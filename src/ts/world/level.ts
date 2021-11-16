@@ -15,14 +15,16 @@ namespace MG {
         private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
         private _bBorderCollisions: boolean[];
 
-        public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour, levelCollisions?: boolean[]) {
+        public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour, x: number = 0, y: number = 0, levelCollisions?: boolean[]) {
             this._name = name;
             this._width = width;
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new oObject('_ROOT_', this, 2);
+            this._rootObject = new oObject('_ROOT_', this);
             this._bBorderCollisions = levelCollisions;
+            this._transform.position.x = x;
+            this._transform.position.y = y;
         }
 
         private generateBorderCollisions (): void {
@@ -59,8 +61,8 @@ namespace MG {
             TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
             this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
 
-            // still loading this here as i haven't implemented texture loading on program start
-            TextureManager.addTexture(Texture.load(Assets.Textures.testObjectTexture))
+            this._rootObject.position = this._transform.position;
+
             let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
             oTemp = oObject.load(Assets.Objects.testLevelCentre, this);

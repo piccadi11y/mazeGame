@@ -70,7 +70,27 @@ var Assets;
             "baseColour": { "r": 0, "g": 255, "b": 0 },
             "layers": undefined
         };
+        Textures.loadList = [
+            Textures.defaultPlayerTexture,
+            Textures.testObjectTexture
+        ];
     })(Textures = Assets.Textures || (Assets.Textures = {}));
+})(Assets || (Assets = {}));
+(function (Assets) {
+    var Levels;
+    (function (Levels) {
+        // TODO // implement level loading
+        Levels.testLevel = {
+            "name": "testLevel",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "white",
+            "xPos": 0,
+            "yPos": 0,
+            "levelCollisions": [true, true, true, true]
+        };
+    })(Levels = Assets.Levels || (Assets.Levels = {}));
 })(Assets || (Assets = {}));
 window.onload = function () {
     var engine = new MG.Engine('GameCanvas');
@@ -604,11 +624,11 @@ var MG;
             // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
         }
         Engine.prototype.Start = function () {
+            MG.TextureManager.load();
             MG.InputHandler.initialise();
             MG.LevelManager.initialise();
             // TODO // eventually move all of this to extended functions outside of the engine (for creating the game without too much hard-coding in the engine)
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
-            MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.defaultPlayerTexture));
             // TODO // perhaps load all textures at start; create a function in textureManager to create all textures contained in Assets.Textures so all everything else has to do is worry about referencing them but never creating them
             var playerObject = new MG.PlayerObject('player');
             playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200));
@@ -618,7 +638,7 @@ var MG;
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.player = playerObject;
             // LevelManager.camera = camera;
-            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white(), [true, true, true, true]);
+            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white(), 0, 0, [true, true, true, true]);
             this.Resize();
             this.mainLoop();
         };
@@ -1222,6 +1242,14 @@ var MG;
             else
                 TextureManager._textures[textureName].referenceCount--;
         };
+        // TODO // load all used textures from Assets.Textures
+        TextureManager.load = function () {
+            // console.log(Assets.Textures.loadList[0]);
+            for (var _i = 0, _a = Assets.Textures.loadList; _i < _a.length; _i++) {
+                var t = _a[_i];
+                TextureManager.addTexture(MG.Texture.load(t));
+            }
+        };
         TextureManager._textures = {};
         return TextureManager;
     }());
@@ -1298,7 +1326,9 @@ var MG;
 var MG;
 (function (MG) {
     var Level = /** @class */ (function () {
-        function Level(name, width, height, gridSize, colour, levelCollisions) {
+        function Level(name, width, height, gridSize, colour, x, y, levelCollisions) {
+            if (x === void 0) { x = 0; }
+            if (y === void 0) { y = 0; }
             this._transform = new MG.Transform(); // TODO // this will be relevant later when the engine supports multiple levels/streaming
             this._spawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
             this._name = name;
@@ -1306,8 +1336,10 @@ var MG;
             this._height = height;
             this._gridSize = gridSize;
             this._baseColour = colour;
-            this._rootObject = new MG.oObject('_ROOT_', this, 2);
+            this._rootObject = new MG.oObject('_ROOT_', this);
             this._bBorderCollisions = levelCollisions;
+            this._transform.position.x = x;
+            this._transform.position.y = y;
         }
         Level.prototype.generateBorderCollisions = function () {
             var oTemp;
@@ -1340,8 +1372,9 @@ var MG;
         Level.prototype.load = function () {
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
             this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
+            this._rootObject.position = this._transform.position;
             // still loading this here as i haven't implemented texture loading on program start
-            MG.TextureManager.addTexture(MG.Texture.load(Assets.Textures.testObjectTexture));
+            // TextureManager.addTexture(Texture.load(Assets.Textures.testObjectTexture))
             var oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
             oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
