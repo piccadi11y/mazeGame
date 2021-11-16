@@ -68,6 +68,19 @@ namespace Assets.Levels {
         "colour": "white",
         "xPos": 0,
         "yPos": 0,
-        "levelCollisions": [true, true, true, true]
+        "levelCollisions": [true, true, true, true],
+        "tiles": [],
+        "objects": [
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "obj": Assets.Objects.testLevelCentre,
+                "x": 200,
+                "y": 100
+            }
+        ]
     }
 }

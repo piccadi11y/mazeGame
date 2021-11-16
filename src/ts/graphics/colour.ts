@@ -51,6 +51,26 @@ namespace MG {
             return '#' + (this._r>0?this._r.toString(16):'00') + (this._g>0?this._g.toString(16):'00') + (this._b>0?this._b.toString(16):'00');
         }
 
+        public static fromString (col: string): Colour {
+            if (col[0] == '#') return Colour.fromHex(col);
+
+            switch(col) {
+                case 'white': return Colour.white();
+                case 'black': return Colour.black();
+                case 'red': return Colour.red();
+                case 'green': return Colour.green();
+                case 'blue': return Colour.blue();
+            }
+
+            return new Colour;
+        }
+
+        // TODO // implement parse from hex
+        public static fromHex (col: string): Colour {
+
+            return undefined;
+        }
+
         public static white () {
             return new Colour(255, 255, 255, 255);
         }

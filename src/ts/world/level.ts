@@ -25,6 +25,11 @@ namespace MG {
             this._bBorderCollisions = levelCollisions;
             this._transform.position.x = x;
             this._transform.position.y = y;
+
+            this._rootObject.position = this._transform.position;
+            this.generateBorderCollisions();
+            TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
+            this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
         }
 
         private generateBorderCollisions (): void {
@@ -57,27 +62,38 @@ namespace MG {
             }
         }
 
-        public load () {
+        /*public load () {
             TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
             this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
 
-            this._rootObject.position = this._transform.position;
 
             let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
             oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             oTemp.position.x = 200;
             oTemp.position.y = 100;
-            this._rootObject.addChild(oTemp);
-
-
-
-            // add level border collisions
-            this.generateBorderCollisions();
-            
+            this._rootObject.addChild(oTemp);            
 
             // load from obj
 
+        }*/
+
+        public static load (data: object): Level {
+            let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
+
+            // tile logic goes here
+
+            // spawn/create objects
+            let oTemp: oObject;
+            console.log()
+            for (let o of data['objects']) {
+                oTemp = oObject.load(o['obj'], level);
+                oTemp.position.x = o['x'];
+                oTemp.position.y = o['y'];
+                level.rootObject.addChild(oTemp);
+            }
+
+            return level;
         }
 
 

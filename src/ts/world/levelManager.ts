@@ -16,7 +16,7 @@ namespace MG {
 
         public static set currentLevel (level: Level) {
             this._currentLevel = level;
-            this._currentLevel.load();
+            // this._currentLevel.load();
             this._gameState.player.currentLevel = this._currentLevel;
         }
 

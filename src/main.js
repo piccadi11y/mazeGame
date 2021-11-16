@@ -85,10 +85,23 @@ var Assets;
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
-            "colour": "white",
+            "colour": { "r": 255, "g": 255, "b": 0 },
             "xPos": 0,
             "yPos": 0,
-            "levelCollisions": [true, true, true, true]
+            "levelCollisions": [true, true, true, true],
+            "tiles": [],
+            "objects": [
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "obj": Assets.Objects.testLevelCentre,
+                    "x": 200,
+                    "y": 100
+                }
+            ]
         };
     })(Levels = Assets.Levels || (Assets.Levels = {}));
 })(Assets || (Assets = {}));
@@ -638,7 +651,8 @@ var MG;
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.player = playerObject;
             // LevelManager.camera = camera;
-            MG.LevelManager.currentLevel = new MG.Level('testLevel', 1000, 1000, 50, MG.Colour.white(), 0, 0, [true, true, true, true]);
+            // LevelManager.currentLevel = new Level('testLevel', 1000, 1000, 50, Colour.white(), 0, 0, [true, true, true, true]);
+            MG.LevelManager.currentLevel = MG.Level.load(Assets.Levels.testLevel);
             this.Resize();
             this.mainLoop();
         };
@@ -988,6 +1002,22 @@ var MG;
             if (bAlpha)
                 return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00') + (this._a > 0 ? this._a.toString(16) : '00');
             return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00');
+        };
+        Colour.fromString = function (col) {
+            if (col[0] == '#')
+                return Colour.fromHex(col);
+            switch (col) {
+                case 'white': return Colour.white();
+                case 'black': return Colour.black();
+                case 'red': return Colour.red();
+                case 'green': return Colour.green();
+                case 'blue': return Colour.blue();
+            }
+            return new Colour;
+        };
+        // TODO // implement parse from hex
+        Colour.fromHex = function (col) {
+            return undefined;
         };
         Colour.white = function () {
             return new Colour(255, 255, 255, 255);
@@ -1340,6 +1370,10 @@ var MG;
             this._bBorderCollisions = levelCollisions;
             this._transform.position.x = x;
             this._transform.position.y = y;
+            this._rootObject.position = this._transform.position;
+            this.generateBorderCollisions();
+            MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
+            this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
         }
         Level.prototype.generateBorderCollisions = function () {
             var oTemp;
@@ -1369,21 +1403,34 @@ var MG;
                 this._rootObject.addChild(oTemp);
             }
         };
-        Level.prototype.load = function () {
-            MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
-            this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
-            this._rootObject.position = this._transform.position;
-            // still loading this here as i haven't implemented texture loading on program start
-            // TextureManager.addTexture(Texture.load(Assets.Textures.testObjectTexture))
-            var oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
+        /*public load () {
+            TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
+            this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
+
+
+            let oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             this._rootObject.addChild(oTemp);
-            oTemp = MG.oObject.load(Assets.Objects.testLevelCentre, this);
+            oTemp = oObject.load(Assets.Objects.testLevelCentre, this);
             oTemp.position.x = 200;
             oTemp.position.y = 100;
             this._rootObject.addChild(oTemp);
-            // add level border collisions
-            this.generateBorderCollisions();
+
             // load from obj
+
+        }*/
+        Level.load = function (data) {
+            var level = new Level(data['name'], data['width'], data['height'], data['gridSize'], MG.Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
+            // tile logic goes here
+            // spawn/create objects
+            var oTemp;
+            for (var _i = 0, _a = data['objects']; _i < _a.length; _i++) {
+                var o = _a[_i];
+                oTemp = MG.oObject.load(o['obj'], level);
+                oTemp.position.x = o['x'];
+                oTemp.position.y = o['y'];
+                level.rootObject.addChild(oTemp);
+            }
+            return level;
         };
         Object.defineProperty(Level.prototype, "rootObject", {
             get: function () {
@@ -1420,7 +1467,7 @@ var MG;
             },
             set: function (level) {
                 this._currentLevel = level;
-                this._currentLevel.load();
+                // this._currentLevel.load();
                 this._gameState.player.currentLevel = this._currentLevel;
             },
             enumerable: false,
