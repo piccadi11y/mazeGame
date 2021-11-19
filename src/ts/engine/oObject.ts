@@ -107,8 +107,8 @@ namespace MG {
             this._collisionComponent.setOwner(this);
         }
 
-        public enableCollision (width: number, height: number, bIsStatic: boolean = true): void {
-            this._collisionComponent = new CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform!==undefined?this._worldTransform:this._transform, CollisionType.BLOCKING);
+        public enableCollision (width: number, height: number, bIsStatic: boolean = true, collisionType: CollisionType = CollisionType.BLOCKING): void {
+            this._collisionComponent = new CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform!==undefined?this._worldTransform:this._transform, collisionType);
             this._bIsStatic = bIsStatic;
             this._collisionComponent.setOwner(this);
         }
@@ -141,9 +141,13 @@ namespace MG {
             return undefined;
         }
 
+        public getComponents (): BaseComponent[] {
+            return this._components;
+        }
+
         // TODO // provide overriding load functionality for all classes inheriting from oObject
         public static load (data: object, level: Level): oObject {
-            let obj: oObject = new oObject(data['name'], level);
+            let obj: oObject = new oObject(level.name + '_' + data['name'], level);
 
             // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
             for (let cD of data['components']) {
@@ -176,7 +180,7 @@ namespace MG {
 
 
         public render (camera: Camera, bDrawDebugs: boolean = false): void {
-            for (let c of this._components) c.render(this._worldTransform, camera);
+            for (let c of this._components) c.render(this._worldTransform, camera, bDrawDebugs);
 
             for (let c of this._children) c.render(camera, bDrawDebugs);
 
@@ -184,7 +188,7 @@ namespace MG {
                 // collision
                 if (this._collisionComponent !== undefined) {
                     let tex: Texture = TextureManager.getTexture('collisionDebug');
-                    tex.draw(camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(camera, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             
             }

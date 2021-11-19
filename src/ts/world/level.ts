@@ -11,6 +11,7 @@ namespace MG {
 
         private _baseColour: Colour;
         private _baseTexture: Sprite;
+        private _tiles: Tile[] = [];
 
         private _rootObject: oObject;
         private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
@@ -33,10 +34,15 @@ namespace MG {
             this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
 
             this._levelDetectionCollision = new CollisionComponent(`${this._name}_levelCollisionComponent`, this._width, this._height, this._transform, CollisionType.NON_BLOCKING);
+
         }
 
         public get name (): string {
             return this._name;
+        }
+
+        public get gridSize (): number {
+            return this._gridSize;
         }
 
         public get centre (): Vector2 {
@@ -47,30 +53,34 @@ namespace MG {
             return this._levelDetectionCollision;
         }
 
+        public get tiles (): Tile[] {
+            return this._tiles;
+        }
+
         private generateBorderCollisions (): void {
             let oTemp;
             let borderWidth: number = 10;
 
             if (this._bBorderCollisions[0]) {
-                oTemp = new oObject('levelCollisionObject_T', this);
+                oTemp = new oObject(`${this._name}_levelCollisionObject_T`, this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = -this._height/2 - borderWidth/2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[1]) {
-                oTemp = new oObject('levelCollisionObject_R', this);
+                oTemp = new oObject(`${this._name}_levelCollisionObject_R`, this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = this._width/2 + borderWidth/2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[2]) {
-                oTemp = new oObject('levelCollisionObject_B', this);
+                oTemp = new oObject(`${this._name}_levelCollisionObject_B`, this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = this._width/2 + borderWidth/2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[3]) {
-                oTemp = new oObject('levelCollisionObject_L', this);
+                oTemp = new oObject(`${this._name}_levelCollisionObject_L`, this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = -this._height/2 - borderWidth/2;
                 this._rootObject.addChild(oTemp);
@@ -81,6 +91,16 @@ namespace MG {
             let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
 
             // tile logic goes here
+            let tTemp: Tile;
+            for (let t of data['tiles']) {
+                tTemp = new Tile(t['obj']['name'], level);
+                tTemp.position.x = t['x'] * level.gridSize - level._width/2 + level.gridSize/2;
+                tTemp.position.y = t['y'] * level.gridSize - level._height/2 + level.gridSize/2;
+                tTemp.rotation = t['d'];
+                tTemp.update(0);
+                if (t['collision'] === "wall") tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true);        // in theory this is working????
+                level.tiles.push(tTemp);
+            }
 
             // spawn/create objects
             let oTemp: oObject;
@@ -109,12 +129,15 @@ namespace MG {
             return false;
         }
 
-        public render (): void {
+        public render (bDrawDebugs: boolean = false): void {
             // render level
-            this._baseTexture.draw(this._transform, LevelManager.camera.cameraComponent.camera);
+            this._baseTexture.draw(this._transform, LevelManager.camera, bDrawDebugs);
+
+            // render tiles
+            for (let t of this._tiles) t.render(LevelManager.camera, bDrawDebugs);
 
             // render objects
-            this._rootObject.render(LevelManager.camera.cameraComponent.camera);
+            this._rootObject.render(LevelManager.camera, bDrawDebugs);
 
         }
 

@@ -17,7 +17,6 @@ var Assets;
 (function (Assets) {
     var Objects;
     (function (Objects) {
-        Objects.e = 'oof';
         Objects.testLevelCentre = {
             "name": "testLevelCentre",
             "components": [
@@ -70,9 +69,230 @@ var Assets;
             "baseColour": { "r": 255, "g": 0, "b": 255 },
             "layers": undefined
         };
+        Textures.TILE_WALL_POST = {
+            "name": "TILE_WALL_POST",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 6 },
+                        { "x": 1, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 3, "y": 6 },
+                        { "x": 4, "y": 6 },
+                        { "x": 5, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 1 },
+                        { "x": 0, "y": 2 },
+                        { "x": 0, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 0, "y": 5 },
+                        { "x": 6, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 6, "y": 3 },
+                        { "x": 6, "y": 4 },
+                        { "x": 6, "y": 5 },
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_DOUBLE = {
+            "name": "TILE_WALL_DOUBLE",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 6 },
+                        { "x": 1, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 3, "y": 6 },
+                        { "x": 4, "y": 6 },
+                        { "x": 5, "y": 6 },
+                        { "x": 6, "y": 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE = {
+            "name": "TILE_WALL_SINGLE",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_END = {
+            "name": "TILE_WALL_END",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 6 },
+                        { "x": 1, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 3, "y": 6 },
+                        { "x": 4, "y": 6 },
+                        { "x": 5, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 6, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 6, "y": 3 },
+                        { "x": 6, "y": 4 },
+                        { "x": 6, "y": 5 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_DOUBLE_CORNER = {
+            "name": "TILE_WALL_DOUBLE_CORNER",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 6, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 6, "y": 3 },
+                        { "x": 6, "y": 4 },
+                        { "x": 6, "y": 5 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR = {
+            "name": "TILE_WALL_SINGLE_CORNER_INTERIOR",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR = {
+            "name": "TILE_WALL_SINGLE_CORNER_EXTERIOR",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 0 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 1, "y": 0 },
+                        { "x": 2, "y": 0 },
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 6, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 6, "y": 3 },
+                        { "x": 6, "y": 4 },
+                        { "x": 6, "y": 5 },
+                        { "x": 6, "y": 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_FLOOR_TEST = {
+            "name": "TILE_FLOOR_TEST",
+            "width": 7,
+            "height": 7,
+            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "layers": [
+                {
+                    "colour": { "r": 255, "g": 200, "b": 255 },
+                    "points": [
+                        { "x": 3, "y": 3 },
+                        { "x": 1, "y": 1 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 1, "y": 5 },
+                        { "x": 5, "y": 1 },
+                        { "x": 5, "y": 2 },
+                        { "x": 5, "y": 3 },
+                        { "x": 5, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 1 },
+                        { "x": 3, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 2, "y": 5 },
+                        { "x": 3, "y": 5 },
+                        { "x": 4, "y": 5 },
+                    ]
+                }
+            ]
+        };
         Textures.loadList = [
             Textures.defaultPlayerTexture,
-            Textures.testObjectTexture
+            Textures.testObjectTexture,
+            Textures.TILE_WALL_POST,
+            Textures.TILE_WALL_DOUBLE,
+            Textures.TILE_WALL_SINGLE,
+            Textures.TILE_WALL_END,
+            Textures.TILE_WALL_DOUBLE_CORNER,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+            Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR,
+            Textures.TILE_FLOOR_TEST
         ];
     })(Textures = Assets.Textures || (Assets.Textures = {}));
 })(Assets || (Assets = {}));
@@ -88,26 +308,72 @@ var Assets;
             "xPos": 0,
             "yPos": 0,
             "levelCollisions": [true, false, true, true],
-            "tiles": [],
-            "objects": [
+            "tiles": [
                 {
-                    "obj": Assets.Objects.testLevelCentre,
+                    "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
                     "x": 0,
-                    "y": 0
+                    "y": 0,
+                    "d": 270,
+                    "collision": "wall"
                 },
                 {
-                    "obj": Assets.Objects.testLevelCentre,
-                    "x": 200,
-                    "y": 100
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 1,
+                    "y": 0,
+                    "d": 180,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 2,
+                    "y": 0,
+                    "d": 180,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 3,
+                    "y": 0,
+                    "d": 180,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 0,
+                    "y": 1,
+                    "d": 90,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 0,
+                    "y": 2,
+                    "d": 90,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    "x": 0,
+                    "y": 3,
+                    "d": 90,
+                    "collision": "wall"
+                },
+                {
+                    "obj": Assets.Textures.TILE_FLOOR_TEST,
+                    "x": 1,
+                    "y": 1,
+                    "d": 0,
+                    "collision": "floor"
                 }
-            ]
+            ],
+            "objects": []
         };
         Levels.testLevel2 = {
             "name": "testLevel2",
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
-            "colour": "red",
+            "colour": "blue",
             "xPos": 1250,
             "yPos": 0,
             "levelCollisions": [true, true, false, false],
@@ -174,7 +440,7 @@ var MG;
         };
         BaseComponent.prototype.update = function (deltaTime) {
         };
-        BaseComponent.prototype.render = function (transform, camera) {
+        BaseComponent.prototype.render = function (transform, camera, bDrawDebugs) {
         };
         return BaseComponent;
     }());
@@ -410,10 +676,13 @@ var MG;
 (function (MG) {
     var SpriteComponent = /** @class */ (function (_super) {
         __extends(SpriteComponent, _super);
-        function SpriteComponent(name, textureName, width, height) {
+        function SpriteComponent(name, textureName, width, height, sprite) {
             if (width === void 0) { width = 100; }
             var _this = _super.call(this, name) || this;
-            _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
+            if (sprite)
+                _this._sprite = sprite;
+            else
+                _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
             return _this;
         }
         Object.defineProperty(SpriteComponent.prototype, "dimensions", {
@@ -423,13 +692,16 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        SpriteComponent.fromSprite = function (name, sprite) {
+            return new SpriteComponent(name, undefined, undefined, undefined, sprite);
+        };
         SpriteComponent.prototype.update = function (deltaTime) {
             _super.prototype.update.call(this, deltaTime);
             this._sprite.update(deltaTime);
         };
-        SpriteComponent.prototype.render = function (transform, camera) {
+        SpriteComponent.prototype.render = function (transform, camera, bDrawDebugs) {
             _super.prototype.render.call(this, transform, camera);
-            this._sprite.draw(transform, camera);
+            this._sprite.draw(transform, camera, bDrawDebugs);
         };
         return SpriteComponent;
     }(MG.BaseComponent));
@@ -586,9 +858,10 @@ var MG;
             this._bIsStatic = bIsStatic;
             this._collisionComponent.setOwner(this);
         };
-        oObject.prototype.enableCollision = function (width, height, bIsStatic) {
+        oObject.prototype.enableCollision = function (width, height, bIsStatic, collisionType) {
             if (bIsStatic === void 0) { bIsStatic = true; }
-            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform, MG.CollisionType.BLOCKING);
+            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform, collisionType);
             this._bIsStatic = bIsStatic;
             this._collisionComponent.setOwner(this);
         };
@@ -621,9 +894,12 @@ var MG;
             }
             return undefined;
         };
+        oObject.prototype.getComponents = function () {
+            return this._components;
+        };
         // TODO // provide overriding load functionality for all classes inheriting from oObject
         oObject.load = function (data, level) {
-            var obj = new oObject(data['name'], level);
+            var obj = new oObject(level.name + '_' + data['name'], level);
             // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
             for (var _i = 0, _a = data['components']; _i < _a.length; _i++) {
                 var cD = _a[_i];
@@ -660,7 +936,7 @@ var MG;
             if (bDrawDebugs === void 0) { bDrawDebugs = false; }
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var c = _a[_i];
-                c.render(this._worldTransform, camera);
+                c.render(this._worldTransform, camera, bDrawDebugs);
             }
             for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
                 var c = _c[_b];
@@ -670,7 +946,7 @@ var MG;
                 // collision
                 if (this._collisionComponent !== undefined) {
                     var tex = MG.TextureManager.getTexture('collisionDebug');
-                    tex.draw(camera, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(camera, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             }
         };
@@ -734,16 +1010,16 @@ var MG;
             MG.InputHandler.initialise();
             MG.LevelManager.initialise(100);
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
-            var playerObject = new MG.PlayerObject('player');
-            playerObject.addComponent(new MG.SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200));
+            var playerObject = new MG.PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
+            playerObject.enableCollisionFromSprite();
             playerObject.position = new MG.Vector2(-300, 0);
-            playerObject.enableCollisionFromSprite('testPlayerSprite', false);
             var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel);
+            MG.LevelManager.bDrawDebugs = false;
             this.resize();
             this.mainLoop();
         };
@@ -757,7 +1033,7 @@ var MG;
             MG.LevelManager.render();
             // ui bits
             var fps = Math.round(1 / this.FRAME_TIME);
-            MG.ctx.fillStyle = 'red';
+            MG.ctx.fillStyle = 'pink';
             MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
             MG.ctx.fillText(MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void', 20, 40);
             var relPosX, relPosY;
@@ -775,7 +1051,7 @@ var MG;
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
             if (MG.LevelManager.camera)
-                MG.LevelManager.camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
+                MG.LevelManager.cameraObject.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
         };
         return Engine;
     }());
@@ -945,10 +1221,11 @@ var MG;
 (function (MG) {
     var PlayerObject = /** @class */ (function (_super) {
         __extends(PlayerObject, _super);
-        function PlayerObject(name) {
+        function PlayerObject(name, texture, width) {
             var _this = _super.call(this, name, undefined, 0) || this;
             _this._movement = MG.Vector2.Zero;
             _this._maxSpeed = 150;
+            _this.addComponent(new MG.SpriteComponent(_this.name + 'SpriteComponent', texture['name'], width));
             return _this;
         }
         Object.defineProperty(PlayerObject.prototype, "currentLevel", {
@@ -961,31 +1238,13 @@ var MG;
             enumerable: false,
             configurable: true
         });
-        PlayerObject.prototype.update = function (deltaTime) {
-            _super.prototype.update.call(this, deltaTime);
-            // TODO // this needs to be seperated into seperate functions, handlers for the keypresses that modify the x and y vels (stored as privs) to be applied rather than running each frame
-            // obviously not production ready movement logic, but good enough for testing
-            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
-            var xDir = (function () {
-                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
-                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
-                return aR - aL;
-            })();
-            var yDir = (function () {
-                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
-                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
-                return aD - aU;
-            })();
-            this._movement.x = xDir * (yDir * yDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
-            this._movement.y = yDir * (xDir * xDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
-            this.consumeMovement();
-        };
         PlayerObject.prototype.consumeMovement = function () {
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
                 //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
-                for (var _i = 0, _a = this._level.rootObject.children; _i < _a.length; _i++) {
-                    var o = _a[_i];
+                var objs = this._level.rootObject.children.concat(this._level.tiles);
+                for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
+                    var o = objs_1[_i];
                     if (o.collisionComponent === undefined)
                         break;
                     // break out if all movement consumed
@@ -1016,14 +1275,15 @@ var MG;
             }
             else {
                 // if we're not contained in one level, check all loaded level's objects
-                for (var _b = 0, _c = MG.LevelManager.loadedLevels; _b < _c.length; _b++) {
-                    var l = _c[_b];
-                    for (var _d = 0, _e = l.rootObject.children; _d < _e.length; _d++) {
-                        var o = _e[_d];
+                for (var _a = 0, _b = MG.LevelManager.loadedLevels; _a < _b.length; _a++) {
+                    var l = _b[_a];
+                    var objs = l.rootObject.children.concat(l.tiles);
+                    for (var _c = 0, objs_2 = objs; _c < objs_2.length; _c++) {
+                        var o = objs_2[_c];
                         if (o.collisionComponent === undefined)
                             break;
                         // break out if all movement consumed
-                        // if (this._movement.x + this._movement.y == 0) break; // this won't work 
+                        // if (this._movement.x + this._movement.y == 0) break; // this won't work // TODO // figure it out so it doesn't check all remaining objects if all movement is nullifiied
                         var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
                         if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
                             switch (result.side) {
@@ -1051,6 +1311,28 @@ var MG;
             // TODO // if applicable, call objects' corresponding on collision/hit functions
             this.position.x += this._movement.x;
             this.position.y += this._movement.y;
+        };
+        PlayerObject.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            // TODO // this needs to be seperated into seperate functions, handlers for the keypresses that modify the x and y vels (stored as privs) to be applied rather than running each frame
+            // obviously not production ready movement logic, but good enough for testing
+            // TODO // eventually add this logic to the player object once i enable custom on update functions for all oObjects (so they can be extended for the game)
+            var xDir = (function () {
+                var aR = MG.InputHandler.getKey(MG.Keys.ARROW_RIGHT).state === MG.State.PRESSED ? 1 : 0;
+                var aL = MG.InputHandler.getKey(MG.Keys.ARROW_LEFT).state === MG.State.PRESSED ? 1 : 0;
+                return aR - aL;
+            })();
+            var yDir = (function () {
+                var aU = MG.InputHandler.getKey(MG.Keys.ARROW_UP).state === MG.State.PRESSED ? 1 : 0;
+                var aD = MG.InputHandler.getKey(MG.Keys.ARROW_DOWN).state === MG.State.PRESSED ? 1 : 0;
+                return aD - aU;
+            })();
+            this._movement.x = xDir * (yDir * yDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
+            this._movement.y = yDir * (xDir * xDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
+            this.consumeMovement();
+        };
+        PlayerObject.prototype.enableCollisionFromSprite = function () {
+            _super.prototype.enableCollisionFromSprite.call(this, this.name + 'SpriteComponent', false);
         };
         return PlayerObject;
     }(MG.oObject));
@@ -1200,9 +1482,9 @@ var MG;
         });
         Sprite.prototype.update = function (deltaTime) {
         };
-        Sprite.prototype.draw = function (transform, camera) {
+        Sprite.prototype.draw = function (transform, camera, bDrawDebugs) {
             // TODO // take in this object's location at some point too, and time
-            this._currentTexture.draw(camera, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
+            this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         };
         return Sprite;
     }());
@@ -1268,7 +1550,7 @@ var MG;
             this._layers.push(layer);
         };
         // TODO // refactor this abomination
-        Texture.prototype.draw = function (camera, _x, _y, rotation, width, height, fit) {
+        Texture.prototype.draw = function (camera, bDrawCentre, _x, _y, rotation, width, height, fit) {
             var _this = this;
             if (rotation === void 0) { rotation = 0; }
             if (fit === void 0) { fit = TextureFit.STRETCH; }
@@ -1357,8 +1639,10 @@ var MG;
                 // 26/10/2021 - 1851: TODO // implment repeat functionality, if needed, otherwise remove option (?)
             }
             // draw object centre for debugging
-            MG.ctx.fillStyle = 'orange';
-            MG.ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+            if (bDrawCentre) {
+                MG.ctx.fillStyle = 'orange';
+                MG.ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+            }
         };
         Texture.load = function (data) {
             var temp = new Texture(data['name'], data['width'], data['height'], new MG.Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']));
@@ -1395,7 +1679,7 @@ var MG;
             if (TextureManager._textures[textureName] === undefined)
                 return undefined;
             TextureManager._textures[textureName].referenceCount++;
-            return this._textures[textureName].texture;
+            return TextureManager._textures[textureName].texture;
         };
         TextureManager.addTexture = function (texture) {
             if (TextureManager._textures[texture.name] === undefined)
@@ -1421,6 +1705,42 @@ var MG;
         return TextureManager;
     }());
     MG.TextureManager = TextureManager;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var TileSpriteManager = /** @class */ (function () {
+        function TileSpriteManager() {
+        }
+        TileSpriteManager.getSprite = function (textureName) {
+            // if (TileSpriteManager._sprites[textureName] === undefined) return undefined;
+            return (TileSpriteManager._sprites[textureName]);
+        };
+        TileSpriteManager.addSprite = function (width, textureName) {
+            if (TileSpriteManager.getSprite(textureName)) {
+                console.warn('The tile-sprite using texture', textureName, 'already exists.');
+                return TileSpriteManager.getSprite(textureName);
+            }
+            var s = new MG.Sprite(width, width, textureName);
+            TileSpriteManager._sprites[textureName] = s;
+            return s;
+        };
+        TileSpriteManager._sprites = {};
+        return TileSpriteManager;
+    }());
+    var Tile = /** @class */ (function (_super) {
+        __extends(Tile, _super);
+        function Tile(textureName, level) {
+            var _this = _super.call(this, level.name + "_TILE_" + textureName, level) || this;
+            _this._width = _this._level.gridSize;
+            var ts = TileSpriteManager.getSprite(textureName);
+            if (ts === undefined)
+                ts = TileSpriteManager.addSprite(_this._width, textureName);
+            _this.addComponent(MG.SpriteComponent.fromSprite(level.name + "_TEXTURECOMPONENT_" + textureName, ts));
+            return _this;
+        }
+        return Tile;
+    }(MG.oObject));
+    MG.Tile = Tile;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -1497,6 +1817,7 @@ var MG;
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
             this._transform = new MG.Transform(); // TODO // this will be relevant later when the engine supports multiple levels/streaming
+            this._tiles = [];
             this._spawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
             this._name = name;
             this._width = width;
@@ -1520,6 +1841,13 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(Level.prototype, "gridSize", {
+            get: function () {
+                return this._gridSize;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Object.defineProperty(Level.prototype, "centre", {
             get: function () {
                 return this._transform.position;
@@ -1534,29 +1862,36 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(Level.prototype, "tiles", {
+            get: function () {
+                return this._tiles;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Level.prototype.generateBorderCollisions = function () {
             var oTemp;
             var borderWidth = 10;
             if (this._bBorderCollisions[0]) {
-                oTemp = new MG.oObject('levelCollisionObject_T', this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_T", this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[1]) {
-                oTemp = new MG.oObject('levelCollisionObject_R', this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_R", this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[2]) {
-                oTemp = new MG.oObject('levelCollisionObject_B', this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_B", this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[3]) {
-                oTemp = new MG.oObject('levelCollisionObject_L', this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_L", this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);
@@ -1565,10 +1900,22 @@ var MG;
         Level.load = function (data) {
             var level = new Level(data['name'], data['width'], data['height'], data['gridSize'], MG.Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
             // tile logic goes here
+            var tTemp;
+            for (var _i = 0, _a = data['tiles']; _i < _a.length; _i++) {
+                var t = _a[_i];
+                tTemp = new MG.Tile(t['obj']['name'], level);
+                tTemp.position.x = t['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
+                tTemp.position.y = t['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
+                tTemp.rotation = t['d'];
+                tTemp.update(0);
+                if (t['collision'] === "wall")
+                    tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true); // in theory this is working????
+                level.tiles.push(tTemp);
+            }
             // spawn/create objects
             var oTemp;
-            for (var _i = 0, _a = data['objects']; _i < _a.length; _i++) {
-                var o = _a[_i];
+            for (var _b = 0, _c = data['objects']; _b < _c.length; _b++) {
+                var o = _c[_b];
                 oTemp = MG.oObject.load(o['obj'], level);
                 oTemp.position.x = o['x'];
                 oTemp.position.y = o['y'];
@@ -1591,11 +1938,17 @@ var MG;
                 return true;
             return false;
         };
-        Level.prototype.render = function () {
+        Level.prototype.render = function (bDrawDebugs) {
+            if (bDrawDebugs === void 0) { bDrawDebugs = false; }
             // render level
-            this._baseTexture.draw(this._transform, MG.LevelManager.camera.cameraComponent.camera);
+            this._baseTexture.draw(this._transform, MG.LevelManager.camera, bDrawDebugs);
+            // render tiles
+            for (var _i = 0, _a = this._tiles; _i < _a.length; _i++) {
+                var t = _a[_i];
+                t.render(MG.LevelManager.camera, bDrawDebugs);
+            }
             // render objects
-            this._rootObject.render(MG.LevelManager.camera.cameraComponent.camera);
+            this._rootObject.render(MG.LevelManager.camera, bDrawDebugs);
         };
         return Level;
     }());
@@ -1619,6 +1972,13 @@ var MG;
                 // this._currentLevel.load();
                 // not sure this is the best place/way to set this, especially if I plan on updating this during game
                 this._gameState.player.currentLevel = this._currentLevel;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(LevelManager, "bDrawDebugs", {
+            set: function (draw) {
+                LevelManager._bDrawDebugs = draw;
             },
             enumerable: false,
             configurable: true
@@ -1654,9 +2014,9 @@ var MG;
             // this._currentLevel.render();
             for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {
                 var l = _a[_i];
-                l.render();
+                l.render(this._bDrawDebugs);
             }
-            this._gameState.player.render(this.camera.cameraComponent.camera);
+            this._gameState.player.render(this.camera, this._bDrawDebugs);
         };
         Object.defineProperty(LevelManager, "player", {
             get: function () {
@@ -1665,10 +2025,17 @@ var MG;
             enumerable: false,
             configurable: true
         });
-        Object.defineProperty(LevelManager, "camera", {
+        Object.defineProperty(LevelManager, "cameraObject", {
             get: function () {
                 // console.log('gamestate:', this._gameState);
                 return this._gameState.camera;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(LevelManager, "camera", {
+            get: function () {
+                return this.cameraObject.cameraComponent.camera;
             },
             enumerable: false,
             configurable: true
@@ -1686,6 +2053,7 @@ var MG;
             LevelManager.currentLevel = l;
         };
         LevelManager._loadedLevels = [];
+        LevelManager._bDrawDebugs = false;
         return LevelManager;
     }());
     MG.LevelManager = LevelManager;

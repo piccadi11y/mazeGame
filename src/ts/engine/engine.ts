@@ -22,10 +22,9 @@ namespace MG {
             LevelManager.initialise(100);
             
             TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
-            let playerObject: PlayerObject = new PlayerObject('player');
-            playerObject.addComponent(new SpriteComponent('testPlayerSprite', Assets.Textures.defaultPlayerTexture['name'], 200))
+            let playerObject: PlayerObject = new PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
+            playerObject.enableCollisionFromSprite();
             playerObject.position = new Vector2(-300, 0);
-            playerObject.enableCollisionFromSprite('testPlayerSprite', false);
 
             let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
@@ -34,6 +33,8 @@ namespace MG {
             LevelManager.loadLevel(Assets.Levels.testLevel2);
             LevelManager.loadLevel(Assets.Levels.testLevel3);
             LevelManager.loadLevel(Assets.Levels.testLevel);
+
+            LevelManager.bDrawDebugs = false;
 
             this.resize();
             this.mainLoop();
@@ -52,7 +53,7 @@ namespace MG {
 
             // ui bits
             let fps = Math.round(1 / this.FRAME_TIME);
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = 'pink';
             ctx.fillText(`${this.FRAME_TIME}s | FPS: ${fps}`, 20, 20);
             ctx.fillText(LevelManager.player.currentLevel?LevelManager.player.currentLevel.name:'the void', 20, 40);
 
@@ -74,7 +75,7 @@ namespace MG {
             this._canvas.width = this._canvas.clientWidth;
             this._canvas.height = this._canvas.clientHeight;
 
-            if (LevelManager.camera) LevelManager.camera.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
+            if (LevelManager.camera) LevelManager.cameraObject.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
         }
     }
 }

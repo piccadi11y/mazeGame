@@ -26,7 +26,7 @@ namespace MG {
 
         }
 
-        public render (transform: Transform, camera: Camera): void {
+        public render (transform: Transform, camera: Camera, bDrawDebugs?: boolean): void {
             
         }
 

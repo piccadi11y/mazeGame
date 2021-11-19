@@ -8,6 +8,8 @@ namespace MG {
 
         private static _gameState: GameState;
 
+        private static _bDrawDebugs: boolean = false;
+
         private constructor() {}
 
         public static initialise (maxObjects: number = 10): void {
@@ -21,6 +23,10 @@ namespace MG {
 
             // not sure this is the best place/way to set this, especially if I plan on updating this during game
             this._gameState.player.currentLevel = this._currentLevel;
+        }
+
+        public static set bDrawDebugs (draw: boolean) {
+            LevelManager._bDrawDebugs = draw;
         }
 
         public static get currentLevel (): Level {
@@ -52,17 +58,21 @@ namespace MG {
 
         public static render (): void {
             // this._currentLevel.render();
-            for (let l of this._loadedLevels) l.render();
-            this._gameState.player.render(this.camera.cameraComponent.camera);
+            for (let l of this._loadedLevels) l.render(this._bDrawDebugs);
+            this._gameState.player.render(this.camera, this._bDrawDebugs);
         }
 
         public static get player (): PlayerObject {
             return this._gameState.player;
         }
 
-        public static get camera (): CameraObject {
+        public static get cameraObject (): CameraObject {
             // console.log('gamestate:', this._gameState);
             return this._gameState.camera;
+        }
+
+        public static get camera (): Camera {
+            return this.cameraObject.cameraComponent.camera;
         }
 
         public static registerObject (o: oObject, id: number = undefined): number {

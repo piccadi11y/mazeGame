@@ -18,7 +18,7 @@ namespace MG {
         public static getTexture (textureName: string): Texture {
             if (TextureManager._textures[textureName] === undefined) return undefined
             TextureManager._textures[textureName].referenceCount++;
-            return this._textures[textureName].texture;
+            return TextureManager._textures[textureName].texture;
         }
 
         public static addTexture (texture: Texture): void {

@@ -55,7 +55,7 @@ namespace MG {
         }
 
         // TODO // refactor this abomination
-        public draw (camera: Camera, _x: number, _y: number, rotation: number = 0, width?: number, height?: number, fit: TextureFit = TextureFit.STRETCH): void {
+        public draw (camera: Camera, bDrawCentre: boolean, _x: number, _y: number, rotation: number = 0, width?: number, height?: number, fit: TextureFit = TextureFit.STRETCH): void {
             let x: number = _x - (width?width:this._width)/2 - camera.view.position.x;
             let y: number = _y - (height?height:this._height)/2 - camera.view.position.y;
 
@@ -149,8 +149,10 @@ namespace MG {
                 // 26/10/2021 - 1851: TODO // implment repeat functionality, if needed, otherwise remove option (?)
             }
             // draw object centre for debugging
-            ctx.fillStyle = 'orange';
-            ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+            if (bDrawCentre) {
+                ctx.fillStyle = 'orange';
+                ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+            }
         }
 
         public static load (data: object): Texture {

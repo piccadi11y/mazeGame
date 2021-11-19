@@ -28,9 +28,9 @@ namespace MG {
 
         }
 
-        public draw (transform: Transform, camera: Camera): void {
+        public draw (transform: Transform, camera: Camera, bDrawDebugs: boolean): void {
             // TODO // take in this object's location at some point too, and time
-            this._currentTexture.draw(camera, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
+            this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         }
     }
 }
