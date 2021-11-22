@@ -55,6 +55,13 @@ namespace MG {
         public get side (): CollisionSide {
             return this._calculatedSide;
         }
+
+        public drawResult (x: number, y: number, colour: string = 'violet'): void {
+            // console.log(this);
+            let output: string = `${this.objectA.name} is colliding with ${this.objectB.name} on side ${CollisionSide[this.side]} with separation of ${this.separation.x}, ${this.separation.y}`;
+            ctx.fillStyle = colour;
+            ctx.fillText(output, x, y);
+        }
     }
 
     export class PointInBoxResult {
@@ -106,9 +113,13 @@ namespace MG {
             let bottomA, bottomB: number;
 
             leftA = this._transform.position.x - this._width/2 + movement.x;
-            rightA = leftA + this._width + movement.y;
-            topA = this._transform.position.y - this._height/2 + movement.x;
-            bottomA = topA + this._height + movement.y;
+            // rightA = leftA + this._width + movement.y; // no way... #2
+            // rightA = leftA + this._width + movement.x; // no way... #3
+            rightA = leftA + this._width;
+            // topA = this._transform.position.y - this._height/2 + movement.x; // no way...
+            topA = this._transform.position.y - this._height/2 + movement.y;
+            // bottomA = topA + this._height + movement.y; // no way... #4
+            bottomA = topA + this._height;
 
             leftB = collisionObject.transform.position.x - collisionObject.width/2;
             rightB = leftB + collisionObject.width;
@@ -149,6 +160,11 @@ namespace MG {
             else sepX = rightB - leftA;
             if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
             else sepY = bottomB - topA;
+            /*if (leftB - rightA < leftB - rightA) sepX = leftB - rightA;
+            else sepX = leftB - rightA;
+            if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
+            else sepY = bottomB - topA;*/
+            console.log(sepX, sepY);
 
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY), collisionObject.collisionType);
         }

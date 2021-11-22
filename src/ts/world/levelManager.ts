@@ -2,6 +2,8 @@ namespace MG {
 
     export class LevelManager {
 
+        public static FRAME: number = 0;
+
         // TODO // expand this to handle management of multiple levels
         private static _currentLevel: Level;
         private static _loadedLevels: Level[] = [];

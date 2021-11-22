@@ -2,6 +2,7 @@ namespace MG {
 
     export class Engine {
 
+
         private _canvas: HTMLCanvasElement;
 
         private FRAME_TIME: number = 0;
@@ -24,7 +25,7 @@ namespace MG {
             TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
             let playerObject: PlayerObject = new PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            playerObject.position = new Vector2(-300, 0);
+            playerObject.position = new Vector2(-300, 400);
 
             let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
@@ -34,7 +35,7 @@ namespace MG {
             LevelManager.loadLevel(Assets.Levels.testLevel3);
             LevelManager.loadLevel(Assets.Levels.testLevel);
 
-            LevelManager.bDrawDebugs = false;
+            LevelManager.bDrawDebugs = true;
 
             this.resize();
             this.mainLoop();
@@ -66,6 +67,7 @@ namespace MG {
 
 
             this.LAST_FRAME = performance.now();
+            LevelManager.FRAME++;
             requestAnimationFrame(()=>this.mainLoop());
         }
 

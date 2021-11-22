@@ -533,6 +533,13 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        BoxCollisionResult.prototype.drawResult = function (x, y, colour) {
+            if (colour === void 0) { colour = 'violet'; }
+            // console.log(this);
+            var output = this.objectA.name + " is colliding with " + this.objectB.name + " on side " + CollisionSide[this.side] + " with separation of " + this.separation.x + ", " + this.separation.y;
+            MG.ctx.fillStyle = colour;
+            MG.ctx.fillText(output, x, y);
+        };
         return BoxCollisionResult;
     }());
     MG.BoxCollisionResult = BoxCollisionResult;
@@ -593,9 +600,13 @@ var MG;
             var topA, topB;
             var bottomA, bottomB;
             leftA = this._transform.position.x - this._width / 2 + movement.x;
-            rightA = leftA + this._width + movement.y;
-            topA = this._transform.position.y - this._height / 2 + movement.x;
-            bottomA = topA + this._height + movement.y;
+            // rightA = leftA + this._width + movement.y; // no way... #2
+            // rightA = leftA + this._width + movement.x; // no way... #3
+            rightA = leftA + this._width;
+            // topA = this._transform.position.y - this._height/2 + movement.x; // no way...
+            topA = this._transform.position.y - this._height / 2 + movement.y;
+            // bottomA = topA + this._height + movement.y; // no way... #4
+            bottomA = topA + this._height;
             leftB = collisionObject.transform.position.x - collisionObject.width / 2;
             rightB = leftB + collisionObject.width;
             topB = collisionObject.transform.position.y - collisionObject.height / 2;
@@ -637,6 +648,11 @@ var MG;
                 sepY = bottomA - topB;
             else
                 sepY = bottomB - topA;
+            /*if (leftB - rightA < leftB - rightA) sepX = leftB - rightA;
+            else sepX = leftB - rightA;
+            if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
+            else sepY = bottomB - topA;*/
+            console.log(sepX, sepY);
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
         };
         CollisionComponent.prototype.checkPointWithin = function (point) {
@@ -1012,14 +1028,14 @@ var MG;
             MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
             var playerObject = new MG.PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            playerObject.position = new MG.Vector2(-300, 0);
+            playerObject.position = new MG.Vector2(-300, 400);
             var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel);
-            MG.LevelManager.bDrawDebugs = false;
+            MG.LevelManager.bDrawDebugs = true;
             this.resize();
             this.mainLoop();
         };
@@ -1043,6 +1059,7 @@ var MG;
             }
             MG.ctx.fillText(relPosX + ", " + relPosY, 20, 60);
             this.LAST_FRAME = performance.now();
+            MG.LevelManager.FRAME++;
             requestAnimationFrame(function () { return _this.mainLoop(); });
         };
         Engine.prototype.resize = function () {
@@ -1239,6 +1256,56 @@ var MG;
             configurable: true
         });
         PlayerObject.prototype.consumeMovement = function () {
+            var _this = this;
+            var handleResult = function (result) {
+                if (result)
+                    result.drawResult(20, 80);
+                if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
+                    /*switch (result.side) {
+                        case CollisionSide.X_NEG:
+                            if (this._movement.x < 0) this._movement.x = 0;
+                            break;
+                        case CollisionSide.X_POS:
+                            if (this._movement.x > 0) this._movement.x = 0;
+                            break;
+                        case CollisionSide.Y_NEG:
+                            if (this._movement.y < 0) this._movement.y = 0;
+                            break;
+                        case CollisionSide.Y_POS:
+                            if (this._movement.y > 0) this._movement.y = 0;
+                            break;
+                    }*/
+                    // replacement of the switch
+                    if (_this._movement.x < 0 && (result.side === MG.CollisionSide.X_NEG)) {
+                        if (result.separation.x > 0)
+                            _this._movement.x += result.separation.x; //+ 1;
+                        // else this._movement.x = 0;
+                        MG.ctx.fillText('X_NEG', 20, 100);
+                    }
+                    else if (_this._movement.x > 0 && (result.side === MG.CollisionSide.X_POS)) {
+                        if (result.separation.x > 0)
+                            _this._movement.x -= result.separation.x; //+ 1;
+                        // else this._movement.x = 0;
+                        MG.ctx.fillText('X_POS', 20, 100);
+                    }
+                    if (_this._movement.y < 0 && (result.side === MG.CollisionSide.Y_NEG)) {
+                        var movYPre = _this._movement.y;
+                        if (result.separation.y > 0)
+                            _this._movement.y += result.separation.y; //+ 1;
+                        // else this._movement.y = 0;
+                        MG.ctx.fillText('Y_NEG', 20, 100);
+                        console.log('- | ' + MG.LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', _this._movement.y, movYPre + result.separation.y);
+                    }
+                    else if (_this._movement.y > 0 && (result.side === MG.CollisionSide.Y_POS)) {
+                        var movYPre = _this._movement.y;
+                        if (result.separation.y > 0)
+                            _this._movement.y -= result.separation.y; //+ 1;
+                        // else this._movement.y = 0;
+                        MG.ctx.fillText('Y_POS', 20, 100);
+                        console.log('+ | ' + MG.LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', _this._movement.y, movYPre - result.separation.y);
+                    }
+                }
+            };
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
                 //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
@@ -1247,33 +1314,13 @@ var MG;
                     var o = objs_1[_i];
                     if (o.collisionComponent === undefined)
                         break;
-                    // break out if all movement consumed
-                    // if (this._movement.x + this._movement.y == 0) break; // this won't work 
-                    var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
-                    if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
-                        switch (result.side) {
-                            case MG.CollisionSide.X_NEG:
-                                if (this._movement.x < 0)
-                                    this._movement.x = 0;
-                                break;
-                            case MG.CollisionSide.X_POS:
-                                if (this._movement.x > 0)
-                                    this._movement.x = 0;
-                                break;
-                            case MG.CollisionSide.Y_NEG:
-                                if (this._movement.y < 0)
-                                    this._movement.y = 0;
-                                break;
-                            case MG.CollisionSide.Y_POS:
-                                if (this._movement.y > 0)
-                                    this._movement.y = 0;
-                                break;
-                        }
-                    }
+                    if (this._movement.x === 0 && this._movement.y === 0)
+                        break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                    handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
                 }
                 //} else {
             }
-            else {
+            else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
                 for (var _a = 0, _b = MG.LevelManager.loadedLevels; _a < _b.length; _a++) {
                     var l = _b[_a];
@@ -1282,29 +1329,9 @@ var MG;
                         var o = objs_2[_c];
                         if (o.collisionComponent === undefined)
                             break;
-                        // break out if all movement consumed
-                        // if (this._movement.x + this._movement.y == 0) break; // this won't work // TODO // figure it out so it doesn't check all remaining objects if all movement is nullifiied
-                        var result = this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y));
-                        if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
-                            switch (result.side) {
-                                case MG.CollisionSide.X_NEG:
-                                    if (this._movement.x < 0)
-                                        this._movement.x = 0;
-                                    break;
-                                case MG.CollisionSide.X_POS:
-                                    if (this._movement.x > 0)
-                                        this._movement.x = 0;
-                                    break;
-                                case MG.CollisionSide.Y_NEG:
-                                    if (this._movement.y < 0)
-                                        this._movement.y = 0;
-                                    break;
-                                case MG.CollisionSide.Y_POS:
-                                    if (this._movement.y > 0)
-                                        this._movement.y = 0;
-                                    break;
-                            }
-                        }
+                        if (this._movement.x === 0 && this._movement.y === 0)
+                            break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                        handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
                     }
                 }
             }
@@ -1330,6 +1357,9 @@ var MG;
             this._movement.x = xDir * (yDir * yDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
             this._movement.y = yDir * (xDir * xDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
             this.consumeMovement();
+            MG.ctx.fillStyle = 'red';
+            MG.ctx.fillText('movement: ' + this._movement.x + ', ' + this._movement.y, 20, 120);
+            MG.ctx.fillText('position: ' + this.position.x + ', ' + this.position.y, 20, 140);
         };
         PlayerObject.prototype.enableCollisionFromSprite = function () {
             _super.prototype.enableCollisionFromSprite.call(this, this.name + 'SpriteComponent', false);
@@ -1871,7 +1901,7 @@ var MG;
         });
         Level.prototype.generateBorderCollisions = function () {
             var oTemp;
-            var borderWidth = 10;
+            var borderWidth = this._gridSize;
             if (this._bBorderCollisions[0]) {
                 oTemp = new MG.oObject(this._name + "_levelCollisionObject_T", this);
                 oTemp.enableCollision(this._width, borderWidth);
@@ -2052,6 +2082,7 @@ var MG;
             LevelManager._loadedLevels.push(l);
             LevelManager.currentLevel = l;
         };
+        LevelManager.FRAME = 0;
         LevelManager._loadedLevels = [];
         LevelManager._bDrawDebugs = false;
         return LevelManager;

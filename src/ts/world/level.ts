@@ -59,7 +59,7 @@ namespace MG {
 
         private generateBorderCollisions (): void {
             let oTemp;
-            let borderWidth: number = 10;
+            let borderWidth: number = this._gridSize;
 
             if (this._bBorderCollisions[0]) {
                 oTemp = new oObject(`${this._name}_levelCollisionObject_T`, this);
