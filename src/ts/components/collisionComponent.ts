@@ -57,7 +57,6 @@ namespace MG {
         }
 
         public drawResult (x: number, y: number, colour: string = 'violet'): void {
-            // console.log(this);
             let output: string = `${this.objectA.name} is colliding with ${this.objectB.name} on side ${CollisionSide[this.side]} with separation of ${this.separation.x}, ${this.separation.y}`;
             ctx.fillStyle = colour;
             ctx.fillText(output, x, y);
@@ -153,18 +152,12 @@ namespace MG {
             }
 
 
-            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
             // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
             let sepX, sepY: number;
             if (rightA - leftB < rightB - leftA) sepX = rightA - leftB;
             else sepX = rightB - leftA;
             if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
             else sepY = bottomB - topA;
-            /*if (leftB - rightA < leftB - rightA) sepX = leftB - rightA;
-            else sepX = leftB - rightA;
-            if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
-            else sepY = bottomB - topA;*/
-            console.log(sepX, sepY);
 
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY), collisionObject.collisionType);
         }

@@ -1,3 +1,7 @@
+namespace Assets.GameOptions {
+    export const bDrawDebugs = false;
+}
+
 namespace Assets.Objects {
     export const testLevelCentre: object = {
         "name":"testLevelCentre",
@@ -263,6 +267,119 @@ namespace Assets.Textures {
         ]
     }
 
+    export const SPAWNPOINT: object = {
+        "name": "SPAWNPOINT",
+        "width": 11,
+        "height": 11,
+        // "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 163,"g": 152,"b": 94},
+                "points": [
+                    {"x": 3, "y": 0},
+                    {"x": 4, "y": 0},
+                    {"x": 5, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 7, "y": 0},
+                    {"x": 2, "y": 1},
+                    {"x": 2, "y": 8},
+                    {"x": 1, "y": 2},
+                    {"x": 1, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 1, "y": 5},
+                    {"x": 5, "y": 1},
+                    {"x": 5, "y": 2},
+                    {"x": 5, "y": 3},
+                    {"x": 5, "y": 4},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 1},
+                    {"x": 3, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 2, "y": 5},
+                    {"x": 3, "y": 5},
+                    {"x": 4, "y": 5},
+                ]
+            }
+        ]
+    }
+
+    // recreate these two once base texture (SPAWNPOINT) is finalised
+
+    export const SPAWNPOINT_CHECKPOINT: object = {
+        "name": "SPAWNPOINT_CHECKPOINT",
+        "width": 11,
+        "height": 11,
+        // "baseColour": {"r": 255,"g": 0,"b": 255},
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 163,"g": 152,"b": 94},
+                "points": [
+                    {"x": 3, "y": 0},
+                    {"x": 4, "y": 0},
+                    {"x": 5, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 7, "y": 0},
+                    {"x": 2, "y": 1},
+                    {"x": 2, "y": 8},
+                    {"x": 1, "y": 2},
+                    {"x": 1, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 1, "y": 5},
+                    {"x": 5, "y": 1},
+                    {"x": 5, "y": 2},
+                    {"x": 5, "y": 3},
+                    {"x": 5, "y": 4},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 1},
+                    {"x": 3, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 2, "y": 5},
+                    {"x": 3, "y": 5},
+                    {"x": 4, "y": 5},
+                ]
+            }
+        ]
+    }
+
+    export const SPAWNPOINT_CHECKPOINT_ACTIVE: object = {
+        "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
+        "width": 11,
+        "height": 11,
+        // "baseColour": {"r": 255,"g": 0,"b": 255},
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 163,"g": 152,"b": 94},
+                "points": [
+                    {"x": 3, "y": 0},
+                    {"x": 4, "y": 0},
+                    {"x": 5, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 7, "y": 0},
+                    {"x": 2, "y": 1},
+                    {"x": 2, "y": 8},
+                    {"x": 1, "y": 2},
+                    {"x": 1, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 1, "y": 5},
+                    {"x": 5, "y": 1},
+                    {"x": 5, "y": 2},
+                    {"x": 5, "y": 3},
+                    {"x": 5, "y": 4},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 1},
+                    {"x": 3, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 2, "y": 5},
+                    {"x": 3, "y": 5},
+                    {"x": 4, "y": 5},
+                ]
+            }
+        ]
+    }
+
     export const loadList: object[] = [
         defaultPlayerTexture,
         testObjectTexture,
@@ -273,7 +390,10 @@ namespace Assets.Textures {
         TILE_WALL_DOUBLE_CORNER,
         TILE_WALL_SINGLE_CORNER_INTERIOR,
         TILE_WALL_SINGLE_CORNER_EXTERIOR,
-        TILE_FLOOR_TEST
+        TILE_FLOOR_TEST,
+        SPAWNPOINT,
+        SPAWNPOINT_CHECKPOINT,
+        SPAWNPOINT_CHECKPOINT_ACTIVE
     ]
 }
 
@@ -287,6 +407,14 @@ namespace Assets.Levels {
         "xPos": 0,
         "yPos": 0,
         "levelCollisions": [true, false, true, true],
+        "spawnPoint": {
+            "name": "tl_spawn",
+            "type": "start",
+            "tex": Assets.Textures.SPAWNPOINT,
+            "texActive": undefined,
+            "x": 5,
+            "y": 5
+        },
         "tiles": [
             {
                 "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
@@ -356,6 +484,14 @@ namespace Assets.Levels {
         "xPos": 1250,
         "yPos": 0,
         "levelCollisions": [true, true, false, false],
+        "spawnPoint": {
+            "name": "tl2_Checkpoint_001",
+            "type": "checkpoint",
+            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "x": 3,
+            "y": 7
+        },
         "tiles": [],
         "objects": [
             {
@@ -379,6 +515,7 @@ namespace Assets.Levels {
         "xPos": 1250,
         "yPos": 1000,
         "levelCollisions": [false, true, true, true],
+        "spawnPoint": undefined,
         "tiles": [],
         "objects": [
             {

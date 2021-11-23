@@ -12,8 +12,6 @@ namespace MG {
             window.onresize = ()=>this.resize();
             document.addEventListener('contentAdded', e => this.resize());      // so when header/footer are loaded in canvas is resized
             this._canvas = Utilities.initialise(canvasID);
-            
-            // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
         }
 
 
@@ -22,10 +20,9 @@ namespace MG {
             InputHandler.initialise();
             LevelManager.initialise(100);
             
-            TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
             let playerObject: PlayerObject = new PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            playerObject.position = new Vector2(-300, 400);
+            // playerObject.position = new Vector2(-300, 400);
 
             let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
@@ -35,7 +32,10 @@ namespace MG {
             LevelManager.loadLevel(Assets.Levels.testLevel3);
             LevelManager.loadLevel(Assets.Levels.testLevel);
 
-            LevelManager.bDrawDebugs = true;
+            LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
+            if (LevelManager.bDrawDebugs) TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
+
+            LevelManager.spawnPlayer();
 
             this.resize();
             this.mainLoop();

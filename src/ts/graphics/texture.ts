@@ -32,11 +32,11 @@ namespace MG {
         private _name: string;
         private _width: number;
         private _height: number;
-        private _baseColour: Colour;
+        private _baseColour: Colour = Colour.white();
         private _layers: Layer[] = [];
 
 
-        public constructor (name: string, width: number, height: number, baseColour: Colour = Colour.white()) {
+        public constructor (name: string, width: number, height: number, baseColour?: Colour) {
             this._name = name;
             this._width = width;
             this._height = height;
@@ -88,7 +88,7 @@ namespace MG {
                 ctx.fill(path);
             }
 
-            drawBaseRect(new Vector2(x, y), width?width:this._width, height?height:this._height, rotation);
+            if (this._baseColour) drawBaseRect(new Vector2(x, y), width?width:this._width, height?height:this._height, rotation);
 
             if (this._layers[0] !== undefined) {
                 let scaleX: number = 1;
@@ -156,7 +156,7 @@ namespace MG {
         }
 
         public static load (data: object): Texture {
-            let temp: Texture = new Texture(data['name'], data['width'], data['height'], new Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']))
+            let temp: Texture = new Texture(data['name'], data['width'], data['height'], data['baseColour']?new Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']):undefined)
             if (data['layers'] !== undefined) {
                 for (let l of data['layers']) {
                     let tempPoints: Vector2[] = [];

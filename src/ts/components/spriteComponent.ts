@@ -4,10 +4,10 @@ namespace MG {
 
         private _sprite: Sprite;
 
-        public constructor (name: string, textureName: string, width: number = 100, height?: number, sprite?: Sprite) {
+        public constructor (name: string, textureNames: string[], width: number = 100, height?: number, sprite?: Sprite) {
             super(name);
             if (sprite) this._sprite = sprite;
-            else this._sprite = new Sprite(width, height!==undefined?height:width, textureName);
+            else this._sprite = new Sprite(width, height!==undefined?height:width, textureNames);
         }
 
         public get dimensions (): Vector2 {

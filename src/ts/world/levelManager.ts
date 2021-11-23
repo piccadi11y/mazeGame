@@ -8,6 +8,9 @@ namespace MG {
         private static _currentLevel: Level;
         private static _loadedLevels: Level[] = [];
 
+        private static _spawnStart: SpawnPoint;
+        private static _spawnCurrent: SpawnPoint;
+
         private static _gameState: GameState;
 
         private static _bDrawDebugs: boolean = false;
@@ -30,6 +33,9 @@ namespace MG {
         public static set bDrawDebugs (draw: boolean) {
             LevelManager._bDrawDebugs = draw;
         }
+        public static get bDrawDebugs (): boolean {
+            return LevelManager._bDrawDebugs;
+        }
 
         public static get currentLevel (): Level {
             return this._currentLevel;
@@ -37,6 +43,19 @@ namespace MG {
 
         public static get loadedLevels (): Level[] {
             return this._loadedLevels;
+        }
+
+        public static registerSpawn (sp: SpawnPoint): void {
+            this._spawnStart = sp;
+            if (!this._spawnCurrent) this._spawnCurrent = sp;
+        }
+
+        public static setCheckpoint (cp: SpawnPoint): void {
+            this._spawnCurrent = cp;
+        }
+
+        public static spawnPlayer (): void {
+            this._gameState.player.position.copyFrom(this._spawnCurrent.position);
         }
 
         public static update (deltaTime: number): void {

@@ -15,6 +15,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Assets;
 (function (Assets) {
+    var GameOptions;
+    (function (GameOptions) {
+        GameOptions.bDrawDebugs = false;
+    })(GameOptions = Assets.GameOptions || (Assets.GameOptions = {}));
+})(Assets || (Assets = {}));
+(function (Assets) {
     var Objects;
     (function (Objects) {
         Objects.testLevelCentre = {
@@ -282,6 +288,115 @@ var Assets;
                 }
             ]
         };
+        Textures.SPAWNPOINT = {
+            "name": "SPAWNPOINT",
+            "width": 11,
+            "height": 11,
+            // "baseColour": {"r": 255,"g": 255,"b": 255},
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 163, "g": 152, "b": 94 },
+                    "points": [
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 7, "y": 0 },
+                        { "x": 2, "y": 1 },
+                        { "x": 2, "y": 8 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 1, "y": 5 },
+                        { "x": 5, "y": 1 },
+                        { "x": 5, "y": 2 },
+                        { "x": 5, "y": 3 },
+                        { "x": 5, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 1 },
+                        { "x": 3, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 2, "y": 5 },
+                        { "x": 3, "y": 5 },
+                        { "x": 4, "y": 5 },
+                    ]
+                }
+            ]
+        };
+        // recreate these two once base texture (SPAWNPOINT) is finalised
+        Textures.SPAWNPOINT_CHECKPOINT = {
+            "name": "SPAWNPOINT_CHECKPOINT",
+            "width": 11,
+            "height": 11,
+            // "baseColour": {"r": 255,"g": 0,"b": 255},
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 163, "g": 152, "b": 94 },
+                    "points": [
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 7, "y": 0 },
+                        { "x": 2, "y": 1 },
+                        { "x": 2, "y": 8 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 1, "y": 5 },
+                        { "x": 5, "y": 1 },
+                        { "x": 5, "y": 2 },
+                        { "x": 5, "y": 3 },
+                        { "x": 5, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 1 },
+                        { "x": 3, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 2, "y": 5 },
+                        { "x": 3, "y": 5 },
+                        { "x": 4, "y": 5 },
+                    ]
+                }
+            ]
+        };
+        Textures.SPAWNPOINT_CHECKPOINT_ACTIVE = {
+            "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
+            "width": 11,
+            "height": 11,
+            // "baseColour": {"r": 255,"g": 0,"b": 255},
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 163, "g": 152, "b": 94 },
+                    "points": [
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 7, "y": 0 },
+                        { "x": 2, "y": 1 },
+                        { "x": 2, "y": 8 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 1, "y": 5 },
+                        { "x": 5, "y": 1 },
+                        { "x": 5, "y": 2 },
+                        { "x": 5, "y": 3 },
+                        { "x": 5, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 1 },
+                        { "x": 3, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 2, "y": 5 },
+                        { "x": 3, "y": 5 },
+                        { "x": 4, "y": 5 },
+                    ]
+                }
+            ]
+        };
         Textures.loadList = [
             Textures.defaultPlayerTexture,
             Textures.testObjectTexture,
@@ -292,7 +407,10 @@ var Assets;
             Textures.TILE_WALL_DOUBLE_CORNER,
             Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
             Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR,
-            Textures.TILE_FLOOR_TEST
+            Textures.TILE_FLOOR_TEST,
+            Textures.SPAWNPOINT,
+            Textures.SPAWNPOINT_CHECKPOINT,
+            Textures.SPAWNPOINT_CHECKPOINT_ACTIVE
         ];
     })(Textures = Assets.Textures || (Assets.Textures = {}));
 })(Assets || (Assets = {}));
@@ -308,6 +426,14 @@ var Assets;
             "xPos": 0,
             "yPos": 0,
             "levelCollisions": [true, false, true, true],
+            "spawnPoint": {
+                "name": "tl_spawn",
+                "type": "start",
+                "tex": Assets.Textures.SPAWNPOINT,
+                "texActive": undefined,
+                "x": 5,
+                "y": 5
+            },
             "tiles": [
                 {
                     "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
@@ -377,6 +503,14 @@ var Assets;
             "xPos": 1250,
             "yPos": 0,
             "levelCollisions": [true, true, false, false],
+            "spawnPoint": {
+                "name": "tl2_Checkpoint_001",
+                "type": "checkpoint",
+                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                "x": 3,
+                "y": 7
+            },
             "tiles": [],
             "objects": [
                 {
@@ -400,6 +534,7 @@ var Assets;
             "xPos": 1250,
             "yPos": 1000,
             "levelCollisions": [false, true, true, true],
+            "spawnPoint": undefined,
             "tiles": [],
             "objects": [
                 {
@@ -535,7 +670,6 @@ var MG;
         });
         BoxCollisionResult.prototype.drawResult = function (x, y, colour) {
             if (colour === void 0) { colour = 'violet'; }
-            // console.log(this);
             var output = this.objectA.name + " is colliding with " + this.objectB.name + " on side " + CollisionSide[this.side] + " with separation of " + this.separation.x + ", " + this.separation.y;
             MG.ctx.fillStyle = colour;
             MG.ctx.fillText(output, x, y);
@@ -637,7 +771,6 @@ var MG;
                 // then it can't be X_NEG
                 side -= CollisionSide.X_NEG;
             }
-            // TODO // add collision component defined buffer (minimum distance between) here too, so that the object doesn't have to think about defining and calculating it itself
             // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
             var sepX, sepY;
             if (rightA - leftB < rightB - leftA)
@@ -648,11 +781,6 @@ var MG;
                 sepY = bottomA - topB;
             else
                 sepY = bottomB - topA;
-            /*if (leftB - rightA < leftB - rightA) sepX = leftB - rightA;
-            else sepX = leftB - rightA;
-            if (bottomA - topB < bottomB - topA) sepY = bottomA - topB;
-            else sepY = bottomB - topA;*/
-            console.log(sepX, sepY);
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
         };
         CollisionComponent.prototype.checkPointWithin = function (point) {
@@ -692,13 +820,13 @@ var MG;
 (function (MG) {
     var SpriteComponent = /** @class */ (function (_super) {
         __extends(SpriteComponent, _super);
-        function SpriteComponent(name, textureName, width, height, sprite) {
+        function SpriteComponent(name, textureNames, width, height, sprite) {
             if (width === void 0) { width = 100; }
             var _this = _super.call(this, name) || this;
             if (sprite)
                 _this._sprite = sprite;
             else
-                _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureName);
+                _this._sprite = new MG.Sprite(width, height !== undefined ? height : width, textureNames);
             return _this;
         }
         Object.defineProperty(SpriteComponent.prototype, "dimensions", {
@@ -921,7 +1049,7 @@ var MG;
                 var cD = _a[_i];
                 switch (cD['type']) {
                     case 'sprite':
-                        obj.addComponent(new MG.SpriteComponent(cD['name'], cD['texture'], cD['width'], cD['height']));
+                        obj.addComponent(new MG.SpriteComponent(cD['name'], [cD['texture']], cD['width'], cD['height']));
                         break;
                     case 'collision':
                         if (cD['spriteName'] !== undefined)
@@ -1019,23 +1147,24 @@ var MG;
             window.onresize = function () { return _this.resize(); };
             document.addEventListener('contentAdded', function (e) { return _this.resize(); }); // so when header/footer are loaded in canvas is resized
             this._canvas = MG.Utilities.initialise(canvasID);
-            // TODO // ensure onload or something the canvas is resized so it doesn't end up looking squished as it does now. needs investigation
         }
         Engine.prototype.Start = function () {
             MG.TextureManager.load();
             MG.InputHandler.initialise();
             MG.LevelManager.initialise(100);
-            MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
             var playerObject = new MG.PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            playerObject.position = new MG.Vector2(-300, 400);
+            // playerObject.position = new Vector2(-300, 400);
             var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel);
-            MG.LevelManager.bDrawDebugs = true;
+            MG.LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
+            if (MG.LevelManager.bDrawDebugs)
+                MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
+            MG.LevelManager.spawnPlayer();
             this.resize();
             this.mainLoop();
         };
@@ -1242,7 +1371,7 @@ var MG;
             var _this = _super.call(this, name, undefined, 0) || this;
             _this._movement = MG.Vector2.Zero;
             _this._maxSpeed = 150;
-            _this.addComponent(new MG.SpriteComponent(_this.name + 'SpriteComponent', texture['name'], width));
+            _this.addComponent(new MG.SpriteComponent(_this.name + 'SpriteComponent', [texture['name']], width));
             return _this;
         }
         Object.defineProperty(PlayerObject.prototype, "currentLevel", {
@@ -1258,51 +1387,22 @@ var MG;
         PlayerObject.prototype.consumeMovement = function () {
             var _this = this;
             var handleResult = function (result) {
-                if (result)
-                    result.drawResult(20, 80);
                 if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
-                    /*switch (result.side) {
-                        case CollisionSide.X_NEG:
-                            if (this._movement.x < 0) this._movement.x = 0;
-                            break;
-                        case CollisionSide.X_POS:
-                            if (this._movement.x > 0) this._movement.x = 0;
-                            break;
-                        case CollisionSide.Y_NEG:
-                            if (this._movement.y < 0) this._movement.y = 0;
-                            break;
-                        case CollisionSide.Y_POS:
-                            if (this._movement.y > 0) this._movement.y = 0;
-                            break;
-                    }*/
-                    // replacement of the switch
                     if (_this._movement.x < 0 && (result.side === MG.CollisionSide.X_NEG)) {
                         if (result.separation.x > 0)
-                            _this._movement.x += result.separation.x; //+ 1;
-                        // else this._movement.x = 0;
-                        MG.ctx.fillText('X_NEG', 20, 100);
+                            _this._movement.x += result.separation.x;
                     }
                     else if (_this._movement.x > 0 && (result.side === MG.CollisionSide.X_POS)) {
                         if (result.separation.x > 0)
-                            _this._movement.x -= result.separation.x; //+ 1;
-                        // else this._movement.x = 0;
-                        MG.ctx.fillText('X_POS', 20, 100);
+                            _this._movement.x -= result.separation.x;
                     }
                     if (_this._movement.y < 0 && (result.side === MG.CollisionSide.Y_NEG)) {
-                        var movYPre = _this._movement.y;
                         if (result.separation.y > 0)
-                            _this._movement.y += result.separation.y; //+ 1;
-                        // else this._movement.y = 0;
-                        MG.ctx.fillText('Y_NEG', 20, 100);
-                        console.log('- | ' + MG.LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', _this._movement.y, movYPre + result.separation.y);
+                            _this._movement.y += result.separation.y;
                     }
                     else if (_this._movement.y > 0 && (result.side === MG.CollisionSide.Y_POS)) {
-                        var movYPre = _this._movement.y;
                         if (result.separation.y > 0)
-                            _this._movement.y -= result.separation.y; //+ 1;
-                        // else this._movement.y = 0;
-                        MG.ctx.fillText('Y_POS', 20, 100);
-                        console.log('+ | ' + MG.LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', _this._movement.y, movYPre - result.separation.y);
+                            _this._movement.y -= result.separation.y;
                     }
                 }
             };
@@ -1318,7 +1418,6 @@ var MG;
                         break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
                     handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
                 }
-                //} else {
             }
             else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
@@ -1357,9 +1456,6 @@ var MG;
             this._movement.x = xDir * (yDir * yDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
             this._movement.y = yDir * (xDir * xDir ? this._maxSpeed * .71 : this._maxSpeed) * deltaTime;
             this.consumeMovement();
-            MG.ctx.fillStyle = 'red';
-            MG.ctx.fillText('movement: ' + this._movement.x + ', ' + this._movement.y, 20, 120);
-            MG.ctx.fillText('position: ' + this.position.x + ', ' + this.position.y, 20, 140);
         };
         PlayerObject.prototype.enableCollisionFromSprite = function () {
             _super.prototype.enableCollisionFromSprite.call(this, this.name + 'SpriteComponent', false);
@@ -1367,6 +1463,33 @@ var MG;
         return PlayerObject;
     }(MG.oObject));
     MG.PlayerObject = PlayerObject;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var SpawnPointType;
+    (function (SpawnPointType) {
+        SpawnPointType["SPAWN"] = "start";
+        SpawnPointType["CHECKPOINT"] = "checkpoint";
+    })(SpawnPointType = MG.SpawnPointType || (MG.SpawnPointType = {}));
+    var SpawnPoint = /** @class */ (function (_super) {
+        __extends(SpawnPoint, _super);
+        function SpawnPoint(name, level, type, textureName, activeTextureName) {
+            if (activeTextureName === void 0) { activeTextureName = undefined; }
+            var _this = _super.call(this, name, level) || this;
+            _this._type = type;
+            _this.addComponent(new MG.SpriteComponent(name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
+            return _this;
+        }
+        Object.defineProperty(SpawnPoint.prototype, "type", {
+            get: function () {
+                return this._type;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return SpawnPoint;
+    }(MG.oObject));
+    MG.SpawnPoint = SpawnPoint;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -1490,10 +1613,17 @@ var MG;
 var MG;
 (function (MG) {
     var Sprite = /** @class */ (function () {
-        function Sprite(width, height, textureName) {
+        function Sprite(width, height, textureNames) {
+            this._textures = [];
             this._width = width;
             this._height = height;
-            this._currentTexture = MG.TextureManager.getTexture(textureName);
+            for (var _i = 0, textureNames_1 = textureNames; _i < textureNames_1.length; _i++) {
+                var tn = textureNames_1[_i];
+                if (tn !== undefined)
+                    this._textures.push(MG.TextureManager.getTexture(tn));
+            }
+            // this._currentTexture = TextureManager.getTexture(textureNames[0]);
+            this._currentTexture = this._textures[0];
             // TODO // add animation/multiple frame support
         }
         Object.defineProperty(Sprite.prototype, "width", {
@@ -1511,9 +1641,9 @@ var MG;
             configurable: true
         });
         Sprite.prototype.update = function (deltaTime) {
+            // for when we need to animate
         };
         Sprite.prototype.draw = function (transform, camera, bDrawDebugs) {
-            // TODO // take in this object's location at some point too, and time
             this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         };
         return Sprite;
@@ -1556,7 +1686,7 @@ var MG;
     }());
     var Texture = /** @class */ (function () {
         function Texture(name, width, height, baseColour) {
-            if (baseColour === void 0) { baseColour = MG.Colour.white(); }
+            this._baseColour = MG.Colour.white();
             this._layers = [];
             this._name = name;
             this._width = width;
@@ -1610,7 +1740,8 @@ var MG;
                 path.closePath();
                 MG.ctx.fill(path);
             };
-            drawBaseRect(new MG.Vector2(x, y), width ? width : this._width, height ? height : this._height, rotation);
+            if (this._baseColour)
+                drawBaseRect(new MG.Vector2(x, y), width ? width : this._width, height ? height : this._height, rotation);
             if (this._layers[0] !== undefined) {
                 var scaleX = 1;
                 var scaleY = 1;
@@ -1675,7 +1806,7 @@ var MG;
             }
         };
         Texture.load = function (data) {
-            var temp = new Texture(data['name'], data['width'], data['height'], new MG.Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']));
+            var temp = new Texture(data['name'], data['width'], data['height'], data['baseColour'] ? new MG.Colour(data['baseColour']['r'], data['baseColour']['g'], data['baseColour']['b']) : undefined);
             if (data['layers'] !== undefined) {
                 for (var _i = 0, _a = data['layers']; _i < _a.length; _i++) {
                     var l = _a[_i];
@@ -1750,7 +1881,7 @@ var MG;
                 console.warn('The tile-sprite using texture', textureName, 'already exists.');
                 return TileSpriteManager.getSprite(textureName);
             }
-            var s = new MG.Sprite(width, width, textureName);
+            var s = new MG.Sprite(width, width, [textureName]);
             TileSpriteManager._sprites[textureName] = s;
             return s;
         };
@@ -1861,7 +1992,7 @@ var MG;
             this._rootObject.position = this._transform.position;
             this.generateBorderCollisions();
             MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
-            this._baseTexture = new MG.Sprite(this._width, this._height, "LEVEL_" + this._name + "_BASE");
+            this._baseTexture = new MG.Sprite(this._width, this._height, ["LEVEL_" + this._name + "_BASE"]);
             this._levelDetectionCollision = new MG.CollisionComponent(this._name + "_levelCollisionComponent", this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
         }
         Object.defineProperty(Level.prototype, "name", {
@@ -1895,6 +2026,13 @@ var MG;
         Object.defineProperty(Level.prototype, "tiles", {
             get: function () {
                 return this._tiles;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Level.prototype, "spawnPoint", {
+            get: function () {
+                return this._spawnPoint;
             },
             enumerable: false,
             configurable: true
@@ -1950,6 +2088,16 @@ var MG;
                 oTemp.position.x = o['x'];
                 oTemp.position.y = o['y'];
                 level.rootObject.addChild(oTemp);
+            }
+            // spawnpoint/checkpoint spawn/registration
+            var sp = data['spawnPoint'];
+            if (sp) {
+                level._spawnPoint = new MG.SpawnPoint(sp['name'], level, sp['type'], sp['tex']['name'], sp['texActive'] ? sp['texActive']['name'] : undefined);
+                if (level.spawnPoint.type == MG.SpawnPointType.SPAWN)
+                    MG.LevelManager.registerSpawn(level.spawnPoint);
+                level._spawnPoint.position.x = sp['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
+                level._spawnPoint.position.y = sp['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
+                level.rootObject.addChild(level._spawnPoint);
             }
             return level;
         };
@@ -2007,6 +2155,9 @@ var MG;
             configurable: true
         });
         Object.defineProperty(LevelManager, "bDrawDebugs", {
+            get: function () {
+                return LevelManager._bDrawDebugs;
+            },
             set: function (draw) {
                 LevelManager._bDrawDebugs = draw;
             },
@@ -2020,6 +2171,17 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        LevelManager.registerSpawn = function (sp) {
+            this._spawnStart = sp;
+            if (!this._spawnCurrent)
+                this._spawnCurrent = sp;
+        };
+        LevelManager.setCheckpoint = function (cp) {
+            this._spawnCurrent = cp;
+        };
+        LevelManager.spawnPlayer = function () {
+            this._gameState.player.position.copyFrom(this._spawnCurrent.position);
+        };
         LevelManager.update = function (deltaTime) {
             // this._currentLevel.update(deltaTime);
             for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {

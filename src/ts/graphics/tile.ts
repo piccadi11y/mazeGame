@@ -13,7 +13,7 @@ namespace MG {
                 console.warn('The tile-sprite using texture', textureName, 'already exists.');
                 return TileSpriteManager.getSprite(textureName);
             }
-            let s: Sprite = new Sprite(width, width, textureName);
+            let s: Sprite = new Sprite(width, width, [textureName]);
             TileSpriteManager._sprites[textureName] = s;
             return s;
         }

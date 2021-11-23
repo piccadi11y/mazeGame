@@ -153,7 +153,7 @@ namespace MG {
             for (let cD of data['components']) {
                 switch (cD['type']) {
                     case 'sprite':
-                        obj.addComponent(new SpriteComponent(cD['name'], cD['texture'], cD['width'], cD['height']));
+                        obj.addComponent(new SpriteComponent(cD['name'], [cD['texture']], cD['width'], cD['height']));
                         break;
                     case 'collision':
                         if (cD['spriteName'] !== undefined) obj.enableCollisionFromSprite(cD['spriteName'], cD['isStatic']);

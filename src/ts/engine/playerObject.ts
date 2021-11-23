@@ -8,7 +8,7 @@ namespace MG {
         public constructor (name: string, texture: object, width: number) {
             super(name, undefined, 0);
 
-            this.addComponent(new SpriteComponent(this.name + 'SpriteComponent', texture['name'], width));
+            this.addComponent(new SpriteComponent(this.name + 'SpriteComponent', [texture['name']], width));
         }
 
         public set currentLevel (level: Level) {
@@ -21,62 +21,31 @@ namespace MG {
 
         private consumeMovement (): void {
             let handleResult = (result: BoxCollisionResult) => {
-                if (result) result.drawResult(20, 80);
                 if (result !== undefined && result.type == CollisionType.BLOCKING) {
-
-                    /*switch (result.side) {
-                        case CollisionSide.X_NEG: 
-                            if (this._movement.x < 0) this._movement.x = 0;
-                            break;
-                        case CollisionSide.X_POS:
-                            if (this._movement.x > 0) this._movement.x = 0;
-                            break;
-                        case CollisionSide.Y_NEG:
-                            if (this._movement.y < 0) this._movement.y = 0;
-                            break;
-                        case CollisionSide.Y_POS:
-                            if (this._movement.y > 0) this._movement.y = 0;
-                            break;
-                    }*/
-                
-                    // replacement of the switch
                     if (this._movement.x < 0 && (result.side === CollisionSide.X_NEG)) {
-                        if (result.separation.x > 0) this._movement.x += result.separation.x //+ 1;
-                        // else this._movement.x = 0;
-                        ctx.fillText('X_NEG', 20, 100);
+                        if (result.separation.x > 0) this._movement.x += result.separation.x;
                     }
                     else if (this._movement.x > 0 && (result.side === CollisionSide.X_POS)) {
-                        if (result.separation.x > 0) this._movement.x -= result.separation.x //+ 1;
-                        // else this._movement.x = 0;
-                        ctx.fillText('X_POS', 20, 100);
+                        if (result.separation.x > 0) this._movement.x -= result.separation.x;
                     }
                     if (this._movement.y < 0 && (result.side === CollisionSide.Y_NEG)) {
-                        let movYPre = this._movement.y;
-                        if (result.separation.y > 0) this._movement.y += result.separation.y //+ 1;
-                        // else this._movement.y = 0;
-                        ctx.fillText('Y_NEG', 20, 100);
-                        console.log('- | ' + LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', this._movement.y, movYPre + result.separation.y);
+                        if (result.separation.y > 0) this._movement.y += result.separation.y;
                     }
                     else if (this._movement.y > 0 && (result.side === CollisionSide.Y_POS)) {
-                        let movYPre = this._movement.y;
-                        if (result.separation.y > 0) this._movement.y -= result.separation.y //+ 1;
-                        // else this._movement.y = 0;
-                        ctx.fillText('Y_POS', 20, 100);
-                        console.log('+ | ' + LevelManager.FRAME + ' | sep.:', result.separation.y, '| movOld.:', movYPre, '| movNew.:', this._movement.y, movYPre - result.separation.y);
+                        if (result.separation.y > 0) this._movement.y -= result.separation.y;
                     }
                 }
             }
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
                 //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
-                    let objs = this._level.rootObject.children.concat(this._level.tiles);
-                    for (let o of objs) {
-                        if (o.collisionComponent === undefined) break;
-                        if (this._movement.x === 0 && this._movement.y === 0) break;        // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    
-                        handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                    }
-                //} else {
+                let objs = this._level.rootObject.children.concat(this._level.tiles);
+                for (let o of objs) {
+                    if (o.collisionComponent === undefined) break;
+                    if (this._movement.x === 0 && this._movement.y === 0) break;        // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                
+                    handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
+                }
             } else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
                 for (let l of LevelManager.loadedLevels) {
@@ -84,7 +53,6 @@ namespace MG {
                     for (let o of objs) {
                         if (o.collisionComponent === undefined) break;
                         if (this._movement.x === 0 && this._movement.y === 0) break;        // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-
                         
                         handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
                     }
@@ -118,10 +86,6 @@ namespace MG {
             this._movement.y = yDir * (xDir*xDir?this._maxSpeed*.71:this._maxSpeed) * deltaTime;
 
             this.consumeMovement();
-
-            ctx.fillStyle = 'red';
-            ctx.fillText('movement: ' + this._movement.x + ', ' + this._movement.y, 20, 120);
-            ctx.fillText('position: ' + this.position.x + ', ' + this.position.y, 20, 140);
             
         }
 

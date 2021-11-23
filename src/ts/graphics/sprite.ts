@@ -4,14 +4,18 @@ namespace MG {
 
         private _width: number;
         private _height: number;
+        private _textures: Texture[] = [];
         private _currentTexture: Texture;
 
 
-        public constructor (width: number, height: number, textureName: string) {
+        public constructor (width: number, height: number, textureNames: string[]) {
             this._width = width;
             this._height = height;
 
-            this._currentTexture = TextureManager.getTexture(textureName);
+            for (let tn of textureNames) if (tn !== undefined) this._textures.push(TextureManager.getTexture(tn))
+
+            // this._currentTexture = TextureManager.getTexture(textureNames[0]);
+            this._currentTexture = this._textures[0];
 
             // TODO // add animation/multiple frame support
         }
@@ -25,11 +29,10 @@ namespace MG {
         }
 
         public update (deltaTime: number): void {
-
+            // for when we need to animate
         }
 
         public draw (transform: Transform, camera: Camera, bDrawDebugs: boolean): void {
-            // TODO // take in this object's location at some point too, and time
             this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         }
     }

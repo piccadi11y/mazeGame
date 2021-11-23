@@ -14,7 +14,7 @@ namespace MG {
         private _tiles: Tile[] = [];
 
         private _rootObject: oObject;
-        private _spawnPoint: oObject = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
+        private _spawnPoint: SpawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
         private _bBorderCollisions: boolean[];
 
         public constructor (name: string, width: number, height: number, gridSize: number, colour: Colour, x: number = 0, y: number = 0, levelCollisions?: boolean[]) {
@@ -31,7 +31,7 @@ namespace MG {
             this._rootObject.position = this._transform.position;
             this.generateBorderCollisions();
             TextureManager.addTexture(new Texture(`LEVEL_${this._name}_BASE`, 1, 1, this._baseColour));
-            this._baseTexture = new Sprite(this._width, this._height, `LEVEL_${this._name}_BASE`);
+            this._baseTexture = new Sprite(this._width, this._height, [`LEVEL_${this._name}_BASE`]);
 
             this._levelDetectionCollision = new CollisionComponent(`${this._name}_levelCollisionComponent`, this._width, this._height, this._transform, CollisionType.NON_BLOCKING);
 
@@ -55,6 +55,10 @@ namespace MG {
 
         public get tiles (): Tile[] {
             return this._tiles;
+        }
+
+        public get spawnPoint (): SpawnPoint {
+            return this._spawnPoint;
         }
 
         private generateBorderCollisions (): void {
@@ -109,6 +113,16 @@ namespace MG {
                 oTemp.position.x = o['x'];
                 oTemp.position.y = o['y'];
                 level.rootObject.addChild(oTemp);
+            }
+
+            // spawnpoint/checkpoint spawn/registration
+            let sp: object = data['spawnPoint']
+            if (sp) {
+                level._spawnPoint = new SpawnPoint(sp['name'], level, sp['type'], sp['tex']['name'], sp['texActive']?sp['texActive']['name']:undefined);
+                if (level.spawnPoint.type == SpawnPointType.SPAWN) LevelManager.registerSpawn(level.spawnPoint);
+                level._spawnPoint.position.x = sp['x'] * level.gridSize - level._width/2 + level.gridSize/2;
+                level._spawnPoint.position.y = sp['y'] * level.gridSize - level._height/2 + level.gridSize/2;
+                level.rootObject.addChild(level._spawnPoint);
             }
 
             return level;
