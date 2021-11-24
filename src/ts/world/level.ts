@@ -61,6 +61,10 @@ namespace MG {
             return this._spawnPoint;
         }
 
+        public set spawnPoint (sp: SpawnPoint) {
+            this._spawnPoint = sp;
+        }
+
         private generateBorderCollisions (): void {
             let oTemp;
             let borderWidth: number = this._gridSize;
@@ -102,6 +106,7 @@ namespace MG {
                 tTemp.position.y = t['y'] * level.gridSize - level._height/2 + level.gridSize/2;
                 tTemp.rotation = t['d'];
                 tTemp.update(0);
+                // TODO // move collision creation to tile constructor
                 if (t['collision'] === "wall") tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true);        // in theory this is working????
                 level.tiles.push(tTemp);
             }
@@ -116,14 +121,17 @@ namespace MG {
             }
 
             // spawnpoint/checkpoint spawn/registration
-            let sp: object = data['spawnPoint']
-            if (sp) {
-                level._spawnPoint = new SpawnPoint(sp['name'], level, sp['type'], sp['tex']['name'], sp['texActive']?sp['texActive']['name']:undefined);
-                if (level.spawnPoint.type == SpawnPointType.SPAWN) LevelManager.registerSpawn(level.spawnPoint);
-                level._spawnPoint.position.x = sp['x'] * level.gridSize - level._width/2 + level.gridSize/2;
-                level._spawnPoint.position.y = sp['y'] * level.gridSize - level._height/2 + level.gridSize/2;
-                level.rootObject.addChild(level._spawnPoint);
+            let spD: object = data['spawnPoint'];
+            if (spD) {
+                let sp: SpawnPoint;
+                sp = SpawnPoint.load(spD, level);
+                if (sp.type == SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
+                level.rootObject.addChild(sp);
+                level.spawnPoint = sp;
+                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;
+                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height/2 + level.gridSize/2;
             }
+            
 
             return level;
         }

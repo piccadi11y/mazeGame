@@ -28,6 +28,15 @@ namespace MG {
             return this._height;
         }
 
+        public set currentTexture (index: number) {
+            let i: number = index >= this._textures.length ? this._textures.length - 1 : index;
+            this._currentTexture = this._textures[i];
+        }
+
+        public get currentTexture (): number {
+            return this._textures.indexOf(this._currentTexture);
+        }
+
         public update (deltaTime: number): void {
             // for when we need to animate
         }

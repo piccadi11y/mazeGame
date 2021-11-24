@@ -79,7 +79,7 @@ var Assets;
             "name": "TILE_WALL_POST",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -116,7 +116,7 @@ var Assets;
             "name": "TILE_WALL_DOUBLE",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -143,7 +143,7 @@ var Assets;
             "name": "TILE_WALL_SINGLE",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -163,7 +163,7 @@ var Assets;
             "name": "TILE_WALL_END",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -195,7 +195,7 @@ var Assets;
             "name": "TILE_WALL_DOUBLE_CORNER",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -222,7 +222,7 @@ var Assets;
             "name": "TILE_WALL_SINGLE_CORNER_INTERIOR",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -236,7 +236,7 @@ var Assets;
             "name": "TILE_WALL_SINGLE_CORNER_EXTERIOR",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 0 },
@@ -262,7 +262,7 @@ var Assets;
             "name": "TILE_FLOOR_TEST",
             "width": 7,
             "height": 7,
-            "baseColour": { "r": 255, "g": 255, "b": 255 },
+            "baseColour": undefined,
             "layers": [
                 {
                     "colour": { "r": 255, "g": 200, "b": 255 },
@@ -292,7 +292,6 @@ var Assets;
             "name": "SPAWNPOINT",
             "width": 11,
             "height": 11,
-            // "baseColour": {"r": 255,"g": 255,"b": 255},
             "baseColour": undefined,
             "layers": [
                 {
@@ -304,22 +303,54 @@ var Assets;
                         { "x": 6, "y": 0 },
                         { "x": 7, "y": 0 },
                         { "x": 2, "y": 1 },
-                        { "x": 2, "y": 8 },
+                        { "x": 8, "y": 1 },
                         { "x": 1, "y": 2 },
-                        { "x": 1, "y": 3 },
-                        { "x": 1, "y": 4 },
-                        { "x": 1, "y": 5 },
-                        { "x": 5, "y": 1 },
+                        { "x": 4, "y": 2 },
                         { "x": 5, "y": 2 },
-                        { "x": 5, "y": 3 },
-                        { "x": 5, "y": 4 },
-                        { "x": 5, "y": 5 },
-                        { "x": 2, "y": 1 },
-                        { "x": 3, "y": 1 },
-                        { "x": 4, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 9, "y": 2 },
+                        { "x": 0, "y": 3 },
+                        { "x": 3, "y": 3 },
+                        { "x": 7, "y": 3 },
+                        { "x": 10, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 2, "y": 4 },
+                        { "x": 8, "y": 4 },
+                        { "x": 10, "y": 4 },
+                        { "x": 0, "y": 5 },
                         { "x": 2, "y": 5 },
-                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 8, "y": 5 },
+                        { "x": 10, "y": 5 },
+                        { "x": 0, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 10, "y": 6 },
+                        { "x": 0, "y": 7 },
+                        { "x": 3, "y": 7 },
+                        { "x": 7, "y": 7 },
+                        { "x": 10, "y": 7 },
+                        { "x": 1, "y": 8 },
+                        { "x": 4, "y": 8 },
+                        { "x": 5, "y": 8 },
+                        { "x": 6, "y": 8 },
+                        { "x": 9, "y": 8 },
+                        { "x": 2, "y": 9 },
+                        { "x": 8, "y": 9 },
+                        { "x": 3, "y": 10 },
+                        { "x": 4, "y": 10 },
+                        { "x": 5, "y": 10 },
+                        { "x": 6, "y": 10 },
+                        { "x": 7, "y": 10 }
+                    ]
+                },
+                {
+                    "colour": { "r": 175, "g": 200, "b": 255 },
+                    "points": [
+                        { "x": 5, "y": 4 },
                         { "x": 4, "y": 5 },
+                        { "x": 6, "y": 5 },
+                        { "x": 5, "y": 6 },
                     ]
                 }
             ]
@@ -329,7 +360,6 @@ var Assets;
             "name": "SPAWNPOINT_CHECKPOINT",
             "width": 11,
             "height": 11,
-            // "baseColour": {"r": 255,"g": 0,"b": 255},
             "baseColour": undefined,
             "layers": [
                 {
@@ -341,22 +371,59 @@ var Assets;
                         { "x": 6, "y": 0 },
                         { "x": 7, "y": 0 },
                         { "x": 2, "y": 1 },
-                        { "x": 2, "y": 8 },
+                        { "x": 8, "y": 1 },
                         { "x": 1, "y": 2 },
-                        { "x": 1, "y": 3 },
-                        { "x": 1, "y": 4 },
-                        { "x": 1, "y": 5 },
-                        { "x": 5, "y": 1 },
+                        { "x": 4, "y": 2 },
                         { "x": 5, "y": 2 },
-                        { "x": 5, "y": 3 },
-                        { "x": 5, "y": 4 },
-                        { "x": 5, "y": 5 },
-                        { "x": 2, "y": 1 },
-                        { "x": 3, "y": 1 },
-                        { "x": 4, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 9, "y": 2 },
+                        { "x": 0, "y": 3 },
+                        { "x": 3, "y": 3 },
+                        { "x": 7, "y": 3 },
+                        { "x": 10, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 2, "y": 4 },
+                        { "x": 8, "y": 4 },
+                        { "x": 10, "y": 4 },
+                        { "x": 0, "y": 5 },
                         { "x": 2, "y": 5 },
-                        { "x": 3, "y": 5 },
-                        { "x": 4, "y": 5 },
+                        { "x": 8, "y": 5 },
+                        { "x": 10, "y": 5 },
+                        { "x": 0, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 10, "y": 6 },
+                        { "x": 0, "y": 7 },
+                        { "x": 3, "y": 7 },
+                        { "x": 7, "y": 7 },
+                        { "x": 10, "y": 7 },
+                        { "x": 1, "y": 8 },
+                        { "x": 4, "y": 8 },
+                        { "x": 5, "y": 8 },
+                        { "x": 6, "y": 8 },
+                        { "x": 9, "y": 8 },
+                        { "x": 2, "y": 9 },
+                        { "x": 8, "y": 9 },
+                        { "x": 3, "y": 10 },
+                        { "x": 4, "y": 10 },
+                        { "x": 5, "y": 10 },
+                        { "x": 6, "y": 10 },
+                        { "x": 7, "y": 10 }
+                    ]
+                },
+                {
+                    "colour": { "r": 255, "g": 0, "b": 0 },
+                    "points": [
+                        { "x": 4, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 6, "y": 6 }
+                    ]
+                },
+                {
+                    "colour": { "r": 143, "g": 255, "b": 143 },
+                    "points": [
+                        { "x": 6, "y": 4 },
+                        { "x": 4, "y": 6 }
                     ]
                 }
             ]
@@ -365,7 +432,6 @@ var Assets;
             "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
             "width": 11,
             "height": 11,
-            // "baseColour": {"r": 255,"g": 0,"b": 255},
             "baseColour": undefined,
             "layers": [
                 {
@@ -377,22 +443,59 @@ var Assets;
                         { "x": 6, "y": 0 },
                         { "x": 7, "y": 0 },
                         { "x": 2, "y": 1 },
-                        { "x": 2, "y": 8 },
+                        { "x": 8, "y": 1 },
                         { "x": 1, "y": 2 },
-                        { "x": 1, "y": 3 },
-                        { "x": 1, "y": 4 },
-                        { "x": 1, "y": 5 },
-                        { "x": 5, "y": 1 },
+                        { "x": 4, "y": 2 },
                         { "x": 5, "y": 2 },
-                        { "x": 5, "y": 3 },
-                        { "x": 5, "y": 4 },
-                        { "x": 5, "y": 5 },
-                        { "x": 2, "y": 1 },
-                        { "x": 3, "y": 1 },
-                        { "x": 4, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 9, "y": 2 },
+                        { "x": 0, "y": 3 },
+                        { "x": 3, "y": 3 },
+                        { "x": 7, "y": 3 },
+                        { "x": 10, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 2, "y": 4 },
+                        { "x": 8, "y": 4 },
+                        { "x": 10, "y": 4 },
+                        { "x": 0, "y": 5 },
                         { "x": 2, "y": 5 },
-                        { "x": 3, "y": 5 },
-                        { "x": 4, "y": 5 },
+                        { "x": 8, "y": 5 },
+                        { "x": 10, "y": 5 },
+                        { "x": 0, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 10, "y": 6 },
+                        { "x": 0, "y": 7 },
+                        { "x": 3, "y": 7 },
+                        { "x": 7, "y": 7 },
+                        { "x": 10, "y": 7 },
+                        { "x": 1, "y": 8 },
+                        { "x": 4, "y": 8 },
+                        { "x": 5, "y": 8 },
+                        { "x": 6, "y": 8 },
+                        { "x": 9, "y": 8 },
+                        { "x": 2, "y": 9 },
+                        { "x": 8, "y": 9 },
+                        { "x": 3, "y": 10 },
+                        { "x": 4, "y": 10 },
+                        { "x": 5, "y": 10 },
+                        { "x": 6, "y": 10 },
+                        { "x": 7, "y": 10 }
+                    ]
+                },
+                {
+                    "colour": { "r": 255, "g": 143, "b": 143 },
+                    "points": [
+                        { "x": 4, "y": 4 },
+                        { "x": 6, "y": 6 }
+                    ]
+                },
+                {
+                    "colour": { "r": 0, "g": 255, "b": 0 },
+                    "points": [
+                        { "x": 6, "y": 4 },
+                        { "x": 5, "y": 5 },
+                        { "x": 4, "y": 6 }
                     ]
                 }
             ]
@@ -509,7 +612,7 @@ var Assets;
                 "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
                 "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
                 "x": 3,
-                "y": 7
+                "y": 18
             },
             "tiles": [],
             "objects": [
@@ -534,7 +637,14 @@ var Assets;
             "xPos": 1250,
             "yPos": 1000,
             "levelCollisions": [false, true, true, true],
-            "spawnPoint": undefined,
+            "spawnPoint": {
+                "name": "tl3_Checkpoint_001",
+                "type": "checkpoint",
+                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                "x": 3,
+                "y": 2
+            },
             "tiles": [],
             "objects": [
                 {
@@ -836,6 +946,16 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(SpriteComponent.prototype, "frame", {
+            get: function () {
+                return this._sprite.currentTexture;
+            },
+            set: function (f) {
+                this._sprite.currentTexture = f;
+            },
+            enumerable: false,
+            configurable: true
+        });
         SpriteComponent.fromSprite = function (name, sprite) {
             return new SpriteComponent(name, undefined, undefined, undefined, sprite);
         };
@@ -995,12 +1115,11 @@ var MG;
                 this._children.splice(index, 1);
             }
         };
-        oObject.prototype.enableCollisionFromSprite = function (spriteName, bIsStatic) {
+        oObject.prototype.enableCollisionFromSprite = function (spriteComponentName, bIsStatic, collisionType) {
             if (bIsStatic === void 0) { bIsStatic = true; }
-            var dimensions = this.getComponent(spriteName).dimensions;
-            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', dimensions.x, dimensions.y, this._worldTransform !== undefined ? this._worldTransform : this._transform, MG.CollisionType.BLOCKING);
-            this._bIsStatic = bIsStatic;
-            this._collisionComponent.setOwner(this);
+            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
+            var dimensions = this.getComponent(spriteComponentName).dimensions;
+            this.enableCollision(dimensions.x, dimensions.y, bIsStatic, collisionType);
         };
         oObject.prototype.enableCollision = function (width, height, bIsStatic, collisionType) {
             if (bIsStatic === void 0) { bIsStatic = true; }
@@ -1015,6 +1134,7 @@ var MG;
             this._collisionComponent = undefined;
             this._bIsStatic = true;
         };
+        oObject.prototype.onCollision = function (collidingObject) { };
         oObject.prototype.getObjectByName = function (name) {
             if (this._name === name)
                 return this;
@@ -1154,7 +1274,6 @@ var MG;
             MG.LevelManager.initialise(100);
             var playerObject = new MG.PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            // playerObject.position = new Vector2(-300, 400);
             var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
@@ -1387,7 +1506,9 @@ var MG;
         PlayerObject.prototype.consumeMovement = function () {
             var _this = this;
             var handleResult = function (result) {
-                if (result !== undefined && result.type == MG.CollisionType.BLOCKING) {
+                if (!result)
+                    return;
+                if ( /*result !== undefined && */result.type === MG.CollisionType.BLOCKING) {
                     if (_this._movement.x < 0 && (result.side === MG.CollisionSide.X_NEG)) {
                         if (result.separation.x > 0)
                             _this._movement.x += result.separation.x;
@@ -1405,34 +1526,38 @@ var MG;
                             _this._movement.y -= result.separation.y;
                     }
                 }
+                else if (result.type === MG.CollisionType.NON_BLOCKING) {
+                    result.objectB.onCollision(result.objectA);
+                }
             };
+            var objs = [];
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
-                //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
-                var objs = this._level.rootObject.children.concat(this._level.tiles);
-                for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
-                    var o = objs_1[_i];
-                    if (o.collisionComponent === undefined)
-                        break;
-                    if (this._movement.x === 0 && this._movement.y === 0)
-                        break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
-                }
+                // let objs = this._level.rootObject.children.concat(this._level.tiles);
+                objs = this._level.rootObject.children.concat(this._level.tiles);
+                /*for (let o of objs) {
+                    if (this._movement.x === 0 && this._movement.y === 0) break;    // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
+                }*/
             }
             else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                for (var _a = 0, _b = MG.LevelManager.loadedLevels; _a < _b.length; _a++) {
-                    var l = _b[_a];
-                    var objs = l.rootObject.children.concat(l.tiles);
-                    for (var _c = 0, objs_2 = objs; _c < objs_2.length; _c++) {
-                        var o = objs_2[_c];
-                        if (o.collisionComponent === undefined)
-                            break;
-                        if (this._movement.x === 0 && this._movement.y === 0)
-                            break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                        handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
-                    }
+                // let objs = []
+                for (var _i = 0, _a = MG.LevelManager.loadedLevels; _i < _a.length; _i++) {
+                    var l = _a[_i];
+                    objs = objs.concat(l.rootObject.children.concat(l.tiles));
                 }
+                /*for (let o of objs) {
+                    if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
+                }*/
+            }
+            for (var _b = 0, objs_1 = objs; _b < objs_1.length; _b++) {
+                var o = objs_1[_b];
+                if (this._movement.x === 0 && this._movement.y === 0)
+                    break; // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                if (o.collisionComponent !== undefined)
+                    handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new MG.Vector2(this._movement.x, this._movement.y)));
             }
             // TODO // if applicable, call objects' corresponding on collision/hit functions
             this.position.x += this._movement.x;
@@ -1476,8 +1601,13 @@ var MG;
         function SpawnPoint(name, level, type, textureName, activeTextureName) {
             if (activeTextureName === void 0) { activeTextureName = undefined; }
             var _this = _super.call(this, name, level) || this;
+            _this._checkpointActive = false;
             _this._type = type;
-            _this.addComponent(new MG.SpriteComponent(name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
+            _this.addComponent(new MG.SpriteComponent(_this.name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
+            // if type==checkpoint, create no blocking collision
+            if (_this._type === SpawnPointType.CHECKPOINT) {
+                _this.enableCollisionFromSprite(_this.name + "_spriteC", true, MG.CollisionType.NON_BLOCKING);
+            }
             return _this;
         }
         Object.defineProperty(SpawnPoint.prototype, "type", {
@@ -1487,6 +1617,27 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        SpawnPoint.load = function (data, level) {
+            return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive'] ? data['texActive']['name'] : undefined);
+        };
+        SpawnPoint.prototype.onCollision = function (collidingObject) {
+            _super.prototype.onCollision.call(this, collidingObject);
+            console.log("ow, " + collidingObject.name + " is running me down");
+            if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
+                MG.LevelManager.setCheckpoint(this);
+        };
+        SpawnPoint.prototype.enable = function () {
+            if (this._type === SpawnPointType.SPAWN)
+                return;
+            this._checkpointActive = true;
+            this.getComponent(this.name + "_spriteC").frame = 1;
+        };
+        SpawnPoint.prototype.disable = function () {
+            if (this._type === SpawnPointType.SPAWN)
+                return;
+            this._checkpointActive = false;
+            this.getComponent(this.name + "_spriteC").frame = 0;
+        };
         return SpawnPoint;
     }(MG.oObject));
     MG.SpawnPoint = SpawnPoint;
@@ -1636,6 +1787,17 @@ var MG;
         Object.defineProperty(Sprite.prototype, "height", {
             get: function () {
                 return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "currentTexture", {
+            get: function () {
+                return this._textures.indexOf(this._currentTexture);
+            },
+            set: function (index) {
+                var i = index >= this._textures.length ? this._textures.length - 1 : index;
+                this._currentTexture = this._textures[i];
             },
             enumerable: false,
             configurable: true
@@ -2034,6 +2196,9 @@ var MG;
             get: function () {
                 return this._spawnPoint;
             },
+            set: function (sp) {
+                this._spawnPoint = sp;
+            },
             enumerable: false,
             configurable: true
         });
@@ -2076,6 +2241,7 @@ var MG;
                 tTemp.position.y = t['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
                 tTemp.rotation = t['d'];
                 tTemp.update(0);
+                // TODO // move collision creation to tile constructor
                 if (t['collision'] === "wall")
                     tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true); // in theory this is working????
                 level.tiles.push(tTemp);
@@ -2090,14 +2256,16 @@ var MG;
                 level.rootObject.addChild(oTemp);
             }
             // spawnpoint/checkpoint spawn/registration
-            var sp = data['spawnPoint'];
-            if (sp) {
-                level._spawnPoint = new MG.SpawnPoint(sp['name'], level, sp['type'], sp['tex']['name'], sp['texActive'] ? sp['texActive']['name'] : undefined);
-                if (level.spawnPoint.type == MG.SpawnPointType.SPAWN)
-                    MG.LevelManager.registerSpawn(level.spawnPoint);
-                level._spawnPoint.position.x = sp['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
-                level._spawnPoint.position.y = sp['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
-                level.rootObject.addChild(level._spawnPoint);
+            var spD = data['spawnPoint'];
+            if (spD) {
+                var sp = void 0;
+                sp = MG.SpawnPoint.load(spD, level);
+                if (sp.type == MG.SpawnPointType.SPAWN)
+                    MG.LevelManager.registerSpawn(sp);
+                level.rootObject.addChild(sp);
+                level.spawnPoint = sp;
+                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
+                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
             }
             return level;
         };
@@ -2177,7 +2345,9 @@ var MG;
                 this._spawnCurrent = sp;
         };
         LevelManager.setCheckpoint = function (cp) {
+            this._spawnCurrent.disable();
             this._spawnCurrent = cp;
+            this._spawnCurrent.enable();
         };
         LevelManager.spawnPlayer = function () {
             this._gameState.player.position.copyFrom(this._spawnCurrent.position);

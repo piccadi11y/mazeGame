@@ -57,7 +57,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_POST",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -94,7 +94,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_DOUBLE",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -121,7 +121,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_SINGLE",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -141,7 +141,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_END",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -173,7 +173,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_DOUBLE_CORNER",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -200,7 +200,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_SINGLE_CORNER_INTERIOR",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -214,7 +214,7 @@ namespace Assets.Textures {
         "name": "TILE_WALL_SINGLE_CORNER_EXTERIOR",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 0},
@@ -240,7 +240,7 @@ namespace Assets.Textures {
         "name": "TILE_FLOOR_TEST",
         "width": 7,
         "height": 7,
-        "baseColour": {"r": 255,"g": 255,"b": 255},
+        "baseColour": undefined,
         "layers": [
             {
                 "colour": {"r": 255,"g": 200,"b": 255},
@@ -271,7 +271,6 @@ namespace Assets.Textures {
         "name": "SPAWNPOINT",
         "width": 11,
         "height": 11,
-        // "baseColour": {"r": 255,"g": 255,"b": 255},
         "baseColour": undefined,
         "layers": [
             {
@@ -283,22 +282,54 @@ namespace Assets.Textures {
                     {"x": 6, "y": 0},
                     {"x": 7, "y": 0},
                     {"x": 2, "y": 1},
-                    {"x": 2, "y": 8},
+                    {"x": 8, "y": 1},
                     {"x": 1, "y": 2},
-                    {"x": 1, "y": 3},
-                    {"x": 1, "y": 4},
-                    {"x": 1, "y": 5},
-                    {"x": 5, "y": 1},
+                    {"x": 4, "y": 2},
                     {"x": 5, "y": 2},
-                    {"x": 5, "y": 3},
-                    {"x": 5, "y": 4},
-                    {"x": 5, "y": 5},
-                    {"x": 2, "y": 1},
-                    {"x": 3, "y": 1},
-                    {"x": 4, "y": 1},
+                    {"x": 6, "y": 2},
+                    {"x": 9, "y": 2},
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 7, "y": 3},
+                    {"x": 10, "y": 3},
+                    {"x": 0, "y": 4},
+                    {"x": 2, "y": 4},
+                    {"x": 8, "y": 4},
+                    {"x": 10, "y": 4},
+                    {"x": 0, "y": 5},
                     {"x": 2, "y": 5},
-                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 8, "y": 5},
+                    {"x": 10, "y": 5},
+                    {"x": 0, "y": 6},
+                    {"x": 2, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 10, "y": 6},
+                    {"x": 0, "y": 7},
+                    {"x": 3, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 10, "y": 7},
+                    {"x": 1, "y": 8},
+                    {"x": 4, "y": 8},
+                    {"x": 5, "y": 8},
+                    {"x": 6, "y": 8},
+                    {"x": 9, "y": 8},
+                    {"x": 2, "y": 9},
+                    {"x": 8, "y": 9},
+                    {"x": 3, "y": 10},
+                    {"x": 4, "y": 10},
+                    {"x": 5, "y": 10},
+                    {"x": 6, "y": 10},
+                    {"x": 7, "y": 10}
+                ]
+            },
+            {
+                "colour": {"r": 175,"g": 200,"b": 255},
+                "points": [
+                    {"x": 5, "y": 4},
                     {"x": 4, "y": 5},
+                    {"x": 6, "y": 5},
+                    {"x": 5, "y": 6},
                 ]
             }
         ]
@@ -310,7 +341,6 @@ namespace Assets.Textures {
         "name": "SPAWNPOINT_CHECKPOINT",
         "width": 11,
         "height": 11,
-        // "baseColour": {"r": 255,"g": 0,"b": 255},
         "baseColour": undefined,
         "layers": [
             {
@@ -322,22 +352,59 @@ namespace Assets.Textures {
                     {"x": 6, "y": 0},
                     {"x": 7, "y": 0},
                     {"x": 2, "y": 1},
-                    {"x": 2, "y": 8},
+                    {"x": 8, "y": 1},
                     {"x": 1, "y": 2},
-                    {"x": 1, "y": 3},
-                    {"x": 1, "y": 4},
-                    {"x": 1, "y": 5},
-                    {"x": 5, "y": 1},
+                    {"x": 4, "y": 2},
                     {"x": 5, "y": 2},
-                    {"x": 5, "y": 3},
-                    {"x": 5, "y": 4},
-                    {"x": 5, "y": 5},
-                    {"x": 2, "y": 1},
-                    {"x": 3, "y": 1},
-                    {"x": 4, "y": 1},
+                    {"x": 6, "y": 2},
+                    {"x": 9, "y": 2},
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 7, "y": 3},
+                    {"x": 10, "y": 3},
+                    {"x": 0, "y": 4},
+                    {"x": 2, "y": 4},
+                    {"x": 8, "y": 4},
+                    {"x": 10, "y": 4},
+                    {"x": 0, "y": 5},
                     {"x": 2, "y": 5},
-                    {"x": 3, "y": 5},
-                    {"x": 4, "y": 5},
+                    {"x": 8, "y": 5},
+                    {"x": 10, "y": 5},
+                    {"x": 0, "y": 6},
+                    {"x": 2, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 10, "y": 6},
+                    {"x": 0, "y": 7},
+                    {"x": 3, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 10, "y": 7},
+                    {"x": 1, "y": 8},
+                    {"x": 4, "y": 8},
+                    {"x": 5, "y": 8},
+                    {"x": 6, "y": 8},
+                    {"x": 9, "y": 8},
+                    {"x": 2, "y": 9},
+                    {"x": 8, "y": 9},
+                    {"x": 3, "y": 10},
+                    {"x": 4, "y": 10},
+                    {"x": 5, "y": 10},
+                    {"x": 6, "y": 10},
+                    {"x": 7, "y": 10}
+                ]
+            },
+            {
+                "colour": {"r": 255,"g": 0,"b": 0},
+                "points": [
+                    {"x": 4, "y": 4},
+                    {"x": 5, "y": 5},
+                    {"x": 6, "y": 6}
+                ]
+            },
+            {
+                "colour": {"r": 143,"g": 255,"b": 143},
+                "points": [
+                    {"x": 6, "y": 4},
+                    {"x": 4, "y": 6}
                 ]
             }
         ]
@@ -347,7 +414,6 @@ namespace Assets.Textures {
         "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
         "width": 11,
         "height": 11,
-        // "baseColour": {"r": 255,"g": 0,"b": 255},
         "baseColour": undefined,
         "layers": [
             {
@@ -359,22 +425,59 @@ namespace Assets.Textures {
                     {"x": 6, "y": 0},
                     {"x": 7, "y": 0},
                     {"x": 2, "y": 1},
-                    {"x": 2, "y": 8},
+                    {"x": 8, "y": 1},
                     {"x": 1, "y": 2},
-                    {"x": 1, "y": 3},
-                    {"x": 1, "y": 4},
-                    {"x": 1, "y": 5},
-                    {"x": 5, "y": 1},
+                    {"x": 4, "y": 2},
                     {"x": 5, "y": 2},
-                    {"x": 5, "y": 3},
-                    {"x": 5, "y": 4},
-                    {"x": 5, "y": 5},
-                    {"x": 2, "y": 1},
-                    {"x": 3, "y": 1},
-                    {"x": 4, "y": 1},
+                    {"x": 6, "y": 2},
+                    {"x": 9, "y": 2},
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 7, "y": 3},
+                    {"x": 10, "y": 3},
+                    {"x": 0, "y": 4},
+                    {"x": 2, "y": 4},
+                    {"x": 8, "y": 4},
+                    {"x": 10, "y": 4},
+                    {"x": 0, "y": 5},
                     {"x": 2, "y": 5},
-                    {"x": 3, "y": 5},
-                    {"x": 4, "y": 5},
+                    {"x": 8, "y": 5},
+                    {"x": 10, "y": 5},
+                    {"x": 0, "y": 6},
+                    {"x": 2, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 10, "y": 6},
+                    {"x": 0, "y": 7},
+                    {"x": 3, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 10, "y": 7},
+                    {"x": 1, "y": 8},
+                    {"x": 4, "y": 8},
+                    {"x": 5, "y": 8},
+                    {"x": 6, "y": 8},
+                    {"x": 9, "y": 8},
+                    {"x": 2, "y": 9},
+                    {"x": 8, "y": 9},
+                    {"x": 3, "y": 10},
+                    {"x": 4, "y": 10},
+                    {"x": 5, "y": 10},
+                    {"x": 6, "y": 10},
+                    {"x": 7, "y": 10}
+                ]
+            },
+            {
+                "colour": {"r": 255,"g": 143,"b": 143},
+                "points": [
+                    {"x": 4, "y": 4},
+                    {"x": 6, "y": 6}
+                ]
+            },
+            {
+                "colour": {"r": 0,"g": 255,"b": 0},
+                "points": [
+                    {"x": 6, "y": 4},
+                    {"x": 5, "y": 5},
+                    {"x": 4, "y": 6}
                 ]
             }
         ]
@@ -490,7 +593,7 @@ namespace Assets.Levels {
             "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
             "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
             "x": 3,
-            "y": 7
+            "y": 18
         },
         "tiles": [],
         "objects": [
@@ -515,7 +618,14 @@ namespace Assets.Levels {
         "xPos": 1250,
         "yPos": 1000,
         "levelCollisions": [false, true, true, true],
-        "spawnPoint": undefined,
+        "spawnPoint": {
+            "name": "tl3_Checkpoint_001",
+            "type": "checkpoint",
+            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "x": 3,
+            "y": 2
+        },
         "tiles": [],
         "objects": [
             {

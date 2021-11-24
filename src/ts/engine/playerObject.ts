@@ -21,7 +21,9 @@ namespace MG {
 
         private consumeMovement (): void {
             let handleResult = (result: BoxCollisionResult) => {
-                if (result !== undefined && result.type == CollisionType.BLOCKING) {
+                if (!result) return;
+
+                if (/*result !== undefined && */result.type === CollisionType.BLOCKING) {
                     if (this._movement.x < 0 && (result.side === CollisionSide.X_NEG)) {
                         if (result.separation.x > 0) this._movement.x += result.separation.x;
                     }
@@ -34,29 +36,32 @@ namespace MG {
                     else if (this._movement.y > 0 && (result.side === CollisionSide.Y_POS)) {
                         if (result.separation.y > 0) this._movement.y -= result.separation.y;
                     }
+                } else if (result.type === CollisionType.NON_BLOCKING) {
+                    result.objectB.onCollision(result.objectA);
                 }
             }
+            let objs = []
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
-                //if (this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
-                let objs = this._level.rootObject.children.concat(this._level.tiles);
-                for (let o of objs) {
-                    if (o.collisionComponent === undefined) break;
-                    if (this._movement.x === 0 && this._movement.y === 0) break;        // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                
-                    handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                }
+                // let objs = this._level.rootObject.children.concat(this._level.tiles);
+                objs = this._level.rootObject.children.concat(this._level.tiles);
+                /*for (let o of objs) {
+                    if (this._movement.x === 0 && this._movement.y === 0) break;    // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
+                }*/
             } else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                for (let l of LevelManager.loadedLevels) {
-                    let objs = l.rootObject.children.concat(l.tiles);
-                    for (let o of objs) {
-                        if (o.collisionComponent === undefined) break;
-                        if (this._movement.x === 0 && this._movement.y === 0) break;        // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                        
-                        handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                    }
-                }
+                // let objs = []
+                for (let l of LevelManager.loadedLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
+                /*for (let o of objs) {
+                    if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
+                }*/
+                
+            }
+            for (let o of objs) {
+                if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
+                if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
             }
             // TODO // if applicable, call objects' corresponding on collision/hit functions
         

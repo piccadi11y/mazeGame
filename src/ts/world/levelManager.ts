@@ -51,7 +51,9 @@ namespace MG {
         }
 
         public static setCheckpoint (cp: SpawnPoint): void {
+            this._spawnCurrent.disable();
             this._spawnCurrent = cp;
+            this._spawnCurrent.enable();
         }
 
         public static spawnPlayer (): void {

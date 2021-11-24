@@ -14,6 +14,14 @@ namespace MG {
             return new Vector2(this._sprite.width, this._sprite.height);
         }
 
+        public get frame (): number {
+            return this._sprite.currentTexture;
+        }
+
+        public set frame (f: number) {
+            this._sprite.currentTexture = f;
+        }
+
         public static fromSprite (name: string, sprite: Sprite): SpriteComponent {
             return new SpriteComponent(name, undefined, undefined, undefined, sprite);
         }

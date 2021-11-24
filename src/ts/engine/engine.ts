@@ -22,7 +22,6 @@ namespace MG {
             
             let playerObject: PlayerObject = new PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
             playerObject.enableCollisionFromSprite();
-            // playerObject.position = new Vector2(-300, 400);
 
             let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
             camera.cameraComponent.setTarget(playerObject);

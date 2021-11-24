@@ -100,11 +100,9 @@ namespace MG {
             }
         }
 
-        public enableCollisionFromSprite (spriteName: string, bIsStatic: boolean = true): void {
-            let dimensions: Vector2 = (this.getComponent(spriteName) as SpriteComponent).dimensions;
-            this._collisionComponent = new CollisionComponent(this._name + 'CollisionComponent', dimensions.x, dimensions.y, this._worldTransform!==undefined?this._worldTransform:this._transform, CollisionType.BLOCKING);
-            this._bIsStatic = bIsStatic;
-            this._collisionComponent.setOwner(this);
+        public enableCollisionFromSprite (spriteComponentName: string, bIsStatic: boolean = true, collisionType: CollisionType = CollisionType.BLOCKING): void {
+            let dimensions: Vector2 = (this.getComponent(spriteComponentName) as SpriteComponent).dimensions;
+            this.enableCollision(dimensions.x, dimensions.y, bIsStatic, collisionType);
         }
 
         public enableCollision (width: number, height: number, bIsStatic: boolean = true, collisionType: CollisionType = CollisionType.BLOCKING): void {
@@ -119,6 +117,8 @@ namespace MG {
             this._collisionComponent = undefined;
             this._bIsStatic = true;
         }
+
+        public onCollision (collidingObject: oObject): void {}
 
         public getObjectByName (name: string): oObject {
             if (this._name === name) return this;
