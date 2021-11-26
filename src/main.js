@@ -48,22 +48,39 @@ var Assets;
     (function (Textures) {
         Textures.defaultPlayerTexture = {
             "name": "defaultPlayerTexture",
-            "width": 10,
-            "height": 10,
-            "baseColour": { "r": 0, "g": 0, "b": 255 },
+            "width": 9,
+            "height": 9,
+            // "baseColour": {"r": 170,"g": 51,"b": 164},
+            "baseColour": undefined,
             "layers": [
                 {
-                    "colour": { "r": 255, "g": 0, "b": 0 },
+                    "colour": { "r": 227, "g": 16, "b": 149 },
                     "points": [
-                        { "x": 9, "y": 9 },
-                        { "x": 3, "y": 5 }
-                    ]
-                },
-                {
-                    "colour": { "r": 255, "g": 255, "b": 255 },
-                    "points": [
+                        { "x": 2, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 0, "y": 2 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 8, "y": 2 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
                         { "x": 4, "y": 4 },
-                        { "x": 6, "y": 9 }
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 0, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 },
+                        { "x": 2, "y": 8 },
+                        { "x": 6, "y": 8 }
                     ]
                 }
             ]
@@ -420,7 +437,7 @@ var Assets;
                     ]
                 },
                 {
-                    "colour": { "r": 143, "g": 255, "b": 143 },
+                    "colour": { "r": 0, "g": 100, "b": 0 },
                     "points": [
                         { "x": 6, "y": 4 },
                         { "x": 4, "y": 6 }
@@ -484,7 +501,7 @@ var Assets;
                     ]
                 },
                 {
-                    "colour": { "r": 255, "g": 143, "b": 143 },
+                    "colour": { "r": 100, "g": 0, "b": 0 },
                     "points": [
                         { "x": 4, "y": 4 },
                         { "x": 6, "y": 6 }
@@ -1237,7 +1254,9 @@ var MG;
     var CameraObject = /** @class */ (function (_super) {
         __extends(CameraObject, _super);
         function CameraObject(name, width, height) {
-            var _this = _super.call(this, name, undefined, 1) || this;
+            var _this = 
+            // TODO // doens't allow for multiple cameras, not important for now/this project
+            _super.call(this, name, undefined, 1) || this;
             _this._cameraComponent = new MG.CameraComponent(name + '_cameraComponent', width, height);
             _this._cameraComponent.setOwner(_this);
             return _this;
@@ -1272,10 +1291,11 @@ var MG;
             MG.TextureManager.load();
             MG.InputHandler.initialise();
             MG.LevelManager.initialise(100);
-            var playerObject = new MG.PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
-            playerObject.enableCollisionFromSprite();
-            var camera = new MG.CameraObject('playerCamera', this._canvas.width, this._canvas.height);
-            camera.cameraComponent.setTarget(playerObject);
+            var player = new MG.Player('player', Assets.Textures.defaultPlayerTexture, 50);
+            player.enableCollisionFromSprite();
+            /*let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
+            camera.cameraComponent.setTarget(player);*/
+            player.createPlayerCamera(this._canvas.width, this._canvas.height);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
@@ -1533,24 +1553,14 @@ var MG;
             var objs = [];
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
-                // let objs = this._level.rootObject.children.concat(this._level.tiles);
                 objs = this._level.rootObject.children.concat(this._level.tiles);
-                /*for (let o of objs) {
-                    if (this._movement.x === 0 && this._movement.y === 0) break;    // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                }*/
             }
             else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                // let objs = []
                 for (var _i = 0, _a = MG.LevelManager.loadedLevels; _i < _a.length; _i++) {
                     var l = _a[_i];
                     objs = objs.concat(l.rootObject.children.concat(l.tiles));
                 }
-                /*for (let o of objs) {
-                    if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                }*/
             }
             for (var _b = 0, objs_1 = objs; _b < objs_1.length; _b++) {
                 var o = objs_1[_b];
@@ -1591,6 +1601,48 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var Utilities = /** @class */ (function () {
+        function Utilities() {
+        }
+        Utilities.initialise = function (id) {
+            var canvas;
+            if (id !== undefined) {
+                canvas = document.getElementById(id);
+                if (canvas === undefined)
+                    throw new Error('Cannot find a canvas element named' + id);
+            }
+            else {
+                canvas = document.createElement('canvas');
+                document.body.appendChild(canvas);
+            }
+            MG.ctx = canvas.getContext('2d');
+            if (MG.ctx === undefined)
+                throw new Error('Unable to initialise');
+            return canvas;
+        };
+        return Utilities;
+    }());
+    MG.Utilities = Utilities;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var Player = /** @class */ (function (_super) {
+        __extends(Player, _super);
+        function Player(name, texture, width) {
+            var _this = _super.call(this, name, texture, width) || this;
+            _this._health = 10;
+            return _this;
+        }
+        Player.prototype.createPlayerCamera = function (vpWidth, vpHeight) {
+            var c = new MG.CameraObject(this.name + "Camera", vpWidth, vpHeight);
+            c.cameraComponent.setTarget(this);
+        };
+        return Player;
+    }(MG.PlayerObject));
+    MG.Player = Player;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var SpawnPointType;
     (function (SpawnPointType) {
         SpawnPointType["SPAWN"] = "start";
@@ -1622,7 +1674,6 @@ var MG;
         };
         SpawnPoint.prototype.onCollision = function (collidingObject) {
             _super.prototype.onCollision.call(this, collidingObject);
-            console.log("ow, " + collidingObject.name + " is running me down");
             if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
                 MG.LevelManager.setCheckpoint(this);
         };
@@ -1641,31 +1692,6 @@ var MG;
         return SpawnPoint;
     }(MG.oObject));
     MG.SpawnPoint = SpawnPoint;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var Utilities = /** @class */ (function () {
-        function Utilities() {
-        }
-        Utilities.initialise = function (id) {
-            var canvas;
-            if (id !== undefined) {
-                canvas = document.getElementById(id);
-                if (canvas === undefined)
-                    throw new Error('Cannot find a canvas element named' + id);
-            }
-            else {
-                canvas = document.createElement('canvas');
-                document.body.appendChild(canvas);
-            }
-            MG.ctx = canvas.getContext('2d');
-            if (MG.ctx === undefined)
-                throw new Error('Unable to initialise');
-            return canvas;
-        };
-        return Utilities;
-    }());
-    MG.Utilities = Utilities;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -2266,6 +2292,7 @@ var MG;
                 level.spawnPoint = sp;
                 level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
                 level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
+                level.spawnPoint.update(0);
             }
             return level;
         };
@@ -2350,7 +2377,7 @@ var MG;
             this._spawnCurrent.enable();
         };
         LevelManager.spawnPlayer = function () {
-            this._gameState.player.position.copyFrom(this._spawnCurrent.position);
+            this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
         };
         LevelManager.update = function (deltaTime) {
             // this._currentLevel.update(deltaTime);

@@ -130,6 +130,7 @@ namespace MG {
                 level.spawnPoint = sp;
                 level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;
                 level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height/2 + level.gridSize/2;
+                level.spawnPoint.update(0);
             }
             
 

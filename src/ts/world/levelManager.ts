@@ -57,7 +57,7 @@ namespace MG {
         }
 
         public static spawnPlayer (): void {
-            this._gameState.player.position.copyFrom(this._spawnCurrent.position);
+            this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
         }
 
         public static update (deltaTime: number): void {

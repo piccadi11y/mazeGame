@@ -20,11 +20,10 @@ namespace MG {
             InputHandler.initialise();
             LevelManager.initialise(100);
             
-            let playerObject: PlayerObject = new PlayerObject('player', Assets.Textures.defaultPlayerTexture, 50);
-            playerObject.enableCollisionFromSprite();
 
-            let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
-            camera.cameraComponent.setTarget(playerObject);
+            let player: Player = new Player('player', Assets.Textures.defaultPlayerTexture, 50);
+            player.enableCollisionFromSprite();
+            player.createPlayerCamera(this._canvas.width, this._canvas.height);
 
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             LevelManager.loadLevel(Assets.Levels.testLevel2);
@@ -35,6 +34,7 @@ namespace MG {
             if (LevelManager.bDrawDebugs) TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
 
             LevelManager.spawnPlayer();
+
 
             this.resize();
             this.mainLoop();

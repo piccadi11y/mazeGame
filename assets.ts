@@ -26,22 +26,39 @@ namespace Assets.Objects {
 namespace Assets.Textures {
     export const defaultPlayerTexture: object = {
         "name": "defaultPlayerTexture",
-        "width": 10,
-        "height": 10,
-        "baseColour": {"r": 0,"g": 0,"b": 255},
+        "width": 9,
+        "height": 9,
+        // "baseColour": {"r": 170,"g": 51,"b": 164},
+        "baseColour": undefined,
         "layers": [
             {
-                "colour": {"r": 255,"g": 0,"b": 0},
+                "colour": {"r": 227,"g": 16,"b": 149},
                 "points": [
-                    {"x": 9, "y": 9},
-                    {"x": 3, "y": 5}
-                ]
-            },
-            {
-                "colour": {"r": 255,"g": 255,"b": 255},
-                "points": [
+                    {"x": 2, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 0, "y": 2},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 8, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
                     {"x": 4, "y": 4},
-                    {"x": 6, "y": 9}
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 0, "y": 6},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 2, "y": 8},
+                    {"x": 6, "y": 8}
                 ]
             }
         ]
@@ -401,7 +418,7 @@ namespace Assets.Textures {
                 ]
             },
             {
-                "colour": {"r": 143,"g": 255,"b": 143},
+                "colour": {"r": 0,"g": 100,"b": 0},
                 "points": [
                     {"x": 6, "y": 4},
                     {"x": 4, "y": 6}
@@ -466,7 +483,7 @@ namespace Assets.Textures {
                 ]
             },
             {
-                "colour": {"r": 255,"g": 143,"b": 143},
+                "colour": {"r": 100,"g": 0,"b": 0},
                 "points": [
                     {"x": 4, "y": 4},
                     {"x": 6, "y": 6}

@@ -7,6 +7,7 @@ namespace MG {
         private _cameraComponent: CameraComponent;
 
         public constructor (name: string, width: number, height: number) {
+            // TODO // doens't allow for multiple cameras, not important for now/this project
             super(name, undefined, 1);
 
             this._cameraComponent = new CameraComponent(name + '_cameraComponent', width, height);

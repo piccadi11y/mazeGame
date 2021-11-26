@@ -32,7 +32,6 @@ namespace MG {
 
         public onCollision (collidingObject: oObject): void {
             super.onCollision(collidingObject);
-            console.log(`ow, ${collidingObject.name} is running me down`);
 
             if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false) LevelManager.setCheckpoint(this);
         }

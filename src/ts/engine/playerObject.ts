@@ -43,21 +43,10 @@ namespace MG {
             let objs = []
             if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0) && this._level && this._collisionComponent.checkBoxContained(this._level.collisionShape)) {
                 // if we're in a level only check for the level's objects
-                // let objs = this._level.rootObject.children.concat(this._level.tiles);
                 objs = this._level.rootObject.children.concat(this._level.tiles);
-                /*for (let o of objs) {
-                    if (this._movement.x === 0 && this._movement.y === 0) break;    // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                }*/
             } else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                // let objs = []
                 for (let l of LevelManager.loadedLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
-                /*for (let o of objs) {
-                    if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
-                    if (o.collisionComponent !== undefined) handleResult(this._collisionComponent.checkColliding(o.collisionComponent, new Vector2(this._movement.x, this._movement.y)));
-                }*/
-                
             }
             for (let o of objs) {
                 if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
