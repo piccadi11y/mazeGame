@@ -92,6 +92,7 @@ namespace MG {
             for (let tn of textureNames) if (tn !== undefined) this._textures.push(TextureManager.getTexture(tn))
 
             this._currentTexture = this._textures[0];
+            this._animSettings = new SpriteAnimationSettings(this._textures.length);
         }
 
         public get width (): number {

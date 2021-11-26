@@ -2311,6 +2311,7 @@ var MG;
                     this._textures.push(MG.TextureManager.getTexture(tn));
             }
             this._currentTexture = this._textures[0];
+            this._animSettings = new SpriteAnimationSettings(this._textures.length);
         }
         Object.defineProperty(Sprite.prototype, "width", {
             get: function () {
