@@ -4,8 +4,8 @@ namespace MG {
 
         private _health: number = 10;
 
-        public constructor (name: string, texture: object, width: number) {
-            super(name, texture, width);
+        public constructor (name: string, textures: object[], width: number) {
+            super(name, textures, width);
         }
 
         public createPlayerCamera (vpWidth: number, vpHeight: number): void {

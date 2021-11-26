@@ -63,6 +63,384 @@ namespace Assets.Textures {
             }
         ]
     }
+    export const playerFrame0: object = {
+        "name": "playerFrame0",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 4, "y": 1}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 8, "y": 0},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 0, "y": 8},
+                    {"x": 8, "y": 8},
+                ]
+            }
+        ]
+    }
+    export const playerFrame1: object = {
+        "name": "playerFrame1",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 0, "y": 2},
+                    {"x": 2, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 6, "y": 2}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 2, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 0, "y": 2},
+                    {"x": 8, "y": 2},
+                    {"x": 0, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 2, "y": 8},
+                    {"x": 6, "y": 8}
+                ]
+            }
+        ]
+    }
+    export const playerFrame2: object = {
+        "name": "playerFrame2",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 7, "y": 4}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 8, "y": 0},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 0, "y": 8},
+                    {"x": 8, "y": 8},
+                ]
+            }
+        ]
+    }
+    export const playerFrame3: object = {
+        "name": "playerFrame3",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 6},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 6, "y": 6}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 2, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 0, "y": 2},
+                    {"x": 8, "y": 2},
+                    {"x": 0, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 2, "y": 8},
+                    {"x": 6, "y": 8}
+                ]
+            }
+        ]
+    }
+    export const playerFrame4: object = {
+        "name": "playerFrame4",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 1, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 4, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 8, "y": 0},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 0, "y": 8},
+                    {"x": 8, "y": 8},
+                ]
+            }
+        ]
+    }
+    export const playerFrame5: object = {
+        "name": "playerFrame5",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 6, "y": 6},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 2, "y": 6}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 2, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 0, "y": 2},
+                    {"x": 8, "y": 2},
+                    {"x": 0, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 2, "y": 8},
+                    {"x": 6, "y": 8}
+                ]
+            }
+        ]
+    }
+    export const playerFrame6: object = {
+        "name": "playerFrame6",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 1, "y": 4}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 8, "y": 0},
+                    {"x": 2, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 0, "y": 8},
+                    {"x": 8, "y": 8},
+                ]
+            }
+        ]
+    }
+    export const playerFrame7: object = {
+        "name": "playerFrame7",
+        "frame": 0,
+        "width": 9,
+        "height": 9,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 227,"g": 16,"b": 149},
+                "points": [
+                    {"x": 1, "y": 1},
+                    {"x": 4, "y": 1},
+                    {"x": 7, "y": 1},
+                    {"x": 6, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 5, "y": 3},
+                    {"x": 1, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 7, "y": 4},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 2, "y": 6},
+                    {"x": 6, "y": 6},
+                    {"x": 1, "y": 7},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7}
+                ]
+            },
+            {
+                "colour": {"r": 72,"g": 137,"b": 227},
+                "points": [
+                    {"x": 2, "y": 2}
+                ]
+            },
+            {
+                "colour": {"r": 85,"g": 98,"b": 113},
+                "points": [
+                    {"x": 2, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 0, "y": 2},
+                    {"x": 8, "y": 2},
+                    {"x": 0, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 2, "y": 8},
+                    {"x": 6, "y": 8}
+                ]
+            }
+        ]
+    }
+
     export const testObjectTexture: object = {
         "name": "testObjectTexture",
         "width": 1,
@@ -502,6 +880,14 @@ namespace Assets.Textures {
 
     export const loadList: object[] = [
         defaultPlayerTexture,
+        playerFrame0,
+        playerFrame1,
+        playerFrame2,
+        playerFrame3,
+        playerFrame4,
+        playerFrame5,
+        playerFrame6,
+        playerFrame7,
         testObjectTexture,
         TILE_WALL_POST,
         TILE_WALL_DOUBLE,
@@ -514,6 +900,17 @@ namespace Assets.Textures {
         SPAWNPOINT,
         SPAWNPOINT_CHECKPOINT,
         SPAWNPOINT_CHECKPOINT_ACTIVE
+    ]
+
+    export const playerFrames: object[] = [
+        playerFrame0,
+        playerFrame1,
+        playerFrame2,
+        playerFrame3,
+        playerFrame4,
+        playerFrame5,
+        playerFrame6,
+        playerFrame7
     ]
 }
 

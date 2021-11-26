@@ -21,9 +21,11 @@ namespace MG {
             LevelManager.initialise(100);
             
 
-            let player: Player = new Player('player', Assets.Textures.defaultPlayerTexture, 50);
+            // let player: Player = new Player('player', [Assets.Textures.defaultPlayerTexture], 50);
+            let player: Player = new Player('player', Assets.Textures.playerFrames, 50);
             player.enableCollisionFromSprite();
             player.createPlayerCamera(this._canvas.width, this._canvas.height);
+            player.enableAnimations(2000, -1);
 
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             LevelManager.loadLevel(Assets.Levels.testLevel2);
@@ -42,19 +44,19 @@ namespace MG {
 
 
         private mainLoop (): void {
-            this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
+            this.FRAME_TIME = performance.now() - this.LAST_FRAME;
 
             // clear
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
 
-            LevelManager.update(this.FRAME_TIME);
+            LevelManager.update(this.FRAME_TIME / 1000);
             LevelManager.render();
 
             // ui bits
-            let fps = Math.round(1 / this.FRAME_TIME);
+            let fps = Math.round(1000 / this.FRAME_TIME);
             ctx.fillStyle = 'pink';
-            ctx.fillText(`${this.FRAME_TIME}s | FPS: ${fps}`, 20, 20);
+            ctx.fillText(`${this.FRAME_TIME}ms | FPS: ${fps}`, 20, 20);
             ctx.fillText(LevelManager.player.currentLevel?LevelManager.player.currentLevel.name:'the void', 20, 40);
 
             let relPosX, relPosY: number;

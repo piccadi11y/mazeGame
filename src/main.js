@@ -85,6 +85,383 @@ var Assets;
                 }
             ]
         };
+        Textures.playerFrame0 = {
+            "name": "playerFrame0",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 4, "y": 1 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 8, "y": 0 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 8 },
+                        { "x": 8, "y": 8 },
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame1 = {
+            "name": "playerFrame1",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 0, "y": 2 },
+                        { "x": 2, "y": 2 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 6, "y": 2 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 2, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 8, "y": 2 },
+                        { "x": 0, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 2, "y": 8 },
+                        { "x": 6, "y": 8 }
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame2 = {
+            "name": "playerFrame2",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 7, "y": 4 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 8, "y": 0 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 8 },
+                        { "x": 8, "y": 8 },
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame3 = {
+            "name": "playerFrame3",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 6 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 6, "y": 6 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 2, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 8, "y": 2 },
+                        { "x": 0, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 2, "y": 8 },
+                        { "x": 6, "y": 8 }
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame4 = {
+            "name": "playerFrame4",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 1, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 4, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 8, "y": 0 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 8 },
+                        { "x": 8, "y": 8 },
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame5 = {
+            "name": "playerFrame5",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 6, "y": 6 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 2, "y": 6 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 2, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 8, "y": 2 },
+                        { "x": 0, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 2, "y": 8 },
+                        { "x": 6, "y": 8 }
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame6 = {
+            "name": "playerFrame6",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 1, "y": 4 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 0, "y": 0 },
+                        { "x": 8, "y": 0 },
+                        { "x": 2, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 0, "y": 8 },
+                        { "x": 8, "y": 8 },
+                    ]
+                }
+            ]
+        };
+        Textures.playerFrame7 = {
+            "name": "playerFrame7",
+            "frame": 0,
+            "width": 9,
+            "height": 9,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 227, "g": 16, "b": 149 },
+                    "points": [
+                        { "x": 1, "y": 1 },
+                        { "x": 4, "y": 1 },
+                        { "x": 7, "y": 1 },
+                        { "x": 6, "y": 2 },
+                        { "x": 3, "y": 3 },
+                        { "x": 5, "y": 3 },
+                        { "x": 1, "y": 4 },
+                        { "x": 4, "y": 4 },
+                        { "x": 7, "y": 4 },
+                        { "x": 3, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 2, "y": 6 },
+                        { "x": 6, "y": 6 },
+                        { "x": 1, "y": 7 },
+                        { "x": 4, "y": 7 },
+                        { "x": 7, "y": 7 }
+                    ]
+                },
+                {
+                    "colour": { "r": 72, "g": 137, "b": 227 },
+                    "points": [
+                        { "x": 2, "y": 2 }
+                    ]
+                },
+                {
+                    "colour": { "r": 85, "g": 98, "b": 113 },
+                    "points": [
+                        { "x": 2, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 8, "y": 2 },
+                        { "x": 0, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 2, "y": 8 },
+                        { "x": 6, "y": 8 }
+                    ]
+                }
+            ]
+        };
         Textures.testObjectTexture = {
             "name": "testObjectTexture",
             "width": 1,
@@ -519,6 +896,14 @@ var Assets;
         };
         Textures.loadList = [
             Textures.defaultPlayerTexture,
+            Textures.playerFrame0,
+            Textures.playerFrame1,
+            Textures.playerFrame2,
+            Textures.playerFrame3,
+            Textures.playerFrame4,
+            Textures.playerFrame5,
+            Textures.playerFrame6,
+            Textures.playerFrame7,
             Textures.testObjectTexture,
             Textures.TILE_WALL_POST,
             Textures.TILE_WALL_DOUBLE,
@@ -531,6 +916,16 @@ var Assets;
             Textures.SPAWNPOINT,
             Textures.SPAWNPOINT_CHECKPOINT,
             Textures.SPAWNPOINT_CHECKPOINT_ACTIVE
+        ];
+        Textures.playerFrames = [
+            Textures.playerFrame0,
+            Textures.playerFrame1,
+            Textures.playerFrame2,
+            Textures.playerFrame3,
+            Textures.playerFrame4,
+            Textures.playerFrame5,
+            Textures.playerFrame6,
+            Textures.playerFrame7
         ];
     })(Textures = Assets.Textures || (Assets.Textures = {}));
 })(Assets || (Assets = {}));
@@ -973,6 +1368,21 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        /**
+         * Enables/initialises animation of the sprite
+         * @param duration The time, in milliseconds (ms), one play of the animation takes
+         * @param playIterations The number of times the animation will loop before finishing. -1 for infinite
+         * @param playDirection The direction the animation will play in. Default: Forwards
+         */
+        SpriteComponent.prototype.enableAnimation = function (duration, playIterations, playDirection) {
+            this._sprite.enableAnimation(duration, playIterations, playDirection);
+        };
+        SpriteComponent.prototype.play = function () {
+            this._sprite.startAnimation();
+        };
+        SpriteComponent.prototype.pause = function () {
+            this._sprite.pauseAnimation();
+        };
         SpriteComponent.fromSprite = function (name, sprite) {
             return new SpriteComponent(name, undefined, undefined, undefined, sprite);
         };
@@ -1291,11 +1701,11 @@ var MG;
             MG.TextureManager.load();
             MG.InputHandler.initialise();
             MG.LevelManager.initialise(100);
-            var player = new MG.Player('player', Assets.Textures.defaultPlayerTexture, 50);
+            // let player: Player = new Player('player', [Assets.Textures.defaultPlayerTexture], 50);
+            var player = new MG.Player('player', Assets.Textures.playerFrames, 50);
             player.enableCollisionFromSprite();
-            /*let camera: CameraObject = new CameraObject('playerCamera', this._canvas.width, this._canvas.height);
-            camera.cameraComponent.setTarget(player);*/
             player.createPlayerCamera(this._canvas.width, this._canvas.height);
+            player.enableAnimations(2000, -1);
             // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
@@ -1309,16 +1719,16 @@ var MG;
         };
         Engine.prototype.mainLoop = function () {
             var _this = this;
-            this.FRAME_TIME = (performance.now() - this.LAST_FRAME) / 1000;
+            this.FRAME_TIME = performance.now() - this.LAST_FRAME;
             // clear
             MG.ctx.fillStyle = 'black';
             MG.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-            MG.LevelManager.update(this.FRAME_TIME);
+            MG.LevelManager.update(this.FRAME_TIME / 1000);
             MG.LevelManager.render();
             // ui bits
-            var fps = Math.round(1 / this.FRAME_TIME);
+            var fps = Math.round(1000 / this.FRAME_TIME);
             MG.ctx.fillStyle = 'pink';
-            MG.ctx.fillText(this.FRAME_TIME + "s | FPS: " + fps, 20, 20);
+            MG.ctx.fillText(this.FRAME_TIME + "ms | FPS: " + fps, 20, 20);
             MG.ctx.fillText(MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void', 20, 40);
             var relPosX, relPosY;
             if (MG.LevelManager.player.currentLevel) {
@@ -1506,11 +1916,16 @@ var MG;
 (function (MG) {
     var PlayerObject = /** @class */ (function (_super) {
         __extends(PlayerObject, _super);
-        function PlayerObject(name, texture, width) {
+        function PlayerObject(name, textures, width) {
             var _this = _super.call(this, name, undefined, 0) || this;
             _this._movement = MG.Vector2.Zero;
             _this._maxSpeed = 150;
-            _this.addComponent(new MG.SpriteComponent(_this.name + 'SpriteComponent', [texture['name']], width));
+            var txN = [];
+            for (var _i = 0, textures_1 = textures; _i < textures_1.length; _i++) {
+                var tx = textures_1[_i];
+                txN.push(tx['name']);
+            }
+            _this.addComponent(new MG.SpriteComponent(_this.name + 'SpriteComponent', txN, width));
             return _this;
         }
         Object.defineProperty(PlayerObject.prototype, "currentLevel", {
@@ -1523,6 +1938,17 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        /**
+         * Enables/initialises sprite animations for the object
+         * @param duration The time, in milliseconds (ms), one play of the animation takes
+         * @param playIterations The number of times the animation will loop before finishing. -1 for infinite
+         * @param playDirection The direction the animation will play in. Default: Forwards
+         */
+        PlayerObject.prototype.enableAnimations = function (duration, playIterations, playDirection) {
+            var sc = this.getComponent(this.name + 'SpriteComponent');
+            sc.enableAnimation(duration, playIterations, playDirection);
+            sc.play();
+        };
         PlayerObject.prototype.consumeMovement = function () {
             var _this = this;
             var handleResult = function (result) {
@@ -1628,8 +2054,8 @@ var MG;
 (function (MG) {
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
-        function Player(name, texture, width) {
-            var _this = _super.call(this, name, texture, width) || this;
+        function Player(name, textures, width) {
+            var _this = _super.call(this, name, textures, width) || this;
             _this._health = 10;
             return _this;
         }
@@ -1789,6 +2215,91 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var SpriteAnimationDirection;
+    (function (SpriteAnimationDirection) {
+        SpriteAnimationDirection[SpriteAnimationDirection["FORWARDS"] = 1] = "FORWARDS";
+        SpriteAnimationDirection[SpriteAnimationDirection["REVERSE"] = -1] = "REVERSE";
+    })(SpriteAnimationDirection = MG.SpriteAnimationDirection || (MG.SpriteAnimationDirection = {}));
+    var SpriteAnimationSettings = /** @class */ (function () {
+        function SpriteAnimationSettings(fc) {
+            this._currentFrame = 0;
+            this._bPlaying = false;
+            /**The duration of the animation in milliseconds (ms) */
+            this._animationDuration = 1000;
+            this.animationDirection = SpriteAnimationDirection.FORWARDS;
+            this._frameCount = fc;
+        }
+        Object.defineProperty(SpriteAnimationSettings.prototype, "animationDuration", {
+            set: function (duration) {
+                this._animationDuration = duration;
+                this._timeBetweenFrames = duration / this._frameCount;
+                this._timeToNextFrame = this._timeBetweenFrames;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "iterations", {
+            get: function () {
+                return this._iterations;
+            },
+            set: function (iterations) {
+                // TODO // This offset is just a stop-gap for delaing with reverse animations, doesn't allow anim to end of frame 0 currently. Implement better solution
+                var offset = this.animationDirection === SpriteAnimationDirection.REVERSE ? 1 : 0;
+                this._iterations = iterations;
+                this._remainingIterations = iterations + offset;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "isPlaying", {
+            get: function () {
+                return this._bPlaying;
+            },
+            set: function (state) {
+                this._bPlaying = state;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "timeToNextFrame", {
+            get: function () {
+                return this._timeToNextFrame;
+            },
+            set: function (time) {
+                this._timeToNextFrame = time;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "timeBetweenFrames", {
+            get: function () {
+                return this._timeBetweenFrames;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "currentFrame", {
+            get: function () {
+                return this._currentFrame;
+            },
+            set: function (index) {
+                this._currentFrame = index;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(SpriteAnimationSettings.prototype, "remainingIterations", {
+            get: function () {
+                return this._remainingIterations;
+            },
+            set: function (count) {
+                this._remainingIterations = count;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return SpriteAnimationSettings;
+    }());
     var Sprite = /** @class */ (function () {
         function Sprite(width, height, textureNames) {
             this._textures = [];
@@ -1799,9 +2310,7 @@ var MG;
                 if (tn !== undefined)
                     this._textures.push(MG.TextureManager.getTexture(tn));
             }
-            // this._currentTexture = TextureManager.getTexture(textureNames[0]);
             this._currentTexture = this._textures[0];
-            // TODO // add animation/multiple frame support
         }
         Object.defineProperty(Sprite.prototype, "width", {
             get: function () {
@@ -1819,17 +2328,66 @@ var MG;
         });
         Object.defineProperty(Sprite.prototype, "currentTexture", {
             get: function () {
-                return this._textures.indexOf(this._currentTexture);
+                // return this._textures.indexOf(this._currentTexture);
+                return this._animSettings.currentFrame;
             },
             set: function (index) {
                 var i = index >= this._textures.length ? this._textures.length - 1 : index;
                 this._currentTexture = this._textures[i];
+                this._animSettings.currentFrame = index;
             },
             enumerable: false,
             configurable: true
         });
+        /**
+         * Enables/initialises animation of the sprite
+         * @param duration The time, in milliseconds (ms), one play of the animation takes
+         * @param playIterations The number of times the animation will loop before finishing. -1 for infinite
+         * @param playDirection The direction the animation will play in. Default: Forwards
+         */
+        Sprite.prototype.enableAnimation = function (duration, playIterations, playDirection) {
+            if (playDirection === void 0) { playDirection = SpriteAnimationDirection.FORWARDS; }
+            this._animSettings = new SpriteAnimationSettings(this._textures.length);
+            this._animSettings.animationDuration = duration;
+            this._animSettings.animationDirection = playDirection;
+            this._animSettings.iterations = playIterations;
+            console.log(this._animSettings);
+        };
+        Sprite.prototype.startAnimation = function () {
+            if (this._animSettings.remainingIterations !== 0)
+                this._animSettings.isPlaying = true;
+        };
+        Sprite.prototype.pauseAnimation = function () {
+            this._animSettings.isPlaying = false;
+        };
         Sprite.prototype.update = function (deltaTime) {
-            // for when we need to animate
+            if (this._animSettings && this._textures.length > 1) {
+                // animate!!!
+                if (!this._animSettings.isPlaying)
+                    return;
+                this._animSettings.timeToNextFrame -= deltaTime * 1000;
+                if (this._animSettings.timeToNextFrame <= 0) {
+                    var looped = false;
+                    // if due to change
+                    var nextI = this._animSettings.currentFrame += this._animSettings.animationDirection;
+                    if (nextI < 0) {
+                        nextI = this._textures.length - 1;
+                        looped = true;
+                    }
+                    else if (nextI >= this._textures.length) {
+                        nextI = 0;
+                        looped = true;
+                    }
+                    this._currentTexture = this._textures[nextI];
+                    this._animSettings.currentFrame = nextI;
+                    this._animSettings.timeToNextFrame = this._animSettings.timeBetweenFrames;
+                    if (this._animSettings.iterations !== -1 && looped) {
+                        this._animSettings.remainingIterations--;
+                        if (this._animSettings.remainingIterations === 0)
+                            this._animSettings.isPlaying = false;
+                    }
+                }
+            }
         };
         Sprite.prototype.draw = function (transform, camera, bDrawDebugs) {
             this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);

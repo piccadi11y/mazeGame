@@ -5,10 +5,13 @@ namespace MG {
         private _movement: Vector2 = Vector2.Zero;
         private _maxSpeed: number = 150;
 
-        public constructor (name: string, texture: object, width: number) {
+        public constructor (name: string, textures: object[], width: number) {
             super(name, undefined, 0);
 
-            this.addComponent(new SpriteComponent(this.name + 'SpriteComponent', [texture['name']], width));
+            let txN: string[] = [];
+            for (let tx of textures) txN.push(tx['name']);
+            
+            this.addComponent(new SpriteComponent(this.name + 'SpriteComponent', txN, width));
         }
 
         public set currentLevel (level: Level) {
@@ -17,6 +20,18 @@ namespace MG {
 
         public get currentLevel (): Level {
             return this._level;
+        }
+
+        /**
+         * Enables/initialises sprite animations for the object
+         * @param duration The time, in milliseconds (ms), one play of the animation takes
+         * @param playIterations The number of times the animation will loop before finishing. -1 for infinite
+         * @param playDirection The direction the animation will play in. Default: Forwards
+         */
+        public enableAnimations (duration: number, playIterations: number, playDirection?: SpriteAnimationDirection): void {
+            let sc: SpriteComponent = this.getComponent(this.name + 'SpriteComponent') as SpriteComponent
+            sc.enableAnimation(duration, playIterations, playDirection);
+            sc.play();
         }
 
         private consumeMovement (): void {
