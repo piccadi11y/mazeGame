@@ -749,7 +749,6 @@ var Assets;
                 }
             ]
         };
-        // recreate these two once base texture (SPAWNPOINT) is finalised
         Textures.SPAWNPOINT_CHECKPOINT = {
             "name": "SPAWNPOINT_CHECKPOINT",
             "width": 11,
@@ -894,6 +893,73 @@ var Assets;
                 }
             ]
         };
+        Textures.SPAWNPOINT_END = {
+            "name": "SPAWNPOINT_END",
+            "width": 11,
+            "height": 11,
+            "baseColour": undefined,
+            "layers": [
+                {
+                    "colour": { "r": 163, "g": 152, "b": 94 },
+                    "points": [
+                        { "x": 3, "y": 0 },
+                        { "x": 4, "y": 0 },
+                        { "x": 5, "y": 0 },
+                        { "x": 6, "y": 0 },
+                        { "x": 7, "y": 0 },
+                        { "x": 2, "y": 1 },
+                        { "x": 8, "y": 1 },
+                        { "x": 1, "y": 2 },
+                        { "x": 4, "y": 2 },
+                        { "x": 5, "y": 2 },
+                        { "x": 6, "y": 2 },
+                        { "x": 9, "y": 2 },
+                        { "x": 0, "y": 3 },
+                        { "x": 3, "y": 3 },
+                        { "x": 7, "y": 3 },
+                        { "x": 10, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 2, "y": 4 },
+                        { "x": 8, "y": 4 },
+                        { "x": 10, "y": 4 },
+                        { "x": 0, "y": 5 },
+                        { "x": 2, "y": 5 },
+                        { "x": 5, "y": 5 },
+                        { "x": 8, "y": 5 },
+                        { "x": 10, "y": 5 },
+                        { "x": 0, "y": 6 },
+                        { "x": 2, "y": 6 },
+                        { "x": 8, "y": 6 },
+                        { "x": 10, "y": 6 },
+                        { "x": 0, "y": 7 },
+                        { "x": 3, "y": 7 },
+                        { "x": 7, "y": 7 },
+                        { "x": 10, "y": 7 },
+                        { "x": 1, "y": 8 },
+                        { "x": 4, "y": 8 },
+                        { "x": 5, "y": 8 },
+                        { "x": 6, "y": 8 },
+                        { "x": 9, "y": 8 },
+                        { "x": 2, "y": 9 },
+                        { "x": 8, "y": 9 },
+                        { "x": 3, "y": 10 },
+                        { "x": 4, "y": 10 },
+                        { "x": 5, "y": 10 },
+                        { "x": 6, "y": 10 },
+                        { "x": 7, "y": 10 }
+                    ]
+                },
+                {
+                    "colour": { "r": 220, "g": 235, "b": 87 },
+                    "points": [
+                        { "x": 5, "y": 4 },
+                        { "x": 4, "y": 5 },
+                        { "x": 6, "y": 5 },
+                        { "x": 5, "y": 6 },
+                    ]
+                }
+            ]
+        };
         Textures.loadList = [
             Textures.defaultPlayerTexture,
             Textures.playerFrame0,
@@ -915,7 +981,8 @@ var Assets;
             Textures.TILE_FLOOR_TEST,
             Textures.SPAWNPOINT,
             Textures.SPAWNPOINT_CHECKPOINT,
-            Textures.SPAWNPOINT_CHECKPOINT_ACTIVE
+            Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            Textures.SPAWNPOINT_END
         ];
         Textures.playerFrames = [
             Textures.playerFrame0,
@@ -932,15 +999,15 @@ var Assets;
 (function (Assets) {
     var Levels;
     (function (Levels) {
-        Levels.testLevel = {
-            "name": "testLevel",
+        Levels.testLevel0 = {
+            "name": "testLevel0",
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
             "xPos": 0,
             "yPos": 0,
-            "levelCollisions": [true, false, true, true],
+            "levelCollisions": [false, true, true, true],
             "spawnPoint": {
                 "name": "tl_spawn",
                 "type": "start",
@@ -1009,17 +1076,17 @@ var Assets;
             ],
             "objects": []
         };
-        Levels.testLevel2 = {
-            "name": "testLevel2",
+        Levels.testLevel1 = {
+            "name": "testLevel1",
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
-            "colour": "blue",
-            "xPos": 1250,
-            "yPos": 0,
-            "levelCollisions": [true, true, false, false],
+            "colour": "white",
+            "xPos": 0,
+            "yPos": -1000,
+            "levelCollisions": [false, false, false, true],
             "spawnPoint": {
-                "name": "tl2_Checkpoint_001",
+                "name": "tl1_Checkpoint_001",
                 "type": "checkpoint",
                 "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
                 "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
@@ -1040,17 +1107,17 @@ var Assets;
                 }
             ]
         };
-        Levels.testLevel3 = {
-            "name": "testLevel3",
+        Levels.testLevel2 = {
+            "name": "testLevel2",
             "width": 1000,
             "height": 1000,
             "gridSize": 50,
-            "colour": "green",
-            "xPos": 1250,
-            "yPos": 1000,
-            "levelCollisions": [false, true, true, true],
+            "colour": "white",
+            "xPos": 1000,
+            "yPos": -1000,
+            "levelCollisions": [false, true, true, false],
             "spawnPoint": {
-                "name": "tl3_Checkpoint_001",
+                "name": "tl2_Checkpoint_001",
                 "type": "checkpoint",
                 "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
                 "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
@@ -1070,6 +1137,65 @@ var Assets;
                     "y": 100
                 }
             ]
+        };
+        Levels.testLevel3 = {
+            "name": "testLevel3",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "white",
+            "xPos": 0,
+            "yPos": -2000,
+            "levelCollisions": [true, false, false, true],
+            "spawnPoint": {
+                "name": "tl3_Checkpoint_001",
+                "type": "checkpoint",
+                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                "x": 3,
+                "y": 2
+            },
+            "tiles": [],
+            "objects": []
+        };
+        Levels.testLevel4 = {
+            "name": "testLevel4",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "white",
+            "xPos": 1000,
+            "yPos": -2000,
+            "levelCollisions": [false, true, false, false],
+            "spawnPoint": {
+                "name": "tl4_Checkpoint_001",
+                "type": "checkpoint",
+                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                "x": 3,
+                "y": 2
+            },
+            "tiles": [],
+            "objects": []
+        };
+        Levels.testLevel5 = {
+            "name": "testLevel5",
+            "width": 1000,
+            "height": 1000,
+            "gridSize": 50,
+            "colour": "white",
+            "xPos": 1000,
+            "yPos": -3000,
+            "levelCollisions": [true, true, false, true],
+            "spawnPoint": {
+                "name": "tl5_End",
+                "type": "end",
+                "tex": Assets.Textures.SPAWNPOINT_END,
+                "x": 9,
+                "y": 9
+            },
+            "tiles": [],
+            "objects": []
         };
     })(Levels = Assets.Levels || (Assets.Levels = {}));
 })(Assets || (Assets = {}));
@@ -1706,10 +1832,13 @@ var MG;
             player.enableCollisionFromSprite();
             player.createPlayerCamera(this._canvas.width, this._canvas.height);
             player.enableAnimations(2000, -1);
-            // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
+            // this obviously isn't the best way to do this...
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel1);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
             MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel4);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel5);
+            MG.LevelManager.loadLevel(Assets.Levels.testLevel0);
             MG.LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (MG.LevelManager.bDrawDebugs)
                 MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
@@ -2073,6 +2202,7 @@ var MG;
     (function (SpawnPointType) {
         SpawnPointType["SPAWN"] = "start";
         SpawnPointType["CHECKPOINT"] = "checkpoint";
+        SpawnPointType["END"] = "end";
     })(SpawnPointType = MG.SpawnPointType || (MG.SpawnPointType = {}));
     var SpawnPoint = /** @class */ (function (_super) {
         __extends(SpawnPoint, _super);
@@ -2083,7 +2213,7 @@ var MG;
             _this._type = type;
             _this.addComponent(new MG.SpriteComponent(_this.name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
             // if type==checkpoint, create no blocking collision
-            if (_this._type === SpawnPointType.CHECKPOINT) {
+            if (_this._type === SpawnPointType.CHECKPOINT || _this._type === SpawnPointType.END) {
                 _this.enableCollisionFromSprite(_this.name + "_spriteC", true, MG.CollisionType.NON_BLOCKING);
             }
             return _this;
@@ -2100,7 +2230,9 @@ var MG;
         };
         SpawnPoint.prototype.onCollision = function (collidingObject) {
             _super.prototype.onCollision.call(this, collidingObject);
-            if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
+            if (this._type === SpawnPointType.END)
+                MG.LevelManager.restart();
+            else if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
                 MG.LevelManager.setCheckpoint(this);
         };
         SpawnPoint.prototype.enable = function () {
@@ -2845,7 +2977,7 @@ var MG;
             if (spD) {
                 var sp = void 0;
                 sp = MG.SpawnPoint.load(spD, level);
-                if (sp.type == MG.SpawnPointType.SPAWN)
+                if (sp.type === MG.SpawnPointType.SPAWN)
                     MG.LevelManager.registerSpawn(sp);
                 level.rootObject.addChild(sp);
                 level.spawnPoint = sp;
@@ -2937,6 +3069,11 @@ var MG;
         };
         LevelManager.spawnPlayer = function () {
             this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
+        };
+        // temporary game-loop
+        LevelManager.restart = function () {
+            this._spawnCurrent = this._spawnStart;
+            this.spawnPlayer();
         };
         LevelManager.update = function (deltaTime) {
             // this._currentLevel.update(deltaTime);

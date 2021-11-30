@@ -729,9 +729,6 @@ namespace Assets.Textures {
             }
         ]
     }
-
-    // recreate these two once base texture (SPAWNPOINT) is finalised
-
     export const SPAWNPOINT_CHECKPOINT: object = {
         "name": "SPAWNPOINT_CHECKPOINT",
         "width": 11,
@@ -804,7 +801,6 @@ namespace Assets.Textures {
             }
         ]
     }
-
     export const SPAWNPOINT_CHECKPOINT_ACTIVE: object = {
         "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
         "width": 11,
@@ -877,6 +873,73 @@ namespace Assets.Textures {
             }
         ]
     }
+    export const SPAWNPOINT_END: object = {
+        "name": "SPAWNPOINT_END",
+        "width": 11,
+        "height": 11,
+        "baseColour": undefined,
+        "layers": [
+            {
+                "colour": {"r": 163,"g": 152,"b": 94},
+                "points": [
+                    {"x": 3, "y": 0},
+                    {"x": 4, "y": 0},
+                    {"x": 5, "y": 0},
+                    {"x": 6, "y": 0},
+                    {"x": 7, "y": 0},
+                    {"x": 2, "y": 1},
+                    {"x": 8, "y": 1},
+                    {"x": 1, "y": 2},
+                    {"x": 4, "y": 2},
+                    {"x": 5, "y": 2},
+                    {"x": 6, "y": 2},
+                    {"x": 9, "y": 2},
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 7, "y": 3},
+                    {"x": 10, "y": 3},
+                    {"x": 0, "y": 4},
+                    {"x": 2, "y": 4},
+                    {"x": 8, "y": 4},
+                    {"x": 10, "y": 4},
+                    {"x": 0, "y": 5},
+                    {"x": 2, "y": 5},
+                    {"x": 5, "y": 5},
+                    {"x": 8, "y": 5},
+                    {"x": 10, "y": 5},
+                    {"x": 0, "y": 6},
+                    {"x": 2, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 10, "y": 6},
+                    {"x": 0, "y": 7},
+                    {"x": 3, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 10, "y": 7},
+                    {"x": 1, "y": 8},
+                    {"x": 4, "y": 8},
+                    {"x": 5, "y": 8},
+                    {"x": 6, "y": 8},
+                    {"x": 9, "y": 8},
+                    {"x": 2, "y": 9},
+                    {"x": 8, "y": 9},
+                    {"x": 3, "y": 10},
+                    {"x": 4, "y": 10},
+                    {"x": 5, "y": 10},
+                    {"x": 6, "y": 10},
+                    {"x": 7, "y": 10}
+                ]
+            },
+            {
+                "colour": {"r": 220,"g": 235,"b": 87},
+                "points": [
+                    {"x": 5, "y": 4},
+                    {"x": 4, "y": 5},
+                    {"x": 6, "y": 5},
+                    {"x": 5, "y": 6},
+                ]
+            }
+        ]
+    }
 
     export const loadList: object[] = [
         defaultPlayerTexture,
@@ -899,7 +962,8 @@ namespace Assets.Textures {
         TILE_FLOOR_TEST,
         SPAWNPOINT,
         SPAWNPOINT_CHECKPOINT,
-        SPAWNPOINT_CHECKPOINT_ACTIVE
+        SPAWNPOINT_CHECKPOINT_ACTIVE,
+        SPAWNPOINT_END
     ]
 
     export const playerFrames: object[] = [
@@ -915,15 +979,15 @@ namespace Assets.Textures {
 }
 
 namespace Assets.Levels {
-    export const testLevel: object = {
-        "name": "testLevel",
+    export const testLevel0: object = {
+        "name": "testLevel0",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
         "xPos": 0,
         "yPos": 0,
-        "levelCollisions": [true, false, true, true],
+        "levelCollisions": [false, true, true, true],
         "spawnPoint": {
             "name": "tl_spawn",
             "type": "start",
@@ -992,17 +1056,17 @@ namespace Assets.Levels {
         ],
         "objects": []
     }
-    export const testLevel2: object = {
-        "name": "testLevel2",
+    export const testLevel1: object = {
+        "name": "testLevel1",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
-        "colour": "blue",
-        "xPos": 1250,
-        "yPos": 0,
-        "levelCollisions": [true, true, false, false],
+        "colour": "white",
+        "xPos": 0,
+        "yPos": -1000,
+        "levelCollisions": [false, false, false, true],
         "spawnPoint": {
-            "name": "tl2_Checkpoint_001",
+            "name": "tl1_Checkpoint_001",
             "type": "checkpoint",
             "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
             "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
@@ -1023,17 +1087,17 @@ namespace Assets.Levels {
             }
         ]
     }
-    export const testLevel3: object = {
-        "name": "testLevel3",
+    export const testLevel2: object = {
+        "name": "testLevel2",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
-        "colour": "green",
-        "xPos": 1250,
-        "yPos": 1000,
-        "levelCollisions": [false, true, true, true],
+        "colour": "white",
+        "xPos": 1000,
+        "yPos": -1000,
+        "levelCollisions": [false, true, true, false],
         "spawnPoint": {
-            "name": "tl3_Checkpoint_001",
+            "name": "tl2_Checkpoint_001",
             "type": "checkpoint",
             "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
             "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
@@ -1053,5 +1117,67 @@ namespace Assets.Levels {
                 "y": 100
             }
         ]
+    }
+
+    export const testLevel3: object = {
+        "name": "testLevel3",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "white",
+        "xPos": 0,
+        "yPos": -2000,
+        "levelCollisions": [true, false, false, true],
+        "spawnPoint": {
+            "name": "tl3_Checkpoint_001",
+            "type": "checkpoint",
+            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "x": 3,
+            "y": 2
+        },
+        "tiles": [],
+        "objects": []
+    }
+
+    export const testLevel4: object = {
+        "name": "testLevel4",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "white",
+        "xPos": 1000,
+        "yPos": -2000,
+        "levelCollisions": [false, true, false, false],
+        "spawnPoint": {
+            "name": "tl4_Checkpoint_001",
+            "type": "checkpoint",
+            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
+            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "x": 3,
+            "y": 2
+        },
+        "tiles": [],
+        "objects": []
+    }
+
+    export const testLevel5: object = {
+        "name": "testLevel5",
+        "width": 1000,
+        "height": 1000,
+        "gridSize": 50,
+        "colour": "white",
+        "xPos": 1000,
+        "yPos": -3000,
+        "levelCollisions": [true, true, false, true],
+        "spawnPoint": {
+            "name": "tl5_End",
+            "type": "end",
+            "tex": Assets.Textures.SPAWNPOINT_END,
+            "x": 9,
+            "y": 9
+        },
+        "tiles": [],
+        "objects": []
     }
 }

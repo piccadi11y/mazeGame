@@ -125,7 +125,7 @@ namespace MG {
             if (spD) {
                 let sp: SpawnPoint;
                 sp = SpawnPoint.load(spD, level);
-                if (sp.type == SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
+                if (sp.type === SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
                 level.rootObject.addChild(sp);
                 level.spawnPoint = sp;
                 level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;

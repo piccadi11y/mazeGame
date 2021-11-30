@@ -60,6 +60,12 @@ namespace MG {
             this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
         }
 
+        // temporary game-loop
+        public static restart (): void {
+            this._spawnCurrent = this._spawnStart;
+            this.spawnPlayer();
+        }
+
         public static update (deltaTime: number): void {
             // this._currentLevel.update(deltaTime);
             for (let l of this._loadedLevels) l.update(deltaTime);

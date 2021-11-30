@@ -2,7 +2,8 @@ namespace MG {
 
     export enum SpawnPointType {
         SPAWN = 'start',
-        CHECKPOINT = 'checkpoint'
+        CHECKPOINT = 'checkpoint',
+        END = 'end'
     }
 
     export class SpawnPoint extends oObject {
@@ -17,7 +18,7 @@ namespace MG {
             this.addComponent(new SpriteComponent(`${this.name}_spriteC`, [textureName, activeTextureName], type===SpawnPointType.SPAWN?level.gridSize*3:level.gridSize));
 
             // if type==checkpoint, create no blocking collision
-            if (this._type === SpawnPointType.CHECKPOINT) {
+            if (this._type === SpawnPointType.CHECKPOINT || this._type === SpawnPointType.END) {
                 this.enableCollisionFromSprite(`${this.name}_spriteC`, true, CollisionType.NON_BLOCKING);
             }
         }
@@ -33,7 +34,8 @@ namespace MG {
         public onCollision (collidingObject: oObject): void {
             super.onCollision(collidingObject);
 
-            if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false) LevelManager.setCheckpoint(this);
+            if (this._type === SpawnPointType.END) LevelManager.restart();
+            else if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false) LevelManager.setCheckpoint(this);
         }
 
         public enable (): void {

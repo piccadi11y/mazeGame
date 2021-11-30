@@ -27,10 +27,13 @@ namespace MG {
             player.createPlayerCamera(this._canvas.width, this._canvas.height);
             player.enableAnimations(2000, -1);
 
-            // LevelManager.currentLevel = Level.load(Assets.Levels.testLevel);
+            // this obviously isn't the best way to do this...
+            LevelManager.loadLevel(Assets.Levels.testLevel1);
             LevelManager.loadLevel(Assets.Levels.testLevel2);
             LevelManager.loadLevel(Assets.Levels.testLevel3);
-            LevelManager.loadLevel(Assets.Levels.testLevel);
+            LevelManager.loadLevel(Assets.Levels.testLevel4);
+            LevelManager.loadLevel(Assets.Levels.testLevel5);
+            LevelManager.loadLevel(Assets.Levels.testLevel0);
 
             LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (LevelManager.bDrawDebugs) TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
