@@ -41,6 +41,18 @@ namespace MG {
             return this._name;
         }
 
+        public get width (): number {
+            return this._width;
+        }
+
+        public get height (): number {
+            return this._height;
+        }
+
+        public get location (): Vector2 {
+            return this._transform.position;
+        }
+
         public get gridSize (): number {
             return this._gridSize;
         }

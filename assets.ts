@@ -1180,4 +1180,12 @@ namespace Assets.Levels {
         "tiles": [],
         "objects": []
     }
+    export const testLevels: object[] = [
+        testLevel0,
+        testLevel1,
+        testLevel2,
+        testLevel3,
+        testLevel4,
+        testLevel5
+    ]
 }

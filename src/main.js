@@ -1197,6 +1197,14 @@ var Assets;
             "tiles": [],
             "objects": []
         };
+        Levels.testLevels = [
+            Levels.testLevel0,
+            Levels.testLevel1,
+            Levels.testLevel2,
+            Levels.testLevel3,
+            Levels.testLevel4,
+            Levels.testLevel5
+        ];
     })(Levels = Assets.Levels || (Assets.Levels = {}));
 })(Assets || (Assets = {}));
 window.onload = function () {
@@ -1832,13 +1840,8 @@ var MG;
             player.enableCollisionFromSprite();
             player.createPlayerCamera(this._canvas.width, this._canvas.height);
             player.enableAnimations(2000, -1);
-            // this obviously isn't the best way to do this...
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel1);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel2);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel3);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel4);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel5);
-            MG.LevelManager.loadLevel(Assets.Levels.testLevel0);
+            // temp, while testing everything
+            MG.LevelManager.load(Assets.Levels.testLevels);
             MG.LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (MG.LevelManager.bDrawDebugs)
                 MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
@@ -2112,7 +2115,8 @@ var MG;
             }
             else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                for (var _i = 0, _a = MG.LevelManager.loadedLevels; _i < _a.length; _i++) {
+                // for (let l of LevelManager.loadedLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
+                for (var _i = 0, _a = MG.LevelManager.activeLevels; _i < _a.length; _i++) {
                     var l = _a[_i];
                     objs = objs.concat(l.rootObject.children.concat(l.tiles));
                 }
@@ -2881,6 +2885,27 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(Level.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Level.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Level.prototype, "location", {
+            get: function () {
+                return this._transform.position;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Object.defineProperty(Level.prototype, "gridSize", {
             get: function () {
                 return this._gridSize;
@@ -3020,6 +3045,14 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var LevelGridPosition = /** @class */ (function () {
+        function LevelGridPosition(x, y, levelRef) {
+            this.pos = new MG.Vector2(x, y);
+            this.level = levelRef;
+        }
+        return LevelGridPosition;
+    }());
+    MG.LevelGridPosition = LevelGridPosition;
     var LevelManager = /** @class */ (function () {
         function LevelManager() {
         }
@@ -3057,8 +3090,16 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(LevelManager, "activeLevels", {
+            get: function () {
+                return this._activeLevels;
+            },
+            enumerable: false,
+            configurable: true
+        });
         LevelManager.registerSpawn = function (sp) {
             this._spawnStart = sp;
+            this.currentLevel = this._spawnStart.level;
             if (!this._spawnCurrent)
                 this._spawnCurrent = sp;
         };
@@ -3068,36 +3109,60 @@ var MG;
             this._spawnCurrent.enable();
         };
         LevelManager.spawnPlayer = function () {
+            this.currentLevel = this._spawnCurrent.level;
             this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
         };
         // temporary game-loop
         LevelManager.restart = function () {
+            if (this._spawnCurrent.type === MG.SpawnPointType.CHECKPOINT)
+                this._spawnCurrent.disable();
             this._spawnCurrent = this._spawnStart;
             this.spawnPlayer();
         };
         LevelManager.update = function (deltaTime) {
             // this._currentLevel.update(deltaTime);
-            for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {
+            // for (let l of this._loadedLevels) l.update(deltaTime);
+            for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
                 var l = _a[_i];
                 l.update(deltaTime);
             }
             this._gameState.player.update(deltaTime);
             this._gameState.camera.update(deltaTime);
             // handle current level detection
-            var cl = undefined;
-            for (var _b = 0, _c = this._loadedLevels; _b < _c.length; _b++) {
+            // let cl: Level = undefined;
+            // for (let l of this._loadedLevels) {
+            for (var _b = 0, _c = this._activeLevels; _b < _c.length; _b++) {
                 var l = _c[_b];
                 if (l.checkHasPlayer(this._gameState.player.position)) {
-                    cl = l;
+                    this._currentLevel = l;
+                    this._gameState.player.currentLevel = l;
+                    this._currentLevelCoords = new MG.Vector2(l.location.x / l.width, l.location.y / l.height);
+                    // cl = l;
                     break;
                 }
             }
-            this._currentLevel = cl;
-            this._gameState.player.currentLevel = cl;
+            // this._currentLevel = cl;
+            // this._gameState.player.currentLevel = cl;
+            // generate/update _activeLevels
+            var calcDir = new MG.Vector2(LevelManager.player.position.x < LevelManager.currentLevel.centre.x ? -1 : 1, LevelManager.player.position.y < LevelManager.currentLevel.centre.y ? -1 : 1);
+            if (this._nextLevelCoords.x - this._currentLevelCoords.x !== calcDir.x || this._nextLevelCoords.y - this._currentLevelCoords.y !== calcDir.y) {
+                this._nextLevelCoords = new MG.Vector2(calcDir.x + this._currentLevelCoords.x, calcDir.y + this._currentLevelCoords.y);
+                var newAL = [this._currentLevel];
+                for (var _d = 0, _e = this._levelGrid; _d < _e.length; _d++) {
+                    var lg = _e[_d];
+                    if ((lg.pos.x === this._nextLevelCoords.x && lg.pos.y === this._currentLevelCoords.y) ||
+                        (lg.pos.x === this._currentLevelCoords.x && lg.pos.y === this._nextLevelCoords.y) ||
+                        (lg.pos.x === this._nextLevelCoords.x && lg.pos.y === this._nextLevelCoords.y))
+                        newAL.push(lg.level);
+                }
+                this._activeLevels = newAL;
+                console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
+            }
         };
         LevelManager.render = function () {
             // this._currentLevel.render();
-            for (var _i = 0, _a = this._loadedLevels; _i < _a.length; _i++) {
+            // for (let l of this._loadedLevels) l.render(this._bDrawDebugs);
+            for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
                 var l = _a[_i];
                 l.render(this._bDrawDebugs);
             }
@@ -3135,10 +3200,27 @@ var MG;
         LevelManager.loadLevel = function (level) {
             var l = MG.Level.load(level);
             LevelManager._loadedLevels.push(l);
-            LevelManager.currentLevel = l;
+        };
+        LevelManager.load = function (levels) {
+            for (var _i = 0, levels_1 = levels; _i < levels_1.length; _i++) {
+                var ld = levels_1[_i];
+                this._loadedLevels.push(MG.Level.load(ld));
+            }
+            for (var _a = 0, _b = this._loadedLevels; _a < _b.length; _a++) {
+                var l = _b[_a];
+                this._levelGrid.push(new LevelGridPosition(l.location.x / l.width, l.location.y / l.height, l));
+            }
+            // figure out active level
+            this._activeLevels.push(this._spawnStart.level);
+            // figure out level layout
+            console.log(this._levelGrid);
         };
         LevelManager.FRAME = 0;
         LevelManager._loadedLevels = [];
+        LevelManager._activeLevels = [];
+        LevelManager._levelGrid = [];
+        LevelManager._nextLevelCoords = MG.Vector2.Zero;
+        LevelManager._currentLevelCoords = MG.Vector2.Zero;
         LevelManager._bDrawDebugs = false;
         return LevelManager;
     }());

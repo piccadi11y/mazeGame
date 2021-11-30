@@ -1,12 +1,25 @@
 namespace MG {
 
+    export class LevelGridPosition {
+        public pos: Vector2;
+        public level: Level;
+
+        constructor (x: number, y: number, levelRef: Level) {
+            this.pos = new Vector2(x, y);
+            this.level = levelRef;
+        }
+    }
+
     export class LevelManager {
 
         public static FRAME: number = 0;
 
-        // TODO // expand this to handle management of multiple levels
         private static _currentLevel: Level;
         private static _loadedLevels: Level[] = [];
+        private static _activeLevels: Level[] = [];
+        private static _levelGrid: LevelGridPosition[] = [];
+        private static _nextLevelCoords: Vector2 = Vector2.Zero;
+        private static _currentLevelCoords: Vector2 = Vector2.Zero;
 
         private static _spawnStart: SpawnPoint;
         private static _spawnCurrent: SpawnPoint;
@@ -45,8 +58,13 @@ namespace MG {
             return this._loadedLevels;
         }
 
+        public static get activeLevels (): Level[] {
+            return this._activeLevels;
+        }
+
         public static registerSpawn (sp: SpawnPoint): void {
             this._spawnStart = sp;
+            this.currentLevel = this._spawnStart.level;
             if (!this._spawnCurrent) this._spawnCurrent = sp;
         }
 
@@ -57,37 +75,51 @@ namespace MG {
         }
 
         public static spawnPlayer (): void {
+            this.currentLevel = this._spawnCurrent.level;
             this._gameState.player.position.copyFrom(this._spawnCurrent.worldTransform.position);
         }
 
         // temporary game-loop
         public static restart (): void {
+            if (this._spawnCurrent.type === SpawnPointType.CHECKPOINT) this._spawnCurrent.disable();
             this._spawnCurrent = this._spawnStart;
             this.spawnPlayer();
         }
 
         public static update (deltaTime: number): void {
-            // this._currentLevel.update(deltaTime);
-            for (let l of this._loadedLevels) l.update(deltaTime);
+            for (let l of this._activeLevels) l.update(deltaTime);
             this._gameState.player.update(deltaTime);
             this._gameState.camera.update(deltaTime);
 
             // handle current level detection
-            let cl: Level = undefined;
-            for (let l of this._loadedLevels) {
+            for (let l of this._activeLevels) {
                 if (l.checkHasPlayer(this._gameState.player.position)) {
-                    cl = l;
+                    this._currentLevel = l;
+                    this._gameState.player.currentLevel = l;
+                    this._currentLevelCoords = new Vector2(l.location.x/l.width, l.location.y/l.height)
                     break;
                 }
             }
-            this._currentLevel = cl;
-            this._gameState.player.currentLevel = cl;
+
+            // generate/update _activeLevels
+            let calcDir: Vector2 = new Vector2(LevelManager.player.position.x < LevelManager.currentLevel.centre.x ? -1 : 1,LevelManager.player.position.y < LevelManager.currentLevel.centre.y ? -1 : 1);
+            if (this._nextLevelCoords.x - this._currentLevelCoords.x !== calcDir.x || this._nextLevelCoords.y - this._currentLevelCoords.y !== calcDir.y) {
+                this._nextLevelCoords = new Vector2(calcDir.x + this._currentLevelCoords.x, calcDir.y + this._currentLevelCoords.y);
+                let newAL: Level[] = [this._currentLevel];
+                for (let lg of this._levelGrid) {
+                    if ((lg.pos.x === this._nextLevelCoords.x && lg.pos.y === this._currentLevelCoords.y) ||
+                        (lg.pos.x === this._currentLevelCoords.x && lg.pos.y === this._nextLevelCoords.y) ||
+                        (lg.pos.x === this._nextLevelCoords.x && lg.pos.y === this._nextLevelCoords.y)) newAL.push(lg.level);
+                }
+                this._activeLevels = newAL;
+                console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
+            }
+
 
         }
 
         public static render (): void {
-            // this._currentLevel.render();
-            for (let l of this._loadedLevels) l.render(this._bDrawDebugs);
+            for (let l of this._activeLevels) l.render(this._bDrawDebugs);
             this._gameState.player.render(this.camera, this._bDrawDebugs);
         }
 
@@ -112,11 +144,16 @@ namespace MG {
             this._gameState.deregisterObject(oID);
         }
 
-
-        public static loadLevel (level: object): void {
+        private static loadLevel (level: object): void {
             let l: Level = Level.load(level);
             LevelManager._loadedLevels.push(l);
-            LevelManager.currentLevel = l;
+        }
+
+        public static load (levels: object[]): void {
+            for (let ld of levels) this._loadedLevels.push(Level.load(ld));
+            for (let l of this._loadedLevels) this._levelGrid.push(new LevelGridPosition(l.location.x/l.width, l.location.y/l.height, l));
+            // so the logic has something to work with on frame 0
+            this._activeLevels.push(this._spawnStart.level);
         }
 
     }

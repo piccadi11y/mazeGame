@@ -61,7 +61,8 @@ namespace MG {
                 objs = this._level.rootObject.children.concat(this._level.tiles);
             } else if (this._collisionComponent !== undefined && (this._movement.x !== 0.0 || this._movement.y !== 0.0)) {
                 // if we're not contained in one level, check all loaded level's objects
-                for (let l of LevelManager.loadedLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
+                // for (let l of LevelManager.loadedLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
+                for (let l of LevelManager.activeLevels) objs = objs.concat(l.rootObject.children.concat(l.tiles));
             }
             for (let o of objs) {
                 if (this._movement.x === 0 && this._movement.y === 0) break;  // if player isn't moving, don't bother calculating collisions, may nto be useful if I end up adding mobile obstacles etc
