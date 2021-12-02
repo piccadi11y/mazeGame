@@ -1581,7 +1581,7 @@ var MG;
             this._id = MG.LevelManager.registerObject(this, id);
             this._name = name;
             this._level = level;
-            console.log('Object \'', this._name, '\' has been created with id:', this._id);
+            // console.log('Object \'', this._name, '\' has been created with id:', this._id);
         }
         Object.defineProperty(oObject.prototype, "id", {
             get: function () {
@@ -1845,6 +1845,24 @@ var MG;
             MG.LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (MG.LevelManager.bDrawDebugs)
                 MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
+            // ui setup
+            var tl = new MG.UserInterfaceLayer('performanceMetrics');
+            MG.UserInterfaceManager.addLayer(tl);
+            var tlbl = new MG.Label('lblFrameData', 80, 15);
+            tlbl.position.x = 20;
+            tlbl.position.y = 20;
+            tlbl.colour = 'pink';
+            tl.addElement(tlbl);
+            tlbl = new MG.Label('lblWorldData', 55, 15);
+            tlbl.position.x = 20;
+            tlbl.position.y = 40;
+            tlbl.colour = 'pink';
+            tl.addElement(tlbl);
+            tlbl = new MG.Label('lblPositionData', 30, 15);
+            tlbl.position.x = 20;
+            tlbl.position.y = 60;
+            tlbl.colour = 'pink';
+            tl.addElement(tlbl);
             MG.LevelManager.spawnPlayer();
             this.resize();
             this.mainLoop();
@@ -1859,15 +1877,16 @@ var MG;
             MG.LevelManager.render();
             // ui bits
             var fps = Math.round(1000 / this.FRAME_TIME);
-            MG.ctx.fillStyle = 'pink';
-            MG.ctx.fillText(this.FRAME_TIME + "ms | FPS: " + fps, 20, 20);
-            MG.ctx.fillText(MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void', 20, 40);
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblFrameData').value = this.FRAME_TIME + "ms | FPS: " + fps;
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblWorldData').value = MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void';
             var relPosX, relPosY;
             if (MG.LevelManager.player.currentLevel) {
                 relPosX = MG.LevelManager.player.position.x < MG.LevelManager.currentLevel.centre.x ? -1 : 1;
                 relPosY = MG.LevelManager.player.position.y < MG.LevelManager.currentLevel.centre.y ? -1 : 1;
             }
-            MG.ctx.fillText(relPosX + ", " + relPosY, 20, 60);
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = relPosX + ", " + relPosY;
+            MG.UserInterfaceManager.update(this.FRAME_TIME / 1000);
+            MG.UserInterfaceManager.render(MG.LevelManager.camera);
             this.LAST_FRAME = performance.now();
             MG.LevelManager.FRAME++;
             requestAnimationFrame(function () { return _this.mainLoop(); });
@@ -1879,6 +1898,7 @@ var MG;
             this._canvas.height = this._canvas.clientHeight;
             if (MG.LevelManager.camera)
                 MG.LevelManager.cameraObject.cameraComponent.handleResize(this._canvas.width, this._canvas.height);
+            MG.UserInterfaceManager.resize(this._canvas.width, this._canvas.height);
         };
         return Engine;
     }());
@@ -2488,7 +2508,7 @@ var MG;
             this._animSettings.animationDuration = duration;
             this._animSettings.animationDirection = playDirection;
             this._animSettings.iterations = playIterations;
-            console.log(this._animSettings);
+            // console.log(this._animSettings);
         };
         Sprite.prototype.startAnimation = function () {
             if (this._animSettings.remainingIterations !== 0)
@@ -2856,6 +2876,328 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var Transform = /** @class */ (function () {
+        function Transform() {
+            this._position = MG.Vector2.Zero;
+            this._rotation = 0;
+        }
+        Object.defineProperty(Transform.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            set: function (pos) {
+                this._position = pos;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Transform.prototype, "rotation", {
+            get: function () {
+                return this._rotation;
+            },
+            set: function (degrees) {
+                this._rotation = degrees;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Transform.prototype.copyFrom = function (transform) {
+            this._rotation = transform.rotation;
+            this._position.copyFrom(transform.position);
+        };
+        return Transform;
+    }());
+    MG.Transform = Transform;
+})(MG || (MG = {}));
+/// <reference path='../world/transform.ts'/>
+var MG;
+(function (MG) {
+    var UserInterfaceNode = /** @class */ (function () {
+        function UserInterfaceNode(name) {
+            this._bShouldTick = false;
+            this._transform = new MG.Transform();
+            this._name = name;
+        }
+        Object.defineProperty(UserInterfaceNode.prototype, "position", {
+            get: function () {
+                return this._transform.position;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UserInterfaceNode.prototype, "rotation", {
+            get: function () {
+                return this._transform.rotation;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UserInterfaceNode.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UserInterfaceNode.prototype, "bShouldTick", {
+            get: function () {
+                return this._bShouldTick;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        UserInterfaceNode.prototype.update = function (deltaTime) {
+        };
+        return UserInterfaceNode;
+    }());
+    MG.UserInterfaceNode = UserInterfaceNode;
+})(MG || (MG = {}));
+/// <reference path="userInterfaceNode.ts"/>
+var MG;
+(function (MG) {
+    var UserInterfaceElement = /** @class */ (function (_super) {
+        __extends(UserInterfaceElement, _super);
+        function UserInterfaceElement(name, width, height) {
+            var _this = _super.call(this, name) || this;
+            _this._children = [];
+            _this._width = width;
+            _this._height = height;
+            return _this;
+        }
+        UserInterfaceElement.prototype.getElementByName = function (name) {
+            if (this.name === name)
+                return this;
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                var result = child.getElementByName(name);
+                if (result !== undefined)
+                    return result;
+            }
+            return undefined;
+        };
+        UserInterfaceElement.prototype.render = function (camera) {
+            // print bg texture/sprite if defined???
+            if (MG.LevelManager.bDrawDebugs) {
+                MG.ctx.strokeStyle = 'purple';
+                MG.ctx.strokeRect(this.position.x, this.position.y, this._width, this._height);
+            }
+        };
+        return UserInterfaceElement;
+    }(MG.UserInterfaceNode));
+    MG.UserInterfaceElement = UserInterfaceElement;
+})(MG || (MG = {}));
+/// <reference path="userInterfaceElement.ts"/>
+var MG;
+(function (MG) {
+    var TextAlignment;
+    (function (TextAlignment) {
+        TextAlignment["LEFT"] = "left";
+        TextAlignment["RIGHT"] = "right";
+        TextAlignment["CENTRE"] = "center"; //,
+        // START = 'start',
+        // END = 'end'
+    })(TextAlignment = MG.TextAlignment || (MG.TextAlignment = {}));
+    var TextBaseline;
+    (function (TextBaseline) {
+        TextBaseline["TOP"] = "top";
+        TextBaseline["HANGING"] = "hanging";
+        TextBaseline["MIDDLE"] = "middle";
+        TextBaseline["ALPHABETIC"] = "alphabetic";
+        TextBaseline["IDEOGRAPHIC"] = "ideographic";
+        TextBaseline["BOTTOM"] = "bottom";
+    })(TextBaseline = MG.TextBaseline || (MG.TextBaseline = {}));
+    var Label = /** @class */ (function (_super) {
+        __extends(Label, _super);
+        function Label(name, width, height) {
+            var _this = _super.call(this, name, width, height) || this;
+            _this._font = '10px consolas';
+            _this._textAlign = TextAlignment.LEFT;
+            _this._textBaseline = TextBaseline.MIDDLE;
+            _this._value = '';
+            _this._colour = 'red';
+            _this._renderOffset = MG.Vector2.Zero;
+            // this._bShouldTick = true;
+            _this.calcAlignment();
+            _this.calcBaseline();
+            return _this;
+        }
+        Object.defineProperty(Label.prototype, "font", {
+            set: function (font) {
+                this._font = font;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Label.prototype.calcAlignment = function () {
+            switch (this._textAlign) {
+                case TextAlignment.LEFT:
+                    this._renderOffset.x = 0;
+                    break;
+                case TextAlignment.CENTRE:
+                    this._renderOffset.x = this._width / 2;
+                    break;
+                case TextAlignment.RIGHT:
+                    this._renderOffset.x = this._width;
+                    break;
+            }
+        };
+        Object.defineProperty(Label.prototype, "textAlignment", {
+            set: function (alignment) {
+                this._textAlign = alignment;
+                this.calcAlignment();
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Label.prototype.calcBaseline = function () {
+            this._renderOffset.y = this._height / 2;
+        };
+        Object.defineProperty(Label.prototype, "textBaseline", {
+            set: function (baseline) {
+                this._textBaseline = baseline;
+                this.calcBaseline();
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "value", {
+            set: function (value) {
+                this._value = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "colour", {
+            set: function (colour) {
+                this._colour = colour;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Label.prototype.render = function (camera) {
+            _super.prototype.render.call(this, camera);
+            MG.ctx.font = this._font;
+            MG.ctx.textAlign = this._textAlign;
+            MG.ctx.textBaseline = this._textBaseline;
+            MG.ctx.fillStyle = this._colour;
+            MG.ctx.fillText(this._value, this.position.x + this._renderOffset.x, this.position.y + this._renderOffset.y, this._width);
+        };
+        return Label;
+    }(MG.UserInterfaceElement));
+    MG.Label = Label;
+})(MG || (MG = {}));
+/// <reference path="userInterfaceElement.ts"/>
+var MG;
+(function (MG) {
+    var UserInterfaceContainer = /** @class */ (function (_super) {
+        __extends(UserInterfaceContainer, _super);
+        function UserInterfaceContainer() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._elements = [];
+            return _this;
+        }
+        UserInterfaceContainer.prototype.getElementByName = function (name) {
+            var result = _super.prototype.getElementByName.call(this, name);
+            if (result !== undefined)
+                return result;
+            for (var _i = 0, _a = this._elements; _i < _a.length; _i++) {
+                var el = _a[_i];
+                result = el.getElementByName(name);
+                if (result !== undefined)
+                    return result;
+            }
+            return undefined;
+        };
+        return UserInterfaceContainer;
+    }(MG.UserInterfaceElement));
+    MG.UserInterfaceContainer = UserInterfaceContainer;
+})(MG || (MG = {}));
+/// <reference path="userInterfaceContainer.ts"/> 
+var MG;
+(function (MG) {
+    var UserInterfaceLayer = /** @class */ (function (_super) {
+        __extends(UserInterfaceLayer, _super);
+        function UserInterfaceLayer(name) {
+            var _this = this;
+            var vpD = MG.UserInterfaceManager.vpDimensions;
+            _this = _super.call(this, name, vpD.x, vpD.y) || this;
+            return _this;
+            // this._bShouldTick = true;
+        }
+        UserInterfaceLayer.prototype.addElement = function (el) {
+            this._elements.push(el);
+        };
+        UserInterfaceLayer.prototype.update = function (deltaTime) {
+            for (var _i = 0, _a = this._elements; _i < _a.length; _i++) {
+                var e = _a[_i];
+                if (e.bShouldTick)
+                    e.update(deltaTime);
+            }
+        };
+        UserInterfaceLayer.prototype.render = function (camera) {
+            for (var _i = 0, _a = this._elements; _i < _a.length; _i++) {
+                var e = _a[_i];
+                e.render(camera);
+            }
+        };
+        return UserInterfaceLayer;
+    }(MG.UserInterfaceContainer));
+    MG.UserInterfaceLayer = UserInterfaceLayer;
+})(MG || (MG = {}));
+/// <reference path='userInterfaceLayer.ts'/>
+var MG;
+(function (MG) {
+    var UserInterfaceManager = /** @class */ (function () {
+        function UserInterfaceManager() {
+        }
+        Object.defineProperty(UserInterfaceManager, "vpDimensions", {
+            get: function () {
+                return this._vpDimensions;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        UserInterfaceManager.addLayer = function (layer) {
+            this._layers.push(layer);
+            // this._layers[layer.name] = layer;
+            // console.log(this._layers);
+            // for (let n in this._layers) console.log(this._layers[n].name);
+        };
+        UserInterfaceManager.getLayerByName = function (name) {
+            for (var _i = 0, _a = this._layers; _i < _a.length; _i++) {
+                var l = _a[_i];
+                if (l.name === name)
+                    return l;
+            }
+            return undefined;
+        };
+        UserInterfaceManager.update = function (deltaTime) {
+            for (var _i = 0, _a = this._layers; _i < _a.length; _i++) {
+                var l = _a[_i];
+                if (l.bShouldTick)
+                    l.update(deltaTime);
+            }
+        };
+        UserInterfaceManager.render = function (camera) {
+            for (var _i = 0, _a = this._layers; _i < _a.length; _i++) {
+                var l = _a[_i];
+                l.render(camera);
+            }
+        };
+        UserInterfaceManager.resize = function (width, height) {
+            console.log('resizing ui!');
+            this._vpDimensions.x = width;
+            this._vpDimensions.y = height;
+        };
+        UserInterfaceManager._layers = [];
+        // private static _layers: {[name: string]: UserInterfaceLayer} = {};
+        UserInterfaceManager._vpDimensions = new MG.Vector2(1000);
+        return UserInterfaceManager;
+    }());
+    MG.UserInterfaceManager = UserInterfaceManager;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
     var Level = /** @class */ (function () {
         function Level(name, width, height, gridSize, colour, x, y, levelCollisions) {
             if (x === void 0) { x = 0; }
@@ -3120,8 +3462,6 @@ var MG;
             this.spawnPlayer();
         };
         LevelManager.update = function (deltaTime) {
-            // this._currentLevel.update(deltaTime);
-            // for (let l of this._loadedLevels) l.update(deltaTime);
             for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
                 var l = _a[_i];
                 l.update(deltaTime);
@@ -3129,20 +3469,15 @@ var MG;
             this._gameState.player.update(deltaTime);
             this._gameState.camera.update(deltaTime);
             // handle current level detection
-            // let cl: Level = undefined;
-            // for (let l of this._loadedLevels) {
             for (var _b = 0, _c = this._activeLevels; _b < _c.length; _b++) {
                 var l = _c[_b];
                 if (l.checkHasPlayer(this._gameState.player.position)) {
                     this._currentLevel = l;
                     this._gameState.player.currentLevel = l;
                     this._currentLevelCoords = new MG.Vector2(l.location.x / l.width, l.location.y / l.height);
-                    // cl = l;
                     break;
                 }
             }
-            // this._currentLevel = cl;
-            // this._gameState.player.currentLevel = cl;
             // generate/update _activeLevels
             var calcDir = new MG.Vector2(LevelManager.player.position.x < LevelManager.currentLevel.centre.x ? -1 : 1, LevelManager.player.position.y < LevelManager.currentLevel.centre.y ? -1 : 1);
             if (this._nextLevelCoords.x - this._currentLevelCoords.x !== calcDir.x || this._nextLevelCoords.y - this._currentLevelCoords.y !== calcDir.y) {
@@ -3156,12 +3491,10 @@ var MG;
                         newAL.push(lg.level);
                 }
                 this._activeLevels = newAL;
-                console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
+                // console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
             }
         };
         LevelManager.render = function () {
-            // this._currentLevel.render();
-            // for (let l of this._loadedLevels) l.render(this._bDrawDebugs);
             for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
                 var l = _a[_i];
                 l.render(this._bDrawDebugs);
@@ -3210,10 +3543,8 @@ var MG;
                 var l = _b[_a];
                 this._levelGrid.push(new LevelGridPosition(l.location.x / l.width, l.location.y / l.height, l));
             }
-            // figure out active level
+            // so the logic has something to work with on frame 0
             this._activeLevels.push(this._spawnStart.level);
-            // figure out level layout
-            console.log(this._levelGrid);
         };
         LevelManager.FRAME = 0;
         LevelManager._loadedLevels = [];
@@ -3225,39 +3556,4 @@ var MG;
         return LevelManager;
     }());
     MG.LevelManager = LevelManager;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var Transform = /** @class */ (function () {
-        function Transform() {
-            this._position = MG.Vector2.Zero;
-            this._rotation = 0;
-        }
-        Object.defineProperty(Transform.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            set: function (pos) {
-                this._position = pos;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Transform.prototype, "rotation", {
-            get: function () {
-                return this._rotation;
-            },
-            set: function (degrees) {
-                this._rotation = degrees;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Transform.prototype.copyFrom = function (transform) {
-            this._rotation = transform.rotation;
-            this._position.copyFrom(transform.position);
-        };
-        return Transform;
-    }());
-    MG.Transform = Transform;
 })(MG || (MG = {}));

@@ -112,7 +112,7 @@ namespace MG {
                         (lg.pos.x === this._nextLevelCoords.x && lg.pos.y === this._nextLevelCoords.y)) newAL.push(lg.level);
                 }
                 this._activeLevels = newAL;
-                console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
+                // console.log('nxt:', this._nextLevelCoords, 'calc:', calcDir);
             }
 
 

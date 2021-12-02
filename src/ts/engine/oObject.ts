@@ -2,6 +2,7 @@ namespace MG {
 
     export class oObject {
 
+        // TODO // Implement _bShouldTick like in ui classes
 
         private _id: number;
         private _name: string;
@@ -27,7 +28,7 @@ namespace MG {
             this._level = level;
 
 
-            console.log('Object \'', this._name, '\' has been created with id:', this._id);
+            // console.log('Object \'', this._name, '\' has been created with id:', this._id);
         }
 
 

@@ -127,7 +127,7 @@ namespace MG {
             this._animSettings.animationDirection = playDirection;
             this._animSettings.iterations = playIterations;
 
-            console.log(this._animSettings);
+            // console.log(this._animSettings);
         }
 
         public startAnimation (): void {
