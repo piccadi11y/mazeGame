@@ -11,14 +11,14 @@ namespace MG {
 
         public constructor (canvasID?: string) {
             window.onresize = ()=>this.resize();
-            document.addEventListener('contentAdded', e => this.resize());      // so when header/footer are loaded in canvas is resized
+            document.addEventListener('contentAdded', e => this.resize());      // so that when header/footer are loaded in canvas is resized
             this._canvas = Utilities.initialise(canvasID);
         }
 
 
         public Start (): void {
             TextureManager.load();
-            InputHandler.initialise();
+            InputHandler.initialise(this._canvas);
             LevelManager.initialise(100);
             
 
@@ -38,20 +38,25 @@ namespace MG {
             let tl: UserInterfaceLayer = new UserInterfaceLayer('performanceMetrics');
             UserInterfaceManager.addLayer(tl);
             let tlbl: Label = new Label('lblFrameData', 80, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 20;
+            tlbl.pos(20, 20);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
             tlbl = new Label('lblWorldData', 55, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 40;
+            tlbl.pos(20, 40);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
             tlbl = new Label('lblPositionData', 30, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 60;
+            tlbl.pos(20, 60);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
+            tlbl = new Label('lblMousePosition', 50, 15);
+            tlbl.pos(20, 80);
+            tlbl.colour = 'pink';
+            tl.addElement(tlbl);
+            let tbtn: Button = new Button('btnTest', 200, 200);
+            tbtn.pos(20, 100);
+            tbtn.setTextures([Colour.white(), Colour.red(), Colour.blue()], ['', Assets.Textures.defaultPlayerTexture['name'], '']);
+            tl.addElement(tbtn);
 
             LevelManager.spawnPlayer();
 
@@ -82,9 +87,10 @@ namespace MG {
                 relPosY = LevelManager.player.position.y < LevelManager.currentLevel.centre.y ? -1 : 1;
             }
             (UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData') as Label).value = `${relPosX}, ${relPosY}`;
+            (UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition') as Label).value = `${InputHandler.mousePosition.x}, ${InputHandler.mousePosition.y}`;
 
             UserInterfaceManager.update(this.FRAME_TIME/1000);
-            UserInterfaceManager.render(LevelManager.camera);
+            UserInterfaceManager.render();
 
 
             this.LAST_FRAME = performance.now();

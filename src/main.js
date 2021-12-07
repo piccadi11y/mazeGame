@@ -17,7 +17,7 @@ var Assets;
 (function (Assets) {
     var GameOptions;
     (function (GameOptions) {
-        GameOptions.bDrawDebugs = false;
+        GameOptions.bDrawDebugs = true;
     })(GameOptions = Assets.GameOptions || (Assets.GameOptions = {}));
 })(Assets || (Assets = {}));
 (function (Assets) {
@@ -1439,11 +1439,19 @@ var MG;
                 sepY = bottomB - topA;
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
         };
-        CollisionComponent.prototype.checkPointWithin = function (point) {
-            var left = this._transform.position.x - this._width / 2;
-            var right = left + this._width;
-            var top = this._transform.position.y - this._height / 2;
-            var bottom = top + this._height;
+        CollisionComponent.prototype.checkPointWithin = function (point, bCentre) {
+            if (bCentre === void 0) { bCentre = true; }
+            var left, right, top, bottom;
+            // left = this._transform.position.x - this._width/2;
+            left = this._transform.position.x;
+            // top = this._transform.position.y - this._height/2;
+            top = this._transform.position.y;
+            if (bCentre) {
+                left -= this._width / 2;
+                top -= this._height / 2;
+            }
+            right = left + this._width;
+            bottom = top + this._height;
             if (point.x < left)
                 return undefined;
             if (point.x > right)
@@ -1454,15 +1462,32 @@ var MG;
                 return undefined;
             return new PointInBoxResult();
         };
-        CollisionComponent.prototype.checkBoxContained = function (containingBox) {
+        CollisionComponent.prototype.checkBoxContained = function (containingBox, bCentre) {
+            if (bCentre === void 0) { bCentre = true; }
             var leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
-            leftA = this._transform.position.x - this._width / 2;
+            /*leftA = this._transform.position.x - this._width/2;
             rightA = leftA + this._width;
-            topA = this._transform.position.y - this._height / 2;
+            topA = this._transform.position.y - this._height/2;
             bottomA = topA + this._height;
-            leftB = containingBox.transform.position.x - containingBox.width / 2;
+
+            leftB = containingBox.transform.position.x - containingBox.width/2;
             rightB = leftB + containingBox.width;
-            topB = containingBox.transform.position.y - containingBox.height / 2;
+            topB = containingBox.transform.position.y - containingBox.height/2;
+            bottomB = topB + containingBox.height;*/
+            // this possibly works, hasn't been tested
+            leftA = this._transform.position.x;
+            topA = this._transform.position.y;
+            leftB = containingBox.transform.position.x;
+            topB = containingBox.transform.position.y;
+            if (bCentre) {
+                leftA -= this._width / 2;
+                topA -= this._height / 2;
+                leftB -= containingBox.width / 2;
+                topB -= containingBox.height / 2;
+            }
+            rightA = leftA + this._width;
+            bottomA = topA + this._height;
+            rightB = leftB + containingBox.width;
             bottomB = topB + containingBox.height;
             if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB)
                 return true;
@@ -1771,7 +1796,7 @@ var MG;
                 // collision
                 if (this._collisionComponent !== undefined) {
                     var tex = MG.TextureManager.getTexture('collisionDebug');
-                    tex.draw(camera, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(camera, true, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             }
         };
@@ -1828,12 +1853,12 @@ var MG;
             this.FRAME_TIME = 0;
             this.LAST_FRAME = 0;
             window.onresize = function () { return _this.resize(); };
-            document.addEventListener('contentAdded', function (e) { return _this.resize(); }); // so when header/footer are loaded in canvas is resized
+            document.addEventListener('contentAdded', function (e) { return _this.resize(); }); // so that when header/footer are loaded in canvas is resized
             this._canvas = MG.Utilities.initialise(canvasID);
         }
         Engine.prototype.Start = function () {
             MG.TextureManager.load();
-            MG.InputHandler.initialise();
+            MG.InputHandler.initialise(this._canvas);
             MG.LevelManager.initialise(100);
             // let player: Player = new Player('player', [Assets.Textures.defaultPlayerTexture], 50);
             var player = new MG.Player('player', Assets.Textures.playerFrames, 50);
@@ -1849,20 +1874,25 @@ var MG;
             var tl = new MG.UserInterfaceLayer('performanceMetrics');
             MG.UserInterfaceManager.addLayer(tl);
             var tlbl = new MG.Label('lblFrameData', 80, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 20;
+            tlbl.pos(20, 20);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
             tlbl = new MG.Label('lblWorldData', 55, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 40;
+            tlbl.pos(20, 40);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
             tlbl = new MG.Label('lblPositionData', 30, 15);
-            tlbl.position.x = 20;
-            tlbl.position.y = 60;
+            tlbl.pos(20, 60);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
+            tlbl = new MG.Label('lblMousePosition', 50, 15);
+            tlbl.pos(20, 80);
+            tlbl.colour = 'pink';
+            tl.addElement(tlbl);
+            var tbtn = new MG.Button('btnTest', 200, 200);
+            tbtn.pos(20, 100);
+            tbtn.setTextures([MG.Colour.white(), MG.Colour.red(), MG.Colour.blue()], ['', Assets.Textures.defaultPlayerTexture['name'], '']);
+            tl.addElement(tbtn);
             MG.LevelManager.spawnPlayer();
             this.resize();
             this.mainLoop();
@@ -1885,8 +1915,9 @@ var MG;
                 relPosY = MG.LevelManager.player.position.y < MG.LevelManager.currentLevel.centre.y ? -1 : 1;
             }
             MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = relPosX + ", " + relPosY;
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = MG.InputHandler.mousePosition.x + ", " + MG.InputHandler.mousePosition.y;
             MG.UserInterfaceManager.update(this.FRAME_TIME / 1000);
-            MG.UserInterfaceManager.render(MG.LevelManager.camera);
+            MG.UserInterfaceManager.render();
             this.LAST_FRAME = performance.now();
             MG.LevelManager.FRAME++;
             requestAnimationFrame(function () { return _this.mainLoop(); });
@@ -1977,6 +2008,75 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    var Vector2 = /** @class */ (function () {
+        function Vector2(x, y) {
+            if (x === void 0) { x = 0; }
+            this._x = x;
+            this._y = y !== undefined ? y : x;
+        }
+        Object.defineProperty(Vector2.prototype, "x", {
+            get: function () {
+                return this._x;
+            },
+            set: function (value) {
+                this._x = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Vector2.prototype, "y", {
+            get: function () {
+                return this._y;
+            },
+            set: function (value) {
+                this._y = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "Zero", {
+            get: function () {
+                return new Vector2();
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Vector2, "One", {
+            get: function () {
+                return new Vector2(1, 1);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Vector2.prototype.toArray = function () {
+            return [this._x, this._y];
+        };
+        Vector2.prototype.copyFrom = function (vector) {
+            this._x = vector._x;
+            this._y = vector._y;
+        };
+        Vector2.rotateRadians = function (vec, radians, bCentered) {
+            if (bCentered === void 0) { bCentered = false; }
+            return new Vector2(vec.x * Math.cos(radians) - vec.y * Math.sin(radians), vec.x * Math.sin(radians) + vec.y * Math.cos(radians));
+        };
+        Vector2.rotate = function (vec, degrees, bCentered) {
+            if (bCentered === void 0) { bCentered = false; }
+            return Vector2.rotateRadians(vec, degrees * (Math.PI / 180), bCentered);
+        };
+        Vector2.prototype.scale = function (scalarX, scalarY) {
+            this._x *= scalarX;
+            this._y *= scalarY !== undefined ? scalarY : scalarX;
+        };
+        Vector2.scale = function (vec, scale, scaleY) {
+            return new Vector2(vec.x * scale, vec.y * (scaleY !== undefined ? scaleY : scale));
+        };
+        return Vector2;
+    }());
+    MG.Vector2 = Vector2;
+})(MG || (MG = {}));
+/// <reference path='../maths/vector2.ts'/>
+var MG;
+(function (MG) {
     var Keys;
     (function (Keys) {
         Keys["ARROW_LEFT"] = "ArrowLeft";
@@ -1993,10 +2093,21 @@ var MG;
     var InputHandler = /** @class */ (function () {
         function InputHandler() {
         }
-        InputHandler.initialise = function () {
+        Object.defineProperty(InputHandler, "mousePosition", {
+            get: function () {
+                return this._mousePosition;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        InputHandler.initialise = function (c) {
             var _this = this;
+            this._canvas = c;
             window.addEventListener('keyup', function (e) { return _this.handleKeyUp(e); });
             window.addEventListener('keydown', function (e) { return _this.handleKeyDown(e); });
+            window.addEventListener('mousemove', function (e) { return _this.pollMouse(e); });
+            window.addEventListener('mousedown', function (e) { return _this.handleMouseClick(e, 'mousedown'); });
+            window.addEventListener('mouseup', function (e) { return _this.handleMouseClick(e, 'mouseup'); });
             this.registerKey('ArrowLeft');
             this.registerKey('ArrowRight');
             this.registerKey('ArrowUp');
@@ -2033,7 +2144,27 @@ var MG;
         InputHandler.getKey = function (name) {
             return this._keys[name];
         };
+        InputHandler.registerMouseClick = function (name, func) {
+            this._registeredOnMouseClick[name] = func;
+        };
+        InputHandler.deregisterMouseClick = function (name) {
+            this._registeredOnMouseClick[name] = undefined;
+            delete this._registeredOnMouseClick[name];
+        };
+        InputHandler.pollMouse = function (e) {
+            // https://stackoverflow.com/a/33063222
+            var rect = this._canvas.getBoundingClientRect();
+            this._mousePosition.x = (e.clientX - rect.left) / (rect.right - rect.left) * this._canvas.width;
+            this._mousePosition.y = (e.clientY - rect.top / (rect.bottom - rect.top) * this._canvas.height);
+        };
+        InputHandler.handleMouseClick = function (e, state) {
+            // console.log(state, this._registeredOnMouseClick);
+            for (var func in this._registeredOnMouseClick)
+                this._registeredOnMouseClick[func](state);
+        };
         InputHandler._keys = {};
+        InputHandler._registeredOnMouseClick = {};
+        InputHandler._mousePosition = MG.Vector2.Zero;
         return InputHandler;
     }());
     MG.InputHandler = InputHandler;
@@ -2334,6 +2465,12 @@ var MG;
                 return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00') + (this._a > 0 ? this._a.toString(16) : '00');
             return '#' + (this._r > 0 ? this._r.toString(16) : '00') + (this._g > 0 ? this._g.toString(16) : '00') + (this._b > 0 ? this._b.toString(16) : '00');
         };
+        Colour.prototype.toString = function (bAlpha) {
+            if (bAlpha === void 0) { bAlpha = false; }
+            if (bAlpha)
+                return 'R' + this._r + 'G' + this._g + 'B' + this._b + 'A' + this._a;
+            return 'R' + this._r + 'G' + this._g + 'B' + this._b;
+        };
         Colour.fromString = function (col) {
             if (col[0] == '#')
                 return Colour.fromHex(col);
@@ -2459,6 +2596,7 @@ var MG;
     var Sprite = /** @class */ (function () {
         function Sprite(width, height, textureNames) {
             this._textures = [];
+            this._bCentreTexture = true;
             this._width = width;
             this._height = height;
             for (var _i = 0, textureNames_1 = textureNames; _i < textureNames_1.length; _i++) {
@@ -2492,6 +2630,16 @@ var MG;
                 var i = index >= this._textures.length ? this._textures.length - 1 : index;
                 this._currentTexture = this._textures[i];
                 this._animSettings.currentFrame = index;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Sprite.prototype, "bCentreTexture", {
+            get: function () {
+                return this._bCentreTexture;
+            },
+            set: function (shouldCentre) {
+                this._bCentreTexture = shouldCentre;
             },
             enumerable: false,
             configurable: true
@@ -2547,7 +2695,7 @@ var MG;
             }
         };
         Sprite.prototype.draw = function (transform, camera, bDrawDebugs) {
-            this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
+            this._currentTexture.draw(camera, bDrawDebugs, this._bCentreTexture, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         };
         return Sprite;
     }());
@@ -2613,12 +2761,12 @@ var MG;
             this._layers.push(layer);
         };
         // TODO // refactor this abomination
-        Texture.prototype.draw = function (camera, bDrawCentre, _x, _y, rotation, width, height, fit) {
+        Texture.prototype.draw = function (camera, bDrawCentre, bCentre, _x, _y, rotation, width, height, fit) {
             var _this = this;
             if (rotation === void 0) { rotation = 0; }
             if (fit === void 0) { fit = TextureFit.STRETCH; }
-            var x = _x - (width ? width : this._width) / 2 - camera.view.position.x;
-            var y = _y - (height ? height : this._height) / 2 - camera.view.position.y;
+            var x = _x - (bCentre ? (width ? width : this._width) / 2 : 0) - camera.view.position.x;
+            var y = _y - (bCentre ? (height ? height : this._height) / 2 : 0) - camera.view.position.y;
             var drawBaseRect = function (vec, width, height, rot) {
                 var normalised = new MG.Vector2(-(width / 2), -(height / 2));
                 var points = [new MG.Vector2(normalised.x, normalised.y), new MG.Vector2(normalised.x + width, normalised.y), new MG.Vector2(normalised.x + width, normalised.y + height), new MG.Vector2(normalised.x, normalised.y + height)];
@@ -2666,9 +2814,10 @@ var MG;
                             // this should all be happening in a shader, ik, but I haven't implemented it in webgl yet, so the cpu will have to do...
                             // transform, rotate, scale
                             // TODO // offload some of this logic to layer creation so it isn't being called each draw (maybe just creating the points array??)
+                            // let bp: Vector2 = bCentre?new Vector2(-(scaleX/2), -(scaleY/2)):new Vector2(scaleX/4, scaleY/4);
                             var bp = new MG.Vector2(-(scaleX / 2), -(scaleY / 2));
                             var points = [new MG.Vector2(bp.x, bp.y), new MG.Vector2(bp.x + scaleX, bp.y), new MG.Vector2(bp.x + scaleX, bp.y + scaleY), new MG.Vector2(bp.x, bp.y + scaleY)];
-                            var halfSize = new MG.Vector2(this._width / 2, this._height / 2);
+                            var halfSize = bCentre ? new MG.Vector2(this._width / 2, this._height / 2) : MG.Vector2.Zero;
                             points[0].x += ((-halfSize.x + p.x) * scaleX) + scaleX / 2;
                             points[0].y += ((-halfSize.y + p.y) * scaleY) + scaleY / 2;
                             points[1].x += ((-halfSize.x + p.x) * scaleX) + scaleX / 2;
@@ -2808,74 +2957,6 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
-    var Vector2 = /** @class */ (function () {
-        function Vector2(x, y) {
-            if (x === void 0) { x = 0; }
-            this._x = x;
-            this._y = y !== undefined ? y : x;
-        }
-        Object.defineProperty(Vector2.prototype, "x", {
-            get: function () {
-                return this._x;
-            },
-            set: function (value) {
-                this._x = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Vector2.prototype, "y", {
-            get: function () {
-                return this._y;
-            },
-            set: function (value) {
-                this._y = value;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Vector2, "Zero", {
-            get: function () {
-                return new Vector2();
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(Vector2, "One", {
-            get: function () {
-                return new Vector2(1, 1);
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Vector2.prototype.toArray = function () {
-            return [this._x, this._y];
-        };
-        Vector2.prototype.copyFrom = function (vector) {
-            this._x = vector._x;
-            this._y = vector._y;
-        };
-        Vector2.rotateRadians = function (vec, radians, bCentered) {
-            if (bCentered === void 0) { bCentered = false; }
-            return new Vector2(vec.x * Math.cos(radians) - vec.y * Math.sin(radians), vec.x * Math.sin(radians) + vec.y * Math.cos(radians));
-        };
-        Vector2.rotate = function (vec, degrees, bCentered) {
-            if (bCentered === void 0) { bCentered = false; }
-            return Vector2.rotateRadians(vec, degrees * (Math.PI / 180), bCentered);
-        };
-        Vector2.prototype.scale = function (scalarX, scalarY) {
-            this._x *= scalarX;
-            this._y *= scalarY !== undefined ? scalarY : scalarX;
-        };
-        Vector2.scale = function (vec, scale, scaleY) {
-            return new Vector2(vec.x * scale, vec.y * (scaleY !== undefined ? scaleY : scale));
-        };
-        return Vector2;
-    }());
-    MG.Vector2 = Vector2;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
     var Transform = /** @class */ (function () {
         function Transform() {
             this._position = MG.Vector2.Zero;
@@ -2918,13 +2999,32 @@ var MG;
             this._transform = new MG.Transform();
             this._name = name;
         }
-        Object.defineProperty(UserInterfaceNode.prototype, "position", {
+        Object.defineProperty(UserInterfaceNode.prototype, "transform", {
             get: function () {
-                return this._transform.position;
+                return this._transform;
             },
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(UserInterfaceNode.prototype, "position", {
+            get: function () {
+                return this._transform.position;
+            },
+            set: function (pos) {
+                this._transform.position.copyFrom(pos);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        UserInterfaceNode.prototype.pos = function (x, y) {
+            if (x && y)
+                this.position = new MG.Vector2(x, y);
+            else if (x)
+                this.position.x = x;
+            else if (y)
+                this.position.y = y;
+            return this.position;
+        };
         Object.defineProperty(UserInterfaceNode.prototype, "rotation", {
             get: function () {
                 return this._transform.rotation;
@@ -2964,6 +3064,28 @@ var MG;
             _this._height = height;
             return _this;
         }
+        Object.defineProperty(UserInterfaceElement.prototype, "sprite", {
+            get: function () {
+                return this._sprite;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        UserInterfaceElement.prototype.setSprite = function (textureNames) {
+            this._sprite = new MG.Sprite(this._width, this._height, textureNames);
+            this._sprite.bCentreTexture = false;
+        };
+        UserInterfaceElement.prototype.pos = function (x, y) {
+            var out = _super.prototype.pos.call(this, x, y);
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                var newPos = child.position;
+                newPos.x += x;
+                newPos.y += y;
+                child.position = newPos;
+            }
+            return out;
+        };
         UserInterfaceElement.prototype.getElementByName = function (name) {
             if (this.name === name)
                 return this;
@@ -2975,16 +3097,124 @@ var MG;
             }
             return undefined;
         };
+        UserInterfaceElement.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                if (child.bShouldTick)
+                    child.update(deltaTime);
+            }
+        };
         UserInterfaceElement.prototype.render = function (camera) {
             // print bg texture/sprite if defined???
+            if (this._sprite)
+                this._sprite.draw(this.transform, camera, MG.LevelManager.bDrawDebugs);
             if (MG.LevelManager.bDrawDebugs) {
                 MG.ctx.strokeStyle = 'purple';
                 MG.ctx.strokeRect(this.position.x, this.position.y, this._width, this._height);
+            }
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                child.render(camera);
             }
         };
         return UserInterfaceElement;
     }(MG.UserInterfaceNode));
     MG.UserInterfaceElement = UserInterfaceElement;
+})(MG || (MG = {}));
+/// <reference path='userInterfaceElement.ts'/>
+var MG;
+(function (MG) {
+    var ButtonTextureState;
+    (function (ButtonTextureState) {
+        ButtonTextureState[ButtonTextureState["INACTIVE"] = 0] = "INACTIVE";
+        ButtonTextureState[ButtonTextureState["HOVER"] = 1] = "HOVER";
+        ButtonTextureState[ButtonTextureState["DOWN"] = 2] = "DOWN";
+    })(ButtonTextureState || (ButtonTextureState = {}));
+    var Button = /** @class */ (function (_super) {
+        __extends(Button, _super);
+        function Button(name, width, height) {
+            var _this = _super.call(this, name, width, height) || this;
+            _this._bClickRegistered = false;
+            _this._bMouseDown = false;
+            _this._bShouldTick = true;
+            _this._collisionComponent = new MG.CollisionComponent(name + 'CollisionComponent', width, height, _this.transform, MG.CollisionType.NON_BLOCKING);
+            _this._label = new MG.Label(name + 'Label', width, height);
+            _this._children.push(_this._label);
+            _this._label.textAlignment = MG.TextAlignment.CENTRE;
+            _this._label.colour = 'orange';
+            _this._label.value = 'inactive';
+            _this._label.pos(_this.position.x, _this.position.y);
+            return _this;
+        }
+        Button.prototype.setTextures = function (baseColours, textureNames) {
+            // logic
+            var texNames = ['', '', ''];
+            if (textureNames) {
+                var texName = void 0;
+                for (var i = 0; i < 3; i++) {
+                    if (textureNames[i] === '') {
+                        texName = 'btn' + baseColours[i].toString();
+                        if (!MG.TextureManager.getTexture(texName))
+                            MG.TextureManager.addTexture(new MG.Texture(texName, 1, 1, baseColours[i]));
+                        texNames[i] = texName;
+                    }
+                    else
+                        texNames[i] = textureNames[i];
+                }
+            }
+            else {
+                var texName = void 0;
+                for (var i = 0; i < 3; i++) {
+                    texName = 'btn' + baseColours[i].toString();
+                    if (!MG.TextureManager.getTexture(texName))
+                        MG.TextureManager.addTexture(new MG.Texture(texName, 1, 1, baseColours[i]));
+                    texNames[i] = texName;
+                }
+            }
+            this.setSprite(texNames);
+            console.log(texNames);
+        };
+        Button.prototype.onClick = function (state) {
+            switch (state) {
+                case 'mousedown':
+                    this._bMouseDown = true;
+                    break;
+                case 'mouseup':
+                    this._bMouseDown = false;
+                    break;
+            }
+        };
+        Button.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            var bMouseOver = this._collisionComponent.checkPointWithin(MG.InputHandler.mousePosition, false);
+            if (bMouseOver && !this._bClickRegistered && !this._bMouseDown) {
+                this._label.value = 'mouseover';
+                this.sprite.currentTexture = ButtonTextureState.HOVER;
+                MG.InputHandler.registerMouseClick(this.name, this.onClick.bind(this));
+                this._bClickRegistered = true;
+            }
+            else if (bMouseOver && this._bClickRegistered && !this._bMouseDown) {
+                this._label.value = 'mouseover';
+                this.sprite.currentTexture = ButtonTextureState.HOVER;
+            }
+            else if (!bMouseOver && this._bClickRegistered && !this._bMouseDown) {
+                this._label.value = 'inactive';
+                this.sprite.currentTexture = ButtonTextureState.INACTIVE;
+                MG.InputHandler.deregisterMouseClick(this.name);
+                this._bClickRegistered = false;
+            }
+            else if (this._bMouseDown) {
+                this.sprite.currentTexture = ButtonTextureState.DOWN;
+                this._label.value = 'mousedown';
+            }
+        };
+        Button.prototype.render = function (camera) {
+            _super.prototype.render.call(this, camera);
+        };
+        return Button;
+    }(MG.UserInterfaceElement));
+    MG.Button = Button;
 })(MG || (MG = {}));
 /// <reference path="userInterfaceElement.ts"/>
 var MG;
@@ -3121,8 +3351,8 @@ var MG;
             var _this = this;
             var vpD = MG.UserInterfaceManager.vpDimensions;
             _this = _super.call(this, name, vpD.x, vpD.y) || this;
+            _this._bShouldTick = true;
             return _this;
-            // this._bShouldTick = true;
         }
         UserInterfaceLayer.prototype.addElement = function (el) {
             this._elements.push(el);
@@ -3178,20 +3408,26 @@ var MG;
                     l.update(deltaTime);
             }
         };
-        UserInterfaceManager.render = function (camera) {
+        UserInterfaceManager.render = function () {
             for (var _i = 0, _a = this._layers; _i < _a.length; _i++) {
                 var l = _a[_i];
-                l.render(camera);
+                l.render(this._camera);
             }
         };
         UserInterfaceManager.resize = function (width, height) {
             console.log('resizing ui!');
+            // not sure I will need these, can probably just use the camera
             this._vpDimensions.x = width;
             this._vpDimensions.y = height;
+            this._camera.resizeScreen(width, height);
+            var tTransform = new MG.Transform();
+            tTransform.position.copyFrom(new MG.Vector2(width / 2, height / 2));
+            this._camera.update(0, tTransform);
         };
         UserInterfaceManager._layers = [];
         // private static _layers: {[name: string]: UserInterfaceLayer} = {};
         UserInterfaceManager._vpDimensions = new MG.Vector2(1000);
+        UserInterfaceManager._camera = new MG.Camera();
         return UserInterfaceManager;
     }());
     MG.UserInterfaceManager = UserInterfaceManager;

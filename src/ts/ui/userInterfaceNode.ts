@@ -13,11 +13,26 @@ namespace MG {
             this._name = name;
         }
 
-        public get position (): Vector2 {
+        protected get transform (): Transform {
+            return this._transform;
+        }
+
+        protected get position (): Vector2 {
             return this._transform.position;
         }
 
-        public get rotation (): number {
+        protected set position (pos: Vector2) {
+            this._transform.position.copyFrom(pos);
+        }
+
+        public pos (x?: number, y?: number) {
+            if (x && y) this.position = new Vector2(x, y);
+            else if (x) this.position.x = x;
+            else if (y) this.position.y = y;
+            return this.position;
+        }
+
+        protected get rotation (): number {
             return this._transform.rotation;
         }
 

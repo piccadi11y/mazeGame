@@ -9,7 +9,7 @@ namespace MG {
             let vpD: Vector2 = UserInterfaceManager.vpDimensions;
             super(name, vpD.x, vpD.y);
 
-            // this._bShouldTick = true;
+            this._bShouldTick = true;
         }
 
         public addElement (el: UserInterfaceElement): void {

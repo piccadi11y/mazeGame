@@ -189,7 +189,7 @@ namespace MG {
                 // collision
                 if (this._collisionComponent !== undefined) {
                     let tex: Texture = TextureManager.getTexture('collisionDebug');
-                    tex.draw(camera, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                    tex.draw(camera, true, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
                 }
             
             }

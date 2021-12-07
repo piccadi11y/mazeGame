@@ -1,5 +1,5 @@
 namespace Assets.GameOptions {
-    export const bDrawDebugs = false;
+    export const bDrawDebugs = true;
 }
 
 namespace Assets.Objects {

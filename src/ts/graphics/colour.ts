@@ -51,6 +51,11 @@ namespace MG {
             return '#' + (this._r>0?this._r.toString(16):'00') + (this._g>0?this._g.toString(16):'00') + (this._b>0?this._b.toString(16):'00');
         }
 
+        public toString (bAlpha: boolean = false): string {
+            if (bAlpha) return 'R' + this._r + 'G' + this._g + 'B' + this._b + 'A' + this._a;
+            return 'R' + this._r + 'G' + this._g + 'B' + this._b;
+        }
+
         public static fromString (col: string): Colour {
             if (col[0] == '#') return Colour.fromHex(col);
 

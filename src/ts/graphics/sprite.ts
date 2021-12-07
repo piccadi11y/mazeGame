@@ -82,6 +82,7 @@ namespace MG {
         private _height: number;
         private _textures: Texture[] = [];
         private _currentTexture: Texture;
+        private _bCentreTexture: boolean = true;
         private _animSettings: SpriteAnimationSettings;
 
 
@@ -113,6 +114,14 @@ namespace MG {
         public get currentTexture (): number {
             // return this._textures.indexOf(this._currentTexture);
             return this._animSettings.currentFrame;
+        }
+
+        public get bCentreTexture (): boolean {
+            return this._bCentreTexture;
+        }
+
+        public set bCentreTexture (shouldCentre: boolean) {
+            this._bCentreTexture = shouldCentre;
         }
 
         /**
@@ -171,7 +180,7 @@ namespace MG {
         }
 
         public draw (transform: Transform, camera: Camera, bDrawDebugs: boolean): void {
-            this._currentTexture.draw(camera, bDrawDebugs, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
+            this._currentTexture.draw(camera, bDrawDebugs, this._bCentreTexture, transform.position.x, transform.position.y, transform.rotation, this._width, this._height);
         }
     }
 }

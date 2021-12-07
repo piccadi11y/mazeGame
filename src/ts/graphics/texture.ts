@@ -55,9 +55,9 @@ namespace MG {
         }
 
         // TODO // refactor this abomination
-        public draw (camera: Camera, bDrawCentre: boolean, _x: number, _y: number, rotation: number = 0, width?: number, height?: number, fit: TextureFit = TextureFit.STRETCH): void {
-            let x: number = _x - (width?width:this._width)/2 - camera.view.position.x;
-            let y: number = _y - (height?height:this._height)/2 - camera.view.position.y;
+        public draw (camera: Camera, bDrawCentre: boolean, bCentre: boolean, _x: number, _y: number, rotation: number = 0, width?: number, height?: number, fit: TextureFit = TextureFit.STRETCH): void {
+            let x: number = _x - (bCentre?(width?width:this._width)/2:0) - camera.view.position.x;
+            let y: number = _y - (bCentre?(height?height:this._height)/2:0) - camera.view.position.y;
 
             let drawBaseRect = (vec: Vector2, width: number, height: number, rot: number) => {
                 let normalised: Vector2 = new Vector2(-(width/2), -(height/2))
@@ -111,9 +111,10 @@ namespace MG {
                             // transform, rotate, scale
 
                             // TODO // offload some of this logic to layer creation so it isn't being called each draw (maybe just creating the points array??)
+                            // let bp: Vector2 = bCentre?new Vector2(-(scaleX/2), -(scaleY/2)):new Vector2(scaleX/4, scaleY/4);
                             let bp: Vector2 = new Vector2(-(scaleX/2), -(scaleY/2));
                             let points: Vector2[] = [new Vector2(bp.x, bp.y), new Vector2(bp.x + scaleX, bp.y), new Vector2(bp.x + scaleX, bp.y + scaleY), new Vector2(bp.x, bp.y + scaleY)];
-                            let halfSize: Vector2 = new Vector2(this._width/2,this._height/2);
+                            let halfSize: Vector2 = bCentre?new Vector2(this._width/2,this._height/2):Vector2.Zero;
                             points[0].x += ((-halfSize.x + p.x) * scaleX) + scaleX / 2;
                             points[0].y += ((-halfSize.y + p.y) * scaleY) + scaleY / 2;
                             points[1].x += ((-halfSize.x + p.x) * scaleX) + scaleX / 2;

@@ -7,6 +7,7 @@ namespace MG {
         private static _layers: UserInterfaceLayer[] = [];
         // private static _layers: {[name: string]: UserInterfaceLayer} = {};
         private static _vpDimensions: Vector2 = new Vector2(1000);
+        private static _camera: Camera = new Camera();
 
         private constructor () {}
 
@@ -28,16 +29,23 @@ namespace MG {
 
         public static update (deltaTime: number): void {
             for (let l of this._layers) if (l.bShouldTick) l.update(deltaTime);
+
         }
 
-        public static render (camera: Camera): void {
-            for (let l of this._layers) l.render(camera);
+        public static render (): void {
+            for (let l of this._layers) l.render(this._camera);
         }
 
         public static resize (width: number, height: number): void {
             console.log('resizing ui!');
+            // not sure I will need these, can probably just use the camera
             this._vpDimensions.x = width;
             this._vpDimensions.y = height;
+
+            this._camera.resizeScreen(width, height);
+            let tTransform: Transform = new Transform();
+            tTransform.position.copyFrom(new Vector2(width/2, height/2));
+            this._camera.update(0, tTransform);
         }
     }
 }

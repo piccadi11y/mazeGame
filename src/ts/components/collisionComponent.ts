@@ -162,11 +162,20 @@ namespace MG {
             return new BoxCollisionResult(this.owner, collisionObject.owner, side, new Vector2(sepX, sepY), collisionObject.collisionType);
         }
 
-        public checkPointWithin (point: Vector2): PointInBoxResult {
-            let left: number = this._transform.position.x - this._width/2;
-            let right: number = left + this._width;
-            let top: number = this._transform.position.y - this._height/2;
-            let bottom: number = top + this._height;
+        public checkPointWithin (point: Vector2, bCentre: boolean = true): PointInBoxResult {
+            let left, right, top, bottom: number;
+            // left = this._transform.position.x - this._width/2;
+            left = this._transform.position.x;
+            // top = this._transform.position.y - this._height/2;
+            top = this._transform.position.y;
+
+            if (bCentre) {
+                left -= this._width/2;
+                top -= this._height/2;
+            }
+            
+            right = left + this._width;
+            bottom = top + this._height;
 
             if (point.x < left) return undefined;
             if (point.x > right) return undefined;
@@ -176,18 +185,37 @@ namespace MG {
             return new PointInBoxResult();
         }
 
-        public checkBoxContained (containingBox: CollisionComponent): boolean {
+        public checkBoxContained (containingBox: CollisionComponent, bCentre: boolean = true): boolean {
             let leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB: number;
 
-            leftA = this._transform.position.x - this._width/2;
+            /*leftA = this._transform.position.x - this._width/2;
             rightA = leftA + this._width;
             topA = this._transform.position.y - this._height/2;
             bottomA = topA + this._height;
 
             leftB = containingBox.transform.position.x - containingBox.width/2;
             rightB = leftB + containingBox.width;
-            topB = containingBox.transform.position.y - containingBox.height/2
+            topB = containingBox.transform.position.y - containingBox.height/2;
+            bottomB = topB + containingBox.height;*/
+
+            // this possibly works, hasn't been tested
+            leftA = this._transform.position.x;
+            topA = this._transform.position.y;
+            leftB = containingBox.transform.position.x;
+            topB = containingBox.transform.position.y
+
+            if (bCentre) {
+                leftA -= this._width/2;
+                topA -= this._height/2;
+                leftB -= containingBox.width/2;
+                topB -= containingBox.height/2;
+            }
+
+            rightA = leftA + this._width;
+            bottomA = topA + this._height;
+            rightB = leftB + containingBox.width;
             bottomB = topB + containingBox.height;
+
 
 
             if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB) return true;
