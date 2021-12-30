@@ -17,7 +17,7 @@ var Assets;
 (function (Assets) {
     var GameOptions;
     (function (GameOptions) {
-        GameOptions.bDrawDebugs = true;
+        GameOptions.bDrawDebugs = false;
     })(GameOptions = Assets.GameOptions || (Assets.GameOptions = {}));
 })(Assets || (Assets = {}));
 (function (Assets) {
@@ -1889,9 +1889,13 @@ var MG;
             tlbl.pos(20, 80);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
-            var tbtn = new MG.Button('btnTest', 200, 200);
+            var tbtn = new MG.Button('btnTest', 75, 20);
             tbtn.pos(20, 100);
-            tbtn.setTextures([MG.Colour.white(), MG.Colour.red(), MG.Colour.blue()], ['', Assets.Textures.defaultPlayerTexture['name'], '']);
+            tbtn.setTextures([new MG.Colour(119, 119, 119), new MG.Colour(85, 85, 85), new MG.Colour(51, 51, 51)]);
+            tbtn.value = 'Respawn';
+            tbtn.font = 'bold 10px consolas';
+            tbtn.colour = 'white';
+            tbtn.onClickFunction = function () { return MG.LevelManager.spawnPlayer(); };
             tl.addElement(tbtn);
             MG.LevelManager.spawnPlayer();
             this.resize();
@@ -1947,6 +1951,7 @@ var MG;
             this._inputMode = InputMode.UI;
             this._loadedObjects = {};
             this._currentLoadedObjects = 0;
+            this._bIsPaused = false;
             this._maxLoadedObjects = maxObjects;
         }
         Object.defineProperty(GameState.prototype, "player", {
@@ -1969,6 +1974,20 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(GameState.prototype, "bIsPaused", {
+            get: function () {
+                return this._bIsPaused;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        GameState.prototype.pause = function () {
+            this._bIsPaused = true;
+            console.log('pause');
+        };
+        GameState.prototype.unpause = function () {
+            this._bIsPaused = true;
+        };
         GameState.prototype.registerObject = function (obj, id) {
             if (id === void 0) { id = undefined; }
             if (id !== undefined) {
@@ -2346,6 +2365,11 @@ var MG;
         Player.prototype.createPlayerCamera = function (vpWidth, vpHeight) {
             var c = new MG.CameraObject(this.name + "Camera", vpWidth, vpHeight);
             c.cameraComponent.setTarget(this);
+        };
+        Player.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            if (MG.InputHandler.getKey(MG.Keys.ESCAPE).state === MG.State.PRESSED && !MG.LevelManager.isPaused)
+                MG.LevelManager.pause();
         };
         return Player;
     }(MG.PlayerObject));
@@ -3137,16 +3161,45 @@ var MG;
             var _this = _super.call(this, name, width, height) || this;
             _this._bClickRegistered = false;
             _this._bMouseDown = false;
+            _this._onClickFunction = function () { return console.log('No on-click logic'); };
             _this._bShouldTick = true;
             _this._collisionComponent = new MG.CollisionComponent(name + 'CollisionComponent', width, height, _this.transform, MG.CollisionType.NON_BLOCKING);
             _this._label = new MG.Label(name + 'Label', width, height);
             _this._children.push(_this._label);
             _this._label.textAlignment = MG.TextAlignment.CENTRE;
             _this._label.colour = 'orange';
-            _this._label.value = 'inactive';
+            _this._label.value = '';
             _this._label.pos(_this.position.x, _this.position.y);
             return _this;
         }
+        Object.defineProperty(Button.prototype, "value", {
+            set: function (value) {
+                this._label.value = value;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Button.prototype, "font", {
+            set: function (font) {
+                this._label.font = font;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Button.prototype, "colour", {
+            set: function (colour) {
+                this._label.colour = colour;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Button.prototype, "onClickFunction", {
+            set: function (func) {
+                this._onClickFunction = func;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Button.prototype.setTextures = function (baseColours, textureNames) {
             // logic
             var texNames = ['', '', ''];
@@ -3173,7 +3226,7 @@ var MG;
                 }
             }
             this.setSprite(texNames);
-            console.log(texNames);
+            // console.log(texNames);
         };
         Button.prototype.onClick = function (state) {
             switch (state) {
@@ -3182,6 +3235,7 @@ var MG;
                     break;
                 case 'mouseup':
                     this._bMouseDown = false;
+                    this._onClickFunction();
                     break;
             }
         };
@@ -3189,25 +3243,20 @@ var MG;
             _super.prototype.update.call(this, deltaTime);
             var bMouseOver = this._collisionComponent.checkPointWithin(MG.InputHandler.mousePosition, false);
             if (bMouseOver && !this._bClickRegistered && !this._bMouseDown) {
-                this._label.value = 'mouseover';
                 this.sprite.currentTexture = ButtonTextureState.HOVER;
                 MG.InputHandler.registerMouseClick(this.name, this.onClick.bind(this));
                 this._bClickRegistered = true;
             }
             else if (bMouseOver && this._bClickRegistered && !this._bMouseDown) {
-                this._label.value = 'mouseover';
                 this.sprite.currentTexture = ButtonTextureState.HOVER;
             }
             else if (!bMouseOver && this._bClickRegistered && !this._bMouseDown) {
-                this._label.value = 'inactive';
                 this.sprite.currentTexture = ButtonTextureState.INACTIVE;
                 MG.InputHandler.deregisterMouseClick(this.name);
                 this._bClickRegistered = false;
             }
-            else if (this._bMouseDown) {
+            else if (this._bMouseDown)
                 this.sprite.currentTexture = ButtonTextureState.DOWN;
-                this._label.value = 'mousedown';
-            }
         };
         Button.prototype.render = function (camera) {
             _super.prototype.render.call(this, camera);
@@ -3697,13 +3746,28 @@ var MG;
             this._spawnCurrent = this._spawnStart;
             this.spawnPlayer();
         };
+        LevelManager.pause = function () {
+            this._gameState.pause();
+        };
+        LevelManager.unpause = function () {
+            this._gameState.unpause();
+        };
+        Object.defineProperty(LevelManager, "isPaused", {
+            get: function () {
+                return this._gameState.bIsPaused;
+            },
+            enumerable: false,
+            configurable: true
+        });
         LevelManager.update = function (deltaTime) {
-            for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
-                var l = _a[_i];
-                l.update(deltaTime);
+            if (!this._gameState.bIsPaused) {
+                for (var _i = 0, _a = this._activeLevels; _i < _a.length; _i++) {
+                    var l = _a[_i];
+                    l.update(deltaTime);
+                }
+                this._gameState.player.update(deltaTime);
+                this._gameState.camera.update(deltaTime);
             }
-            this._gameState.player.update(deltaTime);
-            this._gameState.camera.update(deltaTime);
             // handle current level detection
             for (var _b = 0, _c = this._activeLevels; _b < _c.length; _b++) {
                 var l = _c[_b];

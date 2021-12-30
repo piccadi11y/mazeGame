@@ -12,5 +12,11 @@ namespace MG {
             let c: CameraObject = new CameraObject(`${this.name}Camera`, vpWidth, vpHeight);
             c.cameraComponent.setTarget(this);
         }
+
+        public update (deltaTime: number): void {
+            super.update(deltaTime);
+
+            if (InputHandler.getKey(Keys.ESCAPE).state === State.PRESSED && !LevelManager.isPaused) LevelManager.pause();
+        }
     }
 }

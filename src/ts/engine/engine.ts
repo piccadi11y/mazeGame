@@ -53,9 +53,13 @@ namespace MG {
             tlbl.pos(20, 80);
             tlbl.colour = 'pink';
             tl.addElement(tlbl);
-            let tbtn: Button = new Button('btnTest', 200, 200);
+            let tbtn: Button = new Button('btnTest', 75, 20);
             tbtn.pos(20, 100);
-            tbtn.setTextures([Colour.white(), Colour.red(), Colour.blue()], ['', Assets.Textures.defaultPlayerTexture['name'], '']);
+            tbtn.setTextures([new Colour(119, 119, 119), new Colour(85, 85, 85), new Colour(51, 51, 51)]);
+            tbtn.value = 'Respawn';
+            tbtn.font = 'bold 10px consolas';
+            tbtn.colour = 'white';
+            tbtn.onClickFunction = () => LevelManager.spawnPlayer();
             tl.addElement(tbtn);
 
             LevelManager.spawnPlayer();

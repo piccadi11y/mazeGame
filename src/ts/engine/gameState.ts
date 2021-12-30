@@ -12,6 +12,7 @@ namespace MG {
         private _loadedObjects: {[id: number]: oObject} = {};
         private _currentLoadedObjects: number = 0;
         private _maxLoadedObjects: number;
+        private _bIsPaused = false;
 
         public constructor (maxObjects: number) {
             this._maxLoadedObjects = maxObjects;
@@ -31,6 +32,19 @@ namespace MG {
 
         public set camera (camera: CameraObject) {
             this._playerCamera = camera;
+        }
+
+        public get bIsPaused (): boolean {
+            return this._bIsPaused;
+        }
+
+        public pause (): void {
+            this._bIsPaused = true;
+            console.log('pause');
+        }
+
+        public unpause (): void {
+            this._bIsPaused = true;
         }
 
         public registerObject (obj: oObject, id: number = undefined): number {

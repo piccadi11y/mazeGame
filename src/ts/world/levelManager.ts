@@ -86,10 +86,24 @@ namespace MG {
             this.spawnPlayer();
         }
 
+        public static pause (): void {
+            this._gameState.pause();
+        }
+
+        public static unpause (): void {
+            this._gameState.unpause();
+        }
+
+        public static get isPaused (): boolean {
+            return this._gameState.bIsPaused;
+        }
+
         public static update (deltaTime: number): void {
-            for (let l of this._activeLevels) l.update(deltaTime);
-            this._gameState.player.update(deltaTime);
-            this._gameState.camera.update(deltaTime);
+            if (!this._gameState.bIsPaused) {
+                for (let l of this._activeLevels) l.update(deltaTime);
+                this._gameState.player.update(deltaTime);
+                this._gameState.camera.update(deltaTime);
+            }
 
             // handle current level detection
             for (let l of this._activeLevels) {
