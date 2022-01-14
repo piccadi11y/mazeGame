@@ -64,3 +64,9 @@ next/current steps:
     - level tiles
     - reassess...
     - proc gen?
+
+
+todo:
+    - build out test level as example (set: 14/01/22, done: )
+    - refactor data to use interfaces (set: 14/01/22, done: )
+    - ... finish UI
