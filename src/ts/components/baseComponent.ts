@@ -1,6 +1,6 @@
 namespace MG {
 
-    export interface BaseComponentBuildData {
+    export interface IBaseComponentBuildData {
         type: string,
         name: string
     }

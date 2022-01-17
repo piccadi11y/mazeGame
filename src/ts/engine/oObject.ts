@@ -1,7 +1,8 @@
 namespace MG {
 
-    export interface oObjectBuildData {
-        
+    export interface IoObjectBuildData {
+        name: string,
+        components: IBaseComponentBuildData[]
     }
 
     export class oObject {
@@ -151,7 +152,7 @@ namespace MG {
         }
 
         // TODO // provide overriding load functionality for all classes inheriting from oObject
-        public static load (data: oObjectBuildData, level: Level): oObject {
+        public static load (data: IoObjectBuildData, level: Level): oObject {
             let obj: oObject = new oObject(level.name + '_' + data['name'], level);
 
             // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes

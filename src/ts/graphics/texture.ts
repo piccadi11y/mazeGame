@@ -10,13 +10,16 @@ namespace MG {
         points: ILayerPoint[]
     }
 
-    export interface ITextureBuildData {
+    export interface ITextureData {
         name: string,
         width: number,
         height: number,
         baseColour: IColour_RGB,
         layers: ILayer[],
+    }
 
+    export interface IAnimationFrameData extends ITextureData {
+        frame: number   // TODO // does this ever get used?
     }
 
     export enum TextureFit {

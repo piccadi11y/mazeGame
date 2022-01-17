@@ -4,12 +4,12 @@ namespace MG {
         name: string,
         type: SpawnPointType,
         textureN: string,
-        activeTextureN: string,
+        activeTextureN?: string,
         x: number,
         y: number
     }
 
-        interface lTileBuildData {
+    export interface lTileBuildData {
         textureName: string,
         x: number,
         y: number,
@@ -18,12 +18,12 @@ namespace MG {
     }
 
     export interface loObjectBuildData {
-        objectBuildData: oObjectBuildData,
+        objectBuildData: IoObjectBuildData,
         x: number,
         y: number
     }
 
-    export interface LevelBuildData {
+    export interface ILevelBuildData {
         name: string,
         width: number,
         height: number,

@@ -3,28 +3,28 @@ namespace Assets.GameOptions {
 }
 
 namespace Assets.Objects {
-    export const testLevelCentre: object = {
+    export const testLevelCentre: MG.IoObjectBuildData = {
         "name":"testLevelCentre",
         "components": [
-            {
-                "type": "sprite",
-                "name": "centreSprite",
-                "texture": "testObjectTexture",
-                "width": 50
+            <MG.ISpriteComponentBuildData>{
+                type: 'sprite',
+                name: 'centreSprite',
+                textureName: Assets.Textures.testObjectTexture.name,
+                width: 50
             },
-            {
-                "type": "collision",
-                "spriteName": "centreSprite",
-                "width": undefined,
-                "height": undefined,
-                "isStatic": true
+            <MG.ICollisionComponentBuildData>{
+                type: 'collision',
+                name: 'centreSprite',
+                width: undefined,
+                height: undefined,
+                bStatic: true
             }
         ]
     }
 }
 
 namespace Assets.Textures {
-    export const defaultPlayerTexture: object = {
+    export const defaultPlayerTexture: MG.ITextureData = {
         "name": "defaultPlayerTexture",
         "width": 9,
         "height": 9,
@@ -63,7 +63,8 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame0: object = {
+
+    export const playerFrame0: MG.IAnimationFrameData = {
         "name": "playerFrame0",
         "frame": 0,
         "width": 9,
@@ -108,7 +109,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame1: object = {
+    export const playerFrame1: MG.IAnimationFrameData = {
         "name": "playerFrame1",
         "frame": 0,
         "width": 9,
@@ -158,7 +159,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame2: object = {
+    export const playerFrame2: MG.IAnimationFrameData = {
         "name": "playerFrame2",
         "frame": 0,
         "width": 9,
@@ -203,7 +204,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame3: object = {
+    export const playerFrame3: MG.IAnimationFrameData = {
         "name": "playerFrame3",
         "frame": 0,
         "width": 9,
@@ -252,7 +253,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame4: object = {
+    export const playerFrame4: MG.IAnimationFrameData = {
         "name": "playerFrame4",
         "frame": 0,
         "width": 9,
@@ -297,7 +298,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame5: object = {
+    export const playerFrame5: MG.IAnimationFrameData = {
         "name": "playerFrame5",
         "frame": 0,
         "width": 9,
@@ -346,7 +347,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame6: object = {
+    export const playerFrame6: MG.IAnimationFrameData = {
         "name": "playerFrame6",
         "frame": 0,
         "width": 9,
@@ -391,7 +392,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const playerFrame7: object = {
+    export const playerFrame7: MG.IAnimationFrameData = {
         "name": "playerFrame7",
         "frame": 0,
         "width": 9,
@@ -441,14 +442,14 @@ namespace Assets.Textures {
         ]
     }
 
-    export const testObjectTexture: object = {
+    export const testObjectTexture: MG.ITextureData = {
         "name": "testObjectTexture",
         "width": 1,
         "height": 1,
         "baseColour": {"r": 255,"g": 0,"b": 255},
         "layers": undefined
     }
-    export const TILE_WALL_POST: object = {
+    export const TILE_WALL_POST: MG.ITextureData = {
         "name": "TILE_WALL_POST",
         "width": 7,
         "height": 7,
@@ -485,7 +486,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_DOUBLE: object = {
+    export const TILE_WALL_DOUBLE: MG.ITextureData = {
         "name": "TILE_WALL_DOUBLE",
         "width": 7,
         "height": 7,
@@ -512,7 +513,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_SINGLE: object = {
+    export const TILE_WALL_SINGLE: MG.ITextureData = {
         "name": "TILE_WALL_SINGLE",
         "width": 7,
         "height": 7,
@@ -532,7 +533,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_END: object = {
+    export const TILE_WALL_END: MG.ITextureData = {
         "name": "TILE_WALL_END",
         "width": 7,
         "height": 7,
@@ -564,7 +565,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_DOUBLE_CORNER: object = {
+    export const TILE_WALL_DOUBLE_CORNER: MG.ITextureData = {
         "name": "TILE_WALL_DOUBLE_CORNER",
         "width": 7,
         "height": 7,
@@ -591,7 +592,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_SINGLE_CORNER_INTERIOR: object = {
+    export const TILE_WALL_SINGLE_CORNER_INTERIOR: MG.ITextureData = {
         "name": "TILE_WALL_SINGLE_CORNER_INTERIOR",
         "width": 7,
         "height": 7,
@@ -605,7 +606,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_WALL_SINGLE_CORNER_EXTERIOR: object = {
+    export const TILE_WALL_SINGLE_CORNER_EXTERIOR: MG.ITextureData = {
         "name": "TILE_WALL_SINGLE_CORNER_EXTERIOR",
         "width": 7,
         "height": 7,
@@ -631,7 +632,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const TILE_FLOOR_TEST: object = {
+    export const TILE_FLOOR_TEST: MG.ITextureData = {
         "name": "TILE_FLOOR_TEST",
         "width": 7,
         "height": 7,
@@ -662,7 +663,7 @@ namespace Assets.Textures {
         ]
     }
 
-    /*export const SPAWNPOINT: object = {
+    export const SPAWNPOINT: MG.ITextureData = {
         "name": "SPAWNPOINT",
         "width": 11,
         "height": 11,
@@ -728,66 +729,8 @@ namespace Assets.Textures {
                 ]
             }
         ]
-    }*/
-    export const SPAWNPOINT: MG.ITextureBuildData = {
-        name: 'SPAWNPOINT',
-        width: 11,
-        height: 11,
-        baseColour: undefined,
-        layers: [
-            {
-                colour: {r: 163,g: 152,b: 94},
-                points: [
-                    {x: 3, y: 0},
-                    {x: 4, y: 0},
-                    {x: 5, y: 0},
-                    {x: 6, y: 0},
-                    {x: 7, y: 0},
-                    {x: 2, y: 1},
-                    {x: 8, y: 1},
-                    {x: 1, y: 2},
-                    {x: 4, y: 2},
-                    {x: 5, y: 2},
-                    {x: 6, y: 2},
-                    {x: 9, y: 2},
-                    {x: 0, y: 3},
-                    {x: 3, y: 3},
-                    {x: 7, y: 3},
-                    {x: 10, y: 3},
-                    {x: 0, y: 4},
-                    {x: 2, y: 4},
-                    {x: 8, y: 4},
-                    {x: 10, y: 4},
-                    {x: 0, y: 5},
-                    {x: 2, y: 5},
-                    {x: 5, y: 5},
-                    {x: 8, y: 5},
-                    {x: 10, y: 5},
-                    {x: 0, y: 6},
-                    {x: 2, y: 6},
-                    {x: 8, y: 6},
-                    {x: 10, y: 6},
-                    {x: 0, y: 7},
-                    {x: 3, y: 7},
-                    {x: 7, y: 7},
-                    {x: 10, y: 7},
-                    {x: 1, y: 8},
-                    {x: 4, y: 8},
-                    {x: 5, y: 8},
-                    {x: 6, y: 8},
-                    {x: 9, y: 8},
-                    {x: 2, y: 9},
-                    {x: 8, y: 9},
-                    {x: 3, y: 10},
-                    {x: 4, y: 10},
-                    {x: 5, y: 10},
-                    {x: 6, y: 10},
-                    {x: 7, y: 10}
-                ]
-            }
-        ]
     }
-    export const SPAWNPOINT_CHECKPOINT: object = {
+    export const SPAWNPOINT_CHECKPOINT: MG.ITextureData = {
         "name": "SPAWNPOINT_CHECKPOINT",
         "width": 11,
         "height": 11,
@@ -859,7 +802,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const SPAWNPOINT_CHECKPOINT_ACTIVE: object = {
+    export const SPAWNPOINT_CHECKPOINT_ACTIVE: MG.ITextureData = {
         "name": "SPAWNPOINT_CHECKPOINT_ACTIVE",
         "width": 11,
         "height": 11,
@@ -931,7 +874,7 @@ namespace Assets.Textures {
             }
         ]
     }
-    export const SPAWNPOINT_END: object = {
+    export const SPAWNPOINT_END: MG.ITextureData = {
         "name": "SPAWNPOINT_END",
         "width": 11,
         "height": 11,
@@ -999,7 +942,7 @@ namespace Assets.Textures {
         ]
     }
 
-    export const loadList: object[] = [
+    export const loadList: MG.ITextureData[] = [
         defaultPlayerTexture,
         playerFrame0,
         playerFrame1,
@@ -1024,7 +967,7 @@ namespace Assets.Textures {
         SPAWNPOINT_END
     ]
 
-    export const playerFrames: object[] = [
+    export const playerFrames: MG.IAnimationFrameData[] = [
         playerFrame0,
         playerFrame1,
         playerFrame2,
@@ -1037,191 +980,168 @@ namespace Assets.Textures {
 }
 
 namespace Assets.Levels {
-    export const testLevel: MG.LevelBuildData = {
-        name: 'testLevel0',
-        width: 1000,
-        height: 1000,
-        gridSize: 50,
-        colour: 'white',
-        x: 0,
-        y: 0,
-        borderCollisions: [false, true, true, true],
-        spawnPoint: {
-            name: 'tl_spawn',
-            type: MG.SpawnPointType.SPAWN,
-            textureN: Assets.Textures.SPAWNPOINT.name,
-            activeTextureN: undefined,
-            x: 5,
-            y: 5
-        },
-        tiles: [
-            {
-                textureName: Assets.Textures
-            }
-        ]
-    }
-    export const testLevel0: object = {
+    export const testLevel0: MG.ILevelBuildData = {
         "name": "testLevel0",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 0,
-        "yPos": 0,
-        "levelCollisions": [false, true, true, true],
+        "x": 0,
+        "y": 0,
+        "borderCollisions": [false, true, true, true],
         "spawnPoint": {
             "name": "tl_spawn",
-            "type": "start",
-            "tex": Assets.Textures.SPAWNPOINT,
-            "texActive": undefined,
+            "type": MG.SpawnPointType.SPAWN,
+            textureN: Assets.Textures.SPAWNPOINT.name,
+            "activeTextureN": undefined,
             "x": 5,
             "y": 5
         },
         "tiles": [
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                 "x": 0,
                 "y": 0,
-                "d": 270,
-                "collision": "wall"
+                rotation: 270,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 1,
                 "y": 0,
-                "d": 180,
-                "collision": "wall"
+                rotation: 180,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 2,
                 "y": 0,
-                "d": 180,
-                "collision": "wall"
+                rotation: 180,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 3,
                 "y": 0,
-                "d": 180,
-                "collision": "wall"
+                rotation: 180,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 0,
                 "y": 1,
-                "d": 90,
-                "collision": "wall"
+                rotation: 90,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 0,
                 "y": 2,
-                "d": 90,
-                "collision": "wall"
+                rotation: 90,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE,
+                textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                 "x": 0,
                 "y": 3,
-                "d": 90,
-                "collision": "wall"
+                rotation: 90,
+                collisionType: MG.CollisionType.BLOCKING
             },
             {
-                "obj": Assets.Textures.TILE_FLOOR_TEST,
+                textureName: Assets.Textures.TILE_FLOOR_TEST.name,
                 "x": 1,
                 "y": 1,
-                "d": 0,
-                "collision": "floor"
+                rotation: 0,
+                collisionType: MG.CollisionType.NON_BLOCKING
             },
 
             {
-                "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                 "x": 0,
                 "y": 19,
-                "d": 180,
-                "collision": "wall"
+                rotation: 180,
+                collisionType: MG.CollisionType.BLOCKING
             }
         ],
         "objects": []
     }
-    export const testLevel1: object = {
+    export const testLevel1: MG.ILevelBuildData = {
         "name": "testLevel1",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 0,
-        "yPos": -1000,
-        "levelCollisions": [false, false, false, true],
+        "x": 0,
+        "y": -1000,
+        "borderCollisions": [false, false, false, true],
         "spawnPoint": {
             "name": "tl1_Checkpoint_001",
-            "type": "checkpoint",
-            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "type": MG.SpawnPointType.CHECKPOINT,
+            "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+            "activeTextureN": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
             "y": 18
         },
         "tiles": [],
         "objects": [
             {
-                "obj": Assets.Objects.testLevelCentre,
+                objectBuildData: Assets.Objects.testLevelCentre,
                 "x": 0,
                 "y": 0
             },
             {
-                "obj": Assets.Objects.testLevelCentre,
+                objectBuildData: Assets.Objects.testLevelCentre,
                 "x": -200,
                 "y": 100
             }
         ]
     }
-    export const testLevel2: object = {
+    export const testLevel2: MG.ILevelBuildData = {
         "name": "testLevel2",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 1000,
-        "yPos": -1000,
-        "levelCollisions": [false, true, true, false],
+        "x": 1000,
+        "y": -1000,
+        "borderCollisions": [false, true, true, false],
         "spawnPoint": {
             "name": "tl2_Checkpoint_001",
-            "type": "checkpoint",
-            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "type": MG.SpawnPointType.CHECKPOINT,
+            "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+            activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
             "y": 2
         },
         "tiles": [],
         "objects": [
             {
-                "obj": Assets.Objects.testLevelCentre,
+                objectBuildData: Assets.Objects.testLevelCentre,
                 "x": 0,
                 "y": 0
             },
             {
-                "obj": Assets.Objects.testLevelCentre,
+                objectBuildData: Assets.Objects.testLevelCentre,
                 "x": -200,
                 "y": 100
             }
         ]
     }
 
-    export const testLevel3: object = {
+    export const testLevel3: MG.ILevelBuildData = {
         "name": "testLevel3",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 0,
-        "yPos": -2000,
-        "levelCollisions": [true, false, false, true],
+        "x": 0,
+        "y": -2000,
+        "borderCollisions": [true, false, false, true],
         "spawnPoint": {
             "name": "tl3_Checkpoint_001",
-            "type": "checkpoint",
-            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "type": MG.SpawnPointType.CHECKPOINT,
+            "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+            activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
             "y": 2
         },
@@ -1229,20 +1149,20 @@ namespace Assets.Levels {
         "objects": []
     }
 
-    export const testLevel4: object = {
+    export const testLevel4: MG.ILevelBuildData = {
         "name": "testLevel4",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 1000,
-        "yPos": -2000,
-        "levelCollisions": [false, true, false, false],
+        "x": 1000,
+        "y": -2000,
+        "borderCollisions": [false, true, false, false],
         "spawnPoint": {
             "name": "tl4_Checkpoint_001",
-            "type": "checkpoint",
-            "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-            "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+            "type": MG.SpawnPointType.CHECKPOINT,
+            textureN: Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+            activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
             "y": 2
         },
@@ -1250,26 +1170,26 @@ namespace Assets.Levels {
         "objects": []
     }
 
-    export const testLevel5: object = {
+    export const testLevel5: MG.ILevelBuildData = {
         "name": "testLevel5",
         "width": 1000,
         "height": 1000,
         "gridSize": 50,
         "colour": "white",
-        "xPos": 1000,
-        "yPos": -3000,
-        "levelCollisions": [true, true, false, true],
+        "x": 1000,
+        "y": -3000,
+        "borderCollisions": [true, true, false, true],
         "spawnPoint": {
             "name": "tl5_End",
-            "type": "end",
-            "tex": Assets.Textures.SPAWNPOINT_END,
+            "type": MG.SpawnPointType.END,
+            "textureN": Assets.Textures.SPAWNPOINT_END.name,
             "x": 9,
             "y": 9
         },
         "tiles": [],
         "objects": []
     }
-    export const testLevels: object[] = [
+    export const testLevels: MG.ILevelBuildData[] = [
         testLevel0,
         testLevel1,
         testLevel2,

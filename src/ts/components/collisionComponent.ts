@@ -1,6 +1,6 @@
 namespace MG {
 
-    export interface CollisionComponentBuildData extends BaseComponentBuildData {
+    export interface ICollisionComponentBuildData extends IBaseComponentBuildData {
         width: number,
         height: number,
         bStatic: boolean
