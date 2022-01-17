@@ -662,7 +662,7 @@ namespace Assets.Textures {
         ]
     }
 
-    export const SPAWNPOINT: object = {
+    /*export const SPAWNPOINT: object = {
         "name": "SPAWNPOINT",
         "width": 11,
         "height": 11,
@@ -725,6 +725,64 @@ namespace Assets.Textures {
                     {"x": 4, "y": 5},
                     {"x": 6, "y": 5},
                     {"x": 5, "y": 6},
+                ]
+            }
+        ]
+    }*/
+    export const SPAWNPOINT: MG.ITextureBuildData = {
+        name: 'SPAWNPOINT',
+        width: 11,
+        height: 11,
+        baseColour: undefined,
+        layers: [
+            {
+                colour: {r: 163,g: 152,b: 94},
+                points: [
+                    {x: 3, y: 0},
+                    {x: 4, y: 0},
+                    {x: 5, y: 0},
+                    {x: 6, y: 0},
+                    {x: 7, y: 0},
+                    {x: 2, y: 1},
+                    {x: 8, y: 1},
+                    {x: 1, y: 2},
+                    {x: 4, y: 2},
+                    {x: 5, y: 2},
+                    {x: 6, y: 2},
+                    {x: 9, y: 2},
+                    {x: 0, y: 3},
+                    {x: 3, y: 3},
+                    {x: 7, y: 3},
+                    {x: 10, y: 3},
+                    {x: 0, y: 4},
+                    {x: 2, y: 4},
+                    {x: 8, y: 4},
+                    {x: 10, y: 4},
+                    {x: 0, y: 5},
+                    {x: 2, y: 5},
+                    {x: 5, y: 5},
+                    {x: 8, y: 5},
+                    {x: 10, y: 5},
+                    {x: 0, y: 6},
+                    {x: 2, y: 6},
+                    {x: 8, y: 6},
+                    {x: 10, y: 6},
+                    {x: 0, y: 7},
+                    {x: 3, y: 7},
+                    {x: 7, y: 7},
+                    {x: 10, y: 7},
+                    {x: 1, y: 8},
+                    {x: 4, y: 8},
+                    {x: 5, y: 8},
+                    {x: 6, y: 8},
+                    {x: 9, y: 8},
+                    {x: 2, y: 9},
+                    {x: 8, y: 9},
+                    {x: 3, y: 10},
+                    {x: 4, y: 10},
+                    {x: 5, y: 10},
+                    {x: 6, y: 10},
+                    {x: 7, y: 10}
                 ]
             }
         ]
@@ -979,6 +1037,29 @@ namespace Assets.Textures {
 }
 
 namespace Assets.Levels {
+    export const testLevel: MG.LevelBuildData = {
+        name: 'testLevel0',
+        width: 1000,
+        height: 1000,
+        gridSize: 50,
+        colour: 'white',
+        x: 0,
+        y: 0,
+        borderCollisions: [false, true, true, true],
+        spawnPoint: {
+            name: 'tl_spawn',
+            type: MG.SpawnPointType.SPAWN,
+            textureN: Assets.Textures.SPAWNPOINT.name,
+            activeTextureN: undefined,
+            x: 5,
+            y: 5
+        },
+        tiles: [
+            {
+                textureName: Assets.Textures
+            }
+        ]
+    }
     export const testLevel0: object = {
         "name": "testLevel0",
         "width": 1000,
@@ -1052,6 +1133,14 @@ namespace Assets.Levels {
                 "y": 1,
                 "d": 0,
                 "collision": "floor"
+            },
+
+            {
+                "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                "x": 0,
+                "y": 19,
+                "d": 180,
+                "collision": "wall"
             }
         ],
         "objects": []

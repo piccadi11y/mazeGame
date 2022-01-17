@@ -1072,6 +1072,13 @@ var Assets;
                     "y": 1,
                     "d": 0,
                     "collision": "floor"
+                },
+                {
+                    "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                    "x": 0,
+                    "y": 19,
+                    "d": 180,
+                    "collision": "wall"
                 }
             ],
             "objects": []
@@ -1326,7 +1333,7 @@ var MG;
         });
         BoxCollisionResult.prototype.drawResult = function (x, y, colour) {
             if (colour === void 0) { colour = 'violet'; }
-            var output = this.objectA.name + " is colliding with " + this.objectB.name + " on side " + CollisionSide[this.side] + " with separation of " + this.separation.x + ", " + this.separation.y;
+            var output = "".concat(this.objectA.name, " is colliding with ").concat(this.objectB.name, " on side ").concat(CollisionSide[this.side], " with separation of ").concat(this.separation.x, ", ").concat(this.separation.y);
             MG.ctx.fillStyle = colour;
             MG.ctx.fillText(output, x, y);
         };
@@ -1911,15 +1918,15 @@ var MG;
             MG.LevelManager.render();
             // ui bits
             var fps = Math.round(1000 / this.FRAME_TIME);
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblFrameData').value = this.FRAME_TIME + "ms | FPS: " + fps;
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblFrameData').value = "".concat(this.FRAME_TIME, "ms | FPS: ").concat(fps);
             MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblWorldData').value = MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void';
             var relPosX, relPosY;
             if (MG.LevelManager.player.currentLevel) {
                 relPosX = MG.LevelManager.player.position.x < MG.LevelManager.currentLevel.centre.x ? -1 : 1;
                 relPosY = MG.LevelManager.player.position.y < MG.LevelManager.currentLevel.centre.y ? -1 : 1;
             }
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = relPosX + ", " + relPosY;
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = MG.InputHandler.mousePosition.x + ", " + MG.InputHandler.mousePosition.y;
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = "".concat(relPosX, ", ").concat(relPosY);
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = "".concat(MG.InputHandler.mousePosition.x, ", ").concat(MG.InputHandler.mousePosition.y);
             MG.UserInterfaceManager.update(this.FRAME_TIME / 1000);
             MG.UserInterfaceManager.render();
             this.LAST_FRAME = performance.now();
@@ -2363,7 +2370,7 @@ var MG;
             return _this;
         }
         Player.prototype.createPlayerCamera = function (vpWidth, vpHeight) {
-            var c = new MG.CameraObject(this.name + "Camera", vpWidth, vpHeight);
+            var c = new MG.CameraObject("".concat(this.name, "Camera"), vpWidth, vpHeight);
             c.cameraComponent.setTarget(this);
         };
         Player.prototype.update = function (deltaTime) {
@@ -2390,10 +2397,10 @@ var MG;
             var _this = _super.call(this, name, level) || this;
             _this._checkpointActive = false;
             _this._type = type;
-            _this.addComponent(new MG.SpriteComponent(_this.name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
+            _this.addComponent(new MG.SpriteComponent("".concat(_this.name, "_spriteC"), [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
             // if type==checkpoint, create no blocking collision
             if (_this._type === SpawnPointType.CHECKPOINT || _this._type === SpawnPointType.END) {
-                _this.enableCollisionFromSprite(_this.name + "_spriteC", true, MG.CollisionType.NON_BLOCKING);
+                _this.enableCollisionFromSprite("".concat(_this.name, "_spriteC"), true, MG.CollisionType.NON_BLOCKING);
             }
             return _this;
         }
@@ -2418,13 +2425,13 @@ var MG;
             if (this._type === SpawnPointType.SPAWN)
                 return;
             this._checkpointActive = true;
-            this.getComponent(this.name + "_spriteC").frame = 1;
+            this.getComponent("".concat(this.name, "_spriteC")).frame = 1;
         };
         SpawnPoint.prototype.disable = function () {
             if (this._type === SpawnPointType.SPAWN)
                 return;
             this._checkpointActive = false;
-            this.getComponent(this.name + "_spriteC").frame = 0;
+            this.getComponent("".concat(this.name, "_spriteC")).frame = 0;
         };
         return SpawnPoint;
     }(MG.oObject));
@@ -2926,7 +2933,7 @@ var MG;
         };
         TextureManager.releaseTexture = function (textureName) {
             if (TextureManager._textures[textureName] === undefined)
-                console.warn("A texture named " + textureName + " does not exist and therefore cannot be released.");
+                console.warn("A texture named ".concat(textureName, " does not exist and therefore cannot be released."));
             else
                 TextureManager._textures[textureName].referenceCount--;
         };
@@ -2967,12 +2974,12 @@ var MG;
     var Tile = /** @class */ (function (_super) {
         __extends(Tile, _super);
         function Tile(textureName, level) {
-            var _this = _super.call(this, level.name + "_TILE_" + textureName, level) || this;
+            var _this = _super.call(this, "".concat(level.name, "_TILE_").concat(textureName), level) || this;
             _this._width = _this._level.gridSize;
             var ts = TileSpriteManager.getSprite(textureName);
             if (ts === undefined)
                 ts = TileSpriteManager.addSprite(_this._width, textureName);
-            _this.addComponent(MG.SpriteComponent.fromSprite(level.name + "_TEXTURECOMPONENT_" + textureName, ts));
+            _this.addComponent(MG.SpriteComponent.fromSprite("".concat(level.name, "_TEXTURECOMPONENT_").concat(textureName), ts));
             return _this;
         }
         return Tile;
@@ -3501,9 +3508,9 @@ var MG;
             this._transform.position.y = y;
             this._rootObject.position = this._transform.position;
             this.generateBorderCollisions();
-            MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
-            this._baseTexture = new MG.Sprite(this._width, this._height, ["LEVEL_" + this._name + "_BASE"]);
-            this._levelDetectionCollision = new MG.CollisionComponent(this._name + "_levelCollisionComponent", this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
+            MG.TextureManager.addTexture(new MG.Texture("LEVEL_".concat(this._name, "_BASE"), 1, 1, this._baseColour));
+            this._baseTexture = new MG.Sprite(this._width, this._height, ["LEVEL_".concat(this._name, "_BASE")]);
+            this._levelDetectionCollision = new MG.CollisionComponent("".concat(this._name, "_levelCollisionComponent"), this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
         }
         Object.defineProperty(Level.prototype, "name", {
             get: function () {
@@ -3575,25 +3582,25 @@ var MG;
             var oTemp;
             var borderWidth = this._gridSize;
             if (this._bBorderCollisions[0]) {
-                oTemp = new MG.oObject(this._name + "_levelCollisionObject_T", this);
+                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_T"), this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[1]) {
-                oTemp = new MG.oObject(this._name + "_levelCollisionObject_R", this);
+                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_R"), this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[2]) {
-                oTemp = new MG.oObject(this._name + "_levelCollisionObject_B", this);
+                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_B"), this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[3]) {
-                oTemp = new MG.oObject(this._name + "_levelCollisionObject_L", this);
+                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_L"), this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);

@@ -1,5 +1,11 @@
 namespace MG {
 
+    export interface IColour_RGB {
+        r: number,
+        g: number,
+        b: number
+    }
+
     export class Colour {
         
         public _r: number;

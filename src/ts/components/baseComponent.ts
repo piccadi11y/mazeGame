@@ -1,5 +1,10 @@
 namespace MG {
 
+    export interface BaseComponentBuildData {
+        type: string,
+        name: string
+    }
+
     export abstract class BaseComponent {
 
         protected _owner: oObject;

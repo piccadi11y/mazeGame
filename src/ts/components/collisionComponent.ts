@@ -1,5 +1,11 @@
 namespace MG {
 
+    export interface CollisionComponentBuildData extends BaseComponentBuildData {
+        width: number,
+        height: number,
+        bStatic: boolean
+    }
+
     export enum CollisionSide {
         X_POS = 1,
         X_NEG = 2,

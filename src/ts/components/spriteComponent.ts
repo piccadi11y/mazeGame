@@ -1,5 +1,10 @@
 namespace MG {
 
+    export interface SpriteComponentBuildData extends BaseComponentBuildData {
+        textureName: string,
+        width: number
+    }
+
     export class SpriteComponent extends BaseComponent {
 
         private _sprite: Sprite;

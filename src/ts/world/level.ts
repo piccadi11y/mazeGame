@@ -1,5 +1,42 @@
 namespace MG {
 
+    export interface lSpawnPointBuildData {
+        name: string,
+        type: SpawnPointType,
+        textureN: string,
+        activeTextureN: string,
+        x: number,
+        y: number
+    }
+
+        interface lTileBuildData {
+        textureName: string,
+        x: number,
+        y: number,
+        rotation: number,
+        collisionType: CollisionType
+    }
+
+    export interface loObjectBuildData {
+        objectBuildData: oObjectBuildData,
+        x: number,
+        y: number
+    }
+
+    export interface LevelBuildData {
+        name: string,
+        width: number,
+        height: number,
+        gridSize: number,
+        colour: string,
+        x: number,
+        y: number,
+        borderCollisions: boolean[],
+        spawnPoint: lSpawnPointBuildData,
+        tiles: lTileBuildData[],
+        objects: loObjectBuildData[]
+    }
+
     export class Level {
         
         private _name: string;
@@ -107,7 +144,7 @@ namespace MG {
             }
         }
 
-        public static load (data: object): Level {
+        /*public static load (data: object): Level {
             let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
 
             // tile logic goes here
@@ -145,6 +182,49 @@ namespace MG {
                 level.spawnPoint.update(0);
             }
             
+
+            return level;
+        }*/
+
+        public static load (lData: LevelBuildData): Level {
+            let level: Level = new Level(lData.name, lData.width, lData.height, lData.gridSize, Colour.fromString(lData.colour), lData.x, lData.y, lData.borderCollisions);
+
+            // TODO // t.textureName['name'] -> an actual string once TileBuildData/TextureBuildData is sorted
+            // TODO // refactor tile, oObject and sp constructors to append object to level rather than doing it after building/loading it here
+            // tile build logic
+            let tTemp: Tile;
+            for (let t of lData.tiles) {
+                tTemp = new Tile(t.textureName, level);
+                tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
+                tTemp.position.y = t.y* level.gridSize - level._height/2 + level.gridSize/2;
+                tTemp.rotation = t.rotation;
+                tTemp.update(0);
+                // TODO // move collision creation to tile constructor
+                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName['name'], true);
+                level.tiles.push(tTemp);
+            }
+
+            // spawn objects
+            let oTemp: oObject;
+            for (let o of lData.objects) {
+                oTemp = oObject.load(o.objectBuildData, level);
+                oTemp.position.x = o.x;
+                oTemp.position.y = o.y;
+                level.rootObject.addChild(oTemp);
+            }
+
+            // spawnpoint/checkpoint spawn/registration
+            let spD: lSpawnPointBuildData = lData.spawnPoint;
+            if (spD) {
+                let sp: SpawnPoint;
+                sp = SpawnPoint.load(spD, level);
+                if (sp.type === SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
+                level.rootObject.addChild(sp); // do this in sp constructor
+                level.spawnPoint = sp;
+                sp.position.x = spD.x * level.gridSize - level._width/2 + level.gridSize/2;
+                sp.position.y = spD.y * level.gridSize - level._height/2 + level.gridSize/2;
+                sp.update(0);
+            }
 
             return level;
         }

@@ -1,5 +1,24 @@
 namespace MG {
 
+    export interface ILayerPoint {
+        x: number,
+        y: number
+    }
+
+    export interface ILayer {
+        colour: IColour_RGB,
+        points: ILayerPoint[]
+    }
+
+    export interface ITextureBuildData {
+        name: string,
+        width: number,
+        height: number,
+        baseColour: IColour_RGB,
+        layers: ILayer[],
+
+    }
+
     export enum TextureFit {
         DEFAULT,        // draws 1 to 1, not very visible when only a few pixels wide
         STRETCH,
