@@ -1,6 +1,6 @@
 namespace MG {
 
-    export interface loObjectBuildData {
+    export interface IoObjectData {
         objectBuildData: IoObjectBuildData,
         x: number,
         y: number
@@ -17,7 +17,7 @@ namespace MG {
         borderCollisions: boolean[],
         spawnPoint: ISpawnPointBuildData,
         tiles: ITileBuildData[],
-        objects: loObjectBuildData[]
+        objects: IoObjectData[]
     }
 
     export class Level {
@@ -134,23 +134,12 @@ namespace MG {
             // tile build logic
             let tTemp: Tile;
             for (let tT of lData.tiles) {
-                /*
-                tTemp = new Tile(t.textureName, level);
-                tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
-                tTemp.position.y = t.y* level.gridSize - level._height/2 + level.gridSize/2;
-                tTemp.rotation = t.rotation;
-                tTemp.update(0);
-                // TODO // move collision creation to tile constructor
-                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
-                level.tiles.push(tTemp);
-                */
                 for (let t of tT.instances) {
                     tTemp = new Tile(tT.textureName, level);
                     tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
                     tTemp.position.y = t.y * level.gridSize - level._height/2 + level.gridSize/2;
                     tTemp.rotation = t.rotation;
                     tTemp.update(0);
-                    // if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + tT.textureName, true);
                     if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(Tile.spriteName(level.name, tT.textureName), true);
                     level.tiles.push(tTemp);
                }

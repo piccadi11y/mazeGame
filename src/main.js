@@ -3631,16 +3631,6 @@ var MG;
             var tTemp;
             for (var _i = 0, _a = lData.tiles; _i < _a.length; _i++) {
                 var tT = _a[_i];
-                /*
-                tTemp = new Tile(t.textureName, level);
-                tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
-                tTemp.position.y = t.y* level.gridSize - level._height/2 + level.gridSize/2;
-                tTemp.rotation = t.rotation;
-                tTemp.update(0);
-                // TODO // move collision creation to tile constructor
-                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
-                level.tiles.push(tTemp);
-                */
                 for (var _b = 0, _c = tT.instances; _b < _c.length; _b++) {
                     var t = _c[_b];
                     tTemp = new MG.Tile(tT.textureName, level);
@@ -3648,7 +3638,6 @@ var MG;
                     tTemp.position.y = t.y * level.gridSize - level._height / 2 + level.gridSize / 2;
                     tTemp.rotation = t.rotation;
                     tTemp.update(0);
-                    // if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + tT.textureName, true);
                     if (t.collisionType === MG.CollisionType.BLOCKING)
                         tTemp.enableCollisionFromSprite(MG.Tile.spriteName(level.name, tT.textureName), true);
                     level.tiles.push(tTemp);
