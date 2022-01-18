@@ -158,12 +158,12 @@ namespace MG {
             this._gameState.deregisterObject(oID);
         }
 
-        private static loadLevel (level: object): void {
+        private static loadLevel (level: ILevelBuildData): void {
             let l: Level = Level.load(level);
             LevelManager._loadedLevels.push(l);
         }
 
-        public static load (levels: object[]): void {
+        public static load (levels: ILevelBuildData[]): void {
             for (let ld of levels) this._loadedLevels.push(Level.load(ld));
             for (let l of this._loadedLevels) this._levelGrid.push(new LevelGridPosition(l.location.x/l.width, l.location.y/l.height, l));
             // so the logic has something to work with on frame 0

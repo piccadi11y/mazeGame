@@ -2,7 +2,7 @@ namespace MG {
 
     export interface IoObjectBuildData {
         name: string,
-        components: IBaseComponentBuildData[]
+        components?: IBaseComponentBuildData[]
     }
 
     export class oObject {
@@ -153,18 +153,22 @@ namespace MG {
 
         // TODO // provide overriding load functionality for all classes inheriting from oObject
         public static load (data: IoObjectBuildData, level: Level): oObject {
-            let obj: oObject = new oObject(level.name + '_' + data['name'], level);
+            let obj: oObject = new oObject(level.name + '_' + data.name, level);
 
             // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
-            for (let cD of data['components']) {
-                switch (cD['type']) {
-                    case 'sprite':
-                        obj.addComponent(new SpriteComponent(cD['name'], [cD['texture']], cD['width'], cD['height']));
-                        break;
-                    case 'collision':
-                        if (cD['spriteName'] !== undefined) obj.enableCollisionFromSprite(cD['spriteName'], cD['isStatic']);
-                        else obj.enableCollision(cD['width'], cD['height'], cD['isStatic']);
-                        break;
+            if (data.components) {
+                for (let cD of data.components) {
+                    switch (cD.type) {
+                        case 'sprite':
+                            let cS: ISpriteComponentBuildData = <ISpriteComponentBuildData>cD;
+                            obj.addComponent(new SpriteComponent(cS.name, [cS.textureName], cS.width));
+                            break;
+                        case 'collision':
+                            let cC: ICollisionComponentBuildData = <ICollisionComponentBuildData>cD;
+                            if (cC.spriteName !== undefined) obj.enableCollisionFromSprite(cC.spriteName, cC.bStatic);
+                            else obj.enableCollision(cC.width, cC.height, cC.bStatic);
+                            break;
+                    }
                 }
             }
 

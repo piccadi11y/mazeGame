@@ -1,13 +1,13 @@
 namespace MG {
 
-    export interface lSpawnPointBuildData {
+    /*export interface lSpawnPointBuildData {
         name: string,
         type: SpawnPointType,
         textureN: string,
         activeTextureN?: string,
         x: number,
         y: number
-    }
+    }*/
 
     export interface lTileBuildData {
         textureName: string,
@@ -32,7 +32,7 @@ namespace MG {
         x: number,
         y: number,
         borderCollisions: boolean[],
-        spawnPoint: lSpawnPointBuildData,
+        spawnPoint: ISpawnPointBuildData,
         tiles: lTileBuildData[],
         objects: loObjectBuildData[]
     }
@@ -186,7 +186,7 @@ namespace MG {
             return level;
         }*/
 
-        public static load (lData: LevelBuildData): Level {
+        public static load (lData: ILevelBuildData): Level {
             let level: Level = new Level(lData.name, lData.width, lData.height, lData.gridSize, Colour.fromString(lData.colour), lData.x, lData.y, lData.borderCollisions);
 
             // TODO // t.textureName['name'] -> an actual string once TileBuildData/TextureBuildData is sorted
@@ -200,7 +200,7 @@ namespace MG {
                 tTemp.rotation = t.rotation;
                 tTemp.update(0);
                 // TODO // move collision creation to tile constructor
-                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName['name'], true);
+                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
                 level.tiles.push(tTemp);
             }
 
@@ -214,7 +214,7 @@ namespace MG {
             }
 
             // spawnpoint/checkpoint spawn/registration
-            let spD: lSpawnPointBuildData = lData.spawnPoint;
+            let spD: ISpawnPointBuildData = lData.spawnPoint;
             if (spD) {
                 let sp: SpawnPoint;
                 sp = SpawnPoint.load(spD, level);

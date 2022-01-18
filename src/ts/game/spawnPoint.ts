@@ -1,4 +1,15 @@
+/// <reference path="../engine/oObject.ts"/>
+
 namespace MG {
+
+    export interface ISpawnPointBuildData extends IoObjectBuildData {
+        name: string,
+        spType: SpawnPointType,
+        textureN: string,
+        activeTextureN?: string,
+        x: number,
+        y: number
+    }
 
     export enum SpawnPointType {
         SPAWN = 'start',
@@ -27,8 +38,9 @@ namespace MG {
             return this._type;
         }
 
-        public static load (data: object, level: Level): SpawnPoint {
-            return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive']?data['texActive']['name']:undefined);
+        public static load (data: ISpawnPointBuildData, level: Level): SpawnPoint {
+            // return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive']?data['texActive']['name']:undefined);
+            return new SpawnPoint(data.name, level, data.spType, data.textureN, data.activeTextureN?data.activeTextureN:undefined);
         }
 
         public onCollision (collidingObject: oObject): void {

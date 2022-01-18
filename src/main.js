@@ -13,35 +13,561 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var MG;
+(function (MG) {
+    var oObject = /** @class */ (function () {
+        /**
+         * @param name The object's name
+         * @param level The level the object is associated with, if applicable
+         * @param id The object's id. Leave empty unless intentionally overriding built-in id assignment
+         */
+        function oObject(name, level, id) {
+            if (level === void 0) { level = undefined; }
+            if (id === void 0) { id = undefined; }
+            this._children = [];
+            this._components = [];
+            this._collisionComponent = undefined;
+            this._transform = new MG.Transform();
+            this._worldTransform = new MG.Transform();
+            // don't bother updating collisions if so
+            this._bIsStatic = true;
+            this._id = MG.LevelManager.registerObject(this, id);
+            this._name = name;
+            this._level = level;
+            // console.log('Object \'', this._name, '\' has been created with id:', this._id);
+        }
+        Object.defineProperty(oObject.prototype, "id", {
+            get: function () {
+                return this._id;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "parent", {
+            get: function () {
+                return this._parent;
+            },
+            set: function (parent) {
+                this._parent = parent;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "rotation", {
+            get: function () {
+                return this._transform.rotation;
+            },
+            set: function (degrees) {
+                this._transform.rotation = degrees;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "position", {
+            get: function () {
+                return this._transform.position;
+            },
+            set: function (pos) {
+                this._transform.position.copyFrom(pos);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "worldTransform", {
+            get: function () {
+                return this._worldTransform;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "level", {
+            get: function () {
+                return this._level;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "isStatic", {
+            get: function () {
+                return this._bIsStatic;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "children", {
+            get: function () {
+                return this._children;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(oObject.prototype, "collisionComponent", {
+            get: function () {
+                return this._collisionComponent;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        oObject.prototype.setIsStatic = function (bIsStatic) {
+            this._bIsStatic = bIsStatic;
+        };
+        oObject.prototype.addChild = function (child) {
+            child.parent = this;
+            this._children.push(child);
+        };
+        oObject.prototype.removeChild = function (child) {
+            var index = this._children.indexOf(child);
+            if (index !== -1) {
+                child.parent = undefined;
+                this._children.splice(index, 1);
+            }
+        };
+        oObject.prototype.enableCollisionFromSprite = function (spriteComponentName, bIsStatic, collisionType) {
+            if (bIsStatic === void 0) { bIsStatic = true; }
+            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
+            console.log(spriteComponentName);
+            var dimensions = this.getComponent(spriteComponentName).dimensions;
+            this.enableCollision(dimensions.x, dimensions.y, bIsStatic, collisionType);
+        };
+        oObject.prototype.enableCollision = function (width, height, bIsStatic, collisionType) {
+            if (bIsStatic === void 0) { bIsStatic = true; }
+            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
+            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform, collisionType);
+            this._bIsStatic = bIsStatic;
+            this._collisionComponent.setOwner(this);
+        };
+        oObject.prototype.disableCollision = function () {
+            // TODO // necessary?
+            delete this._collisionComponent;
+            this._collisionComponent = undefined;
+            this._bIsStatic = true;
+        };
+        oObject.prototype.onCollision = function (collidingObject) { };
+        oObject.prototype.getObjectByName = function (name) {
+            if (this._name === name)
+                return this;
+            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
+                var child = _a[_i];
+                var result = child.getObjectByName(name);
+                if (result !== undefined)
+                    return result;
+            }
+            return undefined;
+        };
+        oObject.prototype.addComponent = function (component) {
+            this._components.push(component);
+            component.setOwner(this);
+        };
+        oObject.prototype.getComponent = function (name) {
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var e = _a[_i];
+                if (e.name === name)
+                    return e;
+            }
+            return undefined;
+        };
+        oObject.prototype.getComponents = function () {
+            return this._components;
+        };
+        // TODO // provide overriding load functionality for all classes inheriting from oObject
+        oObject.load = function (data, level) {
+            var obj = new oObject(level.name + '_' + data.name, level);
+            // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
+            if (data.components) {
+                for (var _i = 0, _a = data.components; _i < _a.length; _i++) {
+                    var cD = _a[_i];
+                    switch (cD.type) {
+                        case 'sprite':
+                            var cS = cD;
+                            obj.addComponent(new MG.SpriteComponent(cS.name, [cS.textureName], cS.width));
+                            break;
+                        case 'collision':
+                            var cC = cD;
+                            if (cC.spriteName !== undefined)
+                                obj.enableCollisionFromSprite(cC.spriteName, cC.bStatic);
+                            else
+                                obj.enableCollision(cC.width, cC.height, cC.bStatic);
+                            break;
+                    }
+                }
+            }
+            return obj;
+        };
+        oObject.prototype.update = function (deltaTime) {
+            this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
+            if (this._collisionComponent !== undefined && this._bIsStatic === false) {
+                this._collisionComponent.updateTransform(this._worldTransform !== undefined ? this._worldTransform : this._transform);
+                // TODO // check collisions against other objects? (as in other objects than the player against other non-player objects? maybe...)
+            }
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var c = _a[_i];
+                c.update(deltaTime);
+            }
+            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
+                var c = _c[_b];
+                c.update(deltaTime);
+            }
+        };
+        oObject.prototype.render = function (camera, bDrawDebugs) {
+            if (bDrawDebugs === void 0) { bDrawDebugs = false; }
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var c = _a[_i];
+                c.render(this._worldTransform, camera, bDrawDebugs);
+            }
+            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
+                var c = _c[_b];
+                c.render(camera, bDrawDebugs);
+            }
+            if (bDrawDebugs) {
+                // collision
+                if (this._collisionComponent !== undefined) {
+                    var tex = MG.TextureManager.getTexture('collisionDebug');
+                    tex.draw(camera, true, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                }
+            }
+        };
+        oObject.prototype.updateWorldTransform = function (parentWorldTransform) {
+            if (parentWorldTransform !== undefined) {
+                var trans = new MG.Transform();
+                trans.copyFrom(this._transform);
+                trans.rotation += parentWorldTransform.rotation;
+                trans.position = MG.Vector2.rotate(trans.position, parentWorldTransform.rotation);
+                trans.position.x += parentWorldTransform.position.x;
+                trans.position.y += parentWorldTransform.position.y;
+                this._worldTransform.copyFrom(trans);
+            }
+            else
+                this._worldTransform.copyFrom(this._transform);
+        };
+        return oObject;
+    }());
+    MG.oObject = oObject;
+})(MG || (MG = {}));
+/// <reference path="../engine/oObject.ts"/>
+var MG;
+(function (MG) {
+    var SpawnPointType;
+    (function (SpawnPointType) {
+        SpawnPointType["SPAWN"] = "start";
+        SpawnPointType["CHECKPOINT"] = "checkpoint";
+        SpawnPointType["END"] = "end";
+    })(SpawnPointType = MG.SpawnPointType || (MG.SpawnPointType = {}));
+    var SpawnPoint = /** @class */ (function (_super) {
+        __extends(SpawnPoint, _super);
+        function SpawnPoint(name, level, type, textureName, activeTextureName) {
+            if (activeTextureName === void 0) { activeTextureName = undefined; }
+            var _this = _super.call(this, name, level) || this;
+            _this._checkpointActive = false;
+            _this._type = type;
+            _this.addComponent(new MG.SpriteComponent(_this.name + "_spriteC", [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
+            // if type==checkpoint, create no blocking collision
+            if (_this._type === SpawnPointType.CHECKPOINT || _this._type === SpawnPointType.END) {
+                _this.enableCollisionFromSprite(_this.name + "_spriteC", true, MG.CollisionType.NON_BLOCKING);
+            }
+            return _this;
+        }
+        Object.defineProperty(SpawnPoint.prototype, "type", {
+            get: function () {
+                return this._type;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        SpawnPoint.load = function (data, level) {
+            // return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive']?data['texActive']['name']:undefined);
+            return new SpawnPoint(data.name, level, data.spType, data.textureN, data.activeTextureN ? data.activeTextureN : undefined);
+        };
+        SpawnPoint.prototype.onCollision = function (collidingObject) {
+            _super.prototype.onCollision.call(this, collidingObject);
+            if (this._type === SpawnPointType.END)
+                MG.LevelManager.restart();
+            else if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
+                MG.LevelManager.setCheckpoint(this);
+        };
+        SpawnPoint.prototype.enable = function () {
+            if (this._type === SpawnPointType.SPAWN)
+                return;
+            this._checkpointActive = true;
+            this.getComponent(this.name + "_spriteC").frame = 1;
+        };
+        SpawnPoint.prototype.disable = function () {
+            if (this._type === SpawnPointType.SPAWN)
+                return;
+            this._checkpointActive = false;
+            this.getComponent(this.name + "_spriteC").frame = 0;
+        };
+        return SpawnPoint;
+    }(MG.oObject));
+    MG.SpawnPoint = SpawnPoint;
+})(MG || (MG = {}));
+var MG;
+(function (MG) {
+    var BaseComponent = /** @class */ (function () {
+        function BaseComponent(name) {
+            this.name = name;
+        }
+        Object.defineProperty(BaseComponent.prototype, "owner", {
+            get: function () {
+                return this._owner;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        BaseComponent.prototype.setOwner = function (obj) {
+            this._owner = obj;
+        };
+        BaseComponent.prototype.load = function () {
+        };
+        BaseComponent.prototype.update = function (deltaTime) {
+        };
+        BaseComponent.prototype.render = function (transform, camera, bDrawDebugs) {
+        };
+        return BaseComponent;
+    }());
+    MG.BaseComponent = BaseComponent;
+})(MG || (MG = {}));
+/// <reference path="baseComponent.ts"/>
+var MG;
+(function (MG) {
+    var CollisionSide;
+    (function (CollisionSide) {
+        CollisionSide[CollisionSide["X_POS"] = 1] = "X_POS";
+        CollisionSide[CollisionSide["X_NEG"] = 2] = "X_NEG";
+        CollisionSide[CollisionSide["Y_NEG"] = 4] = "Y_NEG";
+        CollisionSide[CollisionSide["Y_POS"] = 8] = "Y_POS";
+        CollisionSide[CollisionSide["SUM"] = 15] = "SUM";
+        CollisionSide[CollisionSide["XY_NEG"] = 6] = "XY_NEG";
+        CollisionSide[CollisionSide["X_NEG_Y"] = 10] = "X_NEG_Y";
+        CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
+        CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
+    })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
+    var CollisionType;
+    (function (CollisionType) {
+        CollisionType[CollisionType["BLOCKING"] = 0] = "BLOCKING";
+        CollisionType[CollisionType["NON_BLOCKING"] = 1] = "NON_BLOCKING";
+    })(CollisionType = MG.CollisionType || (MG.CollisionType = {}));
+    var BoxCollisionResult = /** @class */ (function () {
+        function BoxCollisionResult(a, b, side, separation, type) {
+            this.objectA = a;
+            this.objectB = b;
+            this._rawSide = side;
+            this.separation = separation;
+            this.type = type;
+            this._calculatedSide = this.calculateSide();
+        }
+        BoxCollisionResult.prototype.calculateSide = function () {
+            // calculate probable side based off separation
+            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
+                return this._rawSide;
+            switch (this._rawSide) {
+                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
+                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
+                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
+                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
+            }
+        };
+        Object.defineProperty(BoxCollisionResult.prototype, "rawSide", {
+            get: function () {
+                return this._rawSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(BoxCollisionResult.prototype, "side", {
+            get: function () {
+                return this._calculatedSide;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        BoxCollisionResult.prototype.drawResult = function (x, y, colour) {
+            if (colour === void 0) { colour = 'violet'; }
+            var output = this.objectA.name + " is colliding with " + this.objectB.name + " on side " + CollisionSide[this.side] + " with separation of " + this.separation.x + ", " + this.separation.y;
+            MG.ctx.fillStyle = colour;
+            MG.ctx.fillText(output, x, y);
+        };
+        return BoxCollisionResult;
+    }());
+    MG.BoxCollisionResult = BoxCollisionResult;
+    var PointInBoxResult = /** @class */ (function () {
+        function PointInBoxResult() {
+            this._placeholder = 'pibr_placeholder';
+        }
+        return PointInBoxResult;
+    }());
+    MG.PointInBoxResult = PointInBoxResult;
+    var CollisionComponent = /** @class */ (function (_super) {
+        __extends(CollisionComponent, _super);
+        function CollisionComponent(name, width, height, transform, type) {
+            var _this = _super.call(this, name) || this;
+            _this._transform = new MG.Transform();
+            _this._width = width;
+            _this._height = height;
+            _this._transform = transform;
+            _this._collisionType = type;
+            return _this;
+        }
+        Object.defineProperty(CollisionComponent.prototype, "transform", {
+            get: function () {
+                return this._transform;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(CollisionComponent.prototype, "collisionType", {
+            get: function () {
+                return this._collisionType;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        CollisionComponent.prototype.updateTransform = function (transform) {
+            this._transform.copyFrom(transform);
+        };
+        CollisionComponent.prototype.checkColliding = function (collisionObject, movement) {
+            // TODO // enable collision checking for rotated objects
+            if (movement === void 0) { movement = MG.Vector2.Zero; }
+            var leftA, leftB;
+            var rightA, rightB;
+            var topA, topB;
+            var bottomA, bottomB;
+            leftA = this._transform.position.x - this._width / 2 + movement.x;
+            // rightA = leftA + this._width + movement.y; // no way... #2
+            // rightA = leftA + this._width + movement.x; // no way... #3
+            rightA = leftA + this._width;
+            // topA = this._transform.position.y - this._height/2 + movement.x; // no way...
+            topA = this._transform.position.y - this._height / 2 + movement.y;
+            // bottomA = topA + this._height + movement.y; // no way... #4
+            bottomA = topA + this._height;
+            leftB = collisionObject.transform.position.x - collisionObject.width / 2;
+            rightB = leftB + collisionObject.width;
+            topB = collisionObject.transform.position.y - collisionObject.height / 2;
+            bottomB = topB + collisionObject.height;
+            if (bottomA <= topB)
+                return undefined;
+            if (topA >= bottomB)
+                return undefined;
+            if (rightA <= leftB)
+                return undefined;
+            if (leftA >= rightB)
+                return undefined;
+            var side = CollisionSide.SUM;
+            // TODO? // I'm sure this derives from bit shifting binary or something...
+            if (bottomA > collisionObject.transform.position.y) {
+                // then it can't be Y_POS
+                side -= CollisionSide.Y_POS;
+            }
+            if (topA < collisionObject.transform.position.y) {
+                // then it can't be Y_NEG
+                side -= CollisionSide.Y_NEG;
+            }
+            if (rightA > collisionObject.transform.position.x) {
+                // then it can't be X_POS
+                side -= CollisionSide.X_POS;
+            }
+            if (leftA < collisionObject.transform.position.x) {
+                // then it can't be X_NEG
+                side -= CollisionSide.X_NEG;
+            }
+            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
+            var sepX, sepY;
+            if (rightA - leftB < rightB - leftA)
+                sepX = rightA - leftB;
+            else
+                sepX = rightB - leftA;
+            if (bottomA - topB < bottomB - topA)
+                sepY = bottomA - topB;
+            else
+                sepY = bottomB - topA;
+            return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
+        };
+        CollisionComponent.prototype.checkPointWithin = function (point, bCentre) {
+            if (bCentre === void 0) { bCentre = true; }
+            var left, right, top, bottom;
+            // left = this._transform.position.x - this._width/2;
+            left = this._transform.position.x;
+            // top = this._transform.position.y - this._height/2;
+            top = this._transform.position.y;
+            if (bCentre) {
+                left -= this._width / 2;
+                top -= this._height / 2;
+            }
+            right = left + this._width;
+            bottom = top + this._height;
+            if (point.x < left)
+                return undefined;
+            if (point.x > right)
+                return undefined;
+            if (point.y < top)
+                return undefined;
+            if (point.y > bottom)
+                return undefined;
+            return new PointInBoxResult();
+        };
+        CollisionComponent.prototype.checkBoxContained = function (containingBox, bCentre) {
+            if (bCentre === void 0) { bCentre = true; }
+            var leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
+            /*leftA = this._transform.position.x - this._width/2;
+            rightA = leftA + this._width;
+            topA = this._transform.position.y - this._height/2;
+            bottomA = topA + this._height;
+
+            leftB = containingBox.transform.position.x - containingBox.width/2;
+            rightB = leftB + containingBox.width;
+            topB = containingBox.transform.position.y - containingBox.height/2;
+            bottomB = topB + containingBox.height;*/
+            // this possibly works, hasn't been tested
+            leftA = this._transform.position.x;
+            topA = this._transform.position.y;
+            leftB = containingBox.transform.position.x;
+            topB = containingBox.transform.position.y;
+            if (bCentre) {
+                leftA -= this._width / 2;
+                topA -= this._height / 2;
+                leftB -= containingBox.width / 2;
+                topB -= containingBox.height / 2;
+            }
+            rightA = leftA + this._width;
+            bottomA = topA + this._height;
+            rightB = leftB + containingBox.width;
+            bottomB = topB + containingBox.height;
+            if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB)
+                return true;
+            return false;
+        };
+        return CollisionComponent;
+    }(MG.BaseComponent));
+    MG.CollisionComponent = CollisionComponent;
+})(MG || (MG = {}));
+/// <reference path="./src/ts/game/spawnPoint.ts"/>
+/// <reference path="./src/ts/components/collisionComponent.ts"/>
 var Assets;
 (function (Assets) {
     var GameOptions;
     (function (GameOptions) {
         GameOptions.bDrawDebugs = false;
     })(GameOptions = Assets.GameOptions || (Assets.GameOptions = {}));
-})(Assets || (Assets = {}));
-(function (Assets) {
-    var Objects;
-    (function (Objects) {
-        Objects.testLevelCentre = {
-            "name": "testLevelCentre",
-            "components": [
-                {
-                    "type": "sprite",
-                    "name": "centreSprite",
-                    "texture": "testObjectTexture",
-                    "width": 50
-                },
-                {
-                    "type": "collision",
-                    "spriteName": "centreSprite",
-                    "width": undefined,
-                    "height": undefined,
-                    "isStatic": true
-                }
-            ]
-        };
-    })(Objects = Assets.Objects || (Assets.Objects = {}));
 })(Assets || (Assets = {}));
 (function (Assets) {
     var Textures;
@@ -997,6 +1523,30 @@ var Assets;
     })(Textures = Assets.Textures || (Assets.Textures = {}));
 })(Assets || (Assets = {}));
 (function (Assets) {
+    var Objects;
+    (function (Objects) {
+        Objects.testLevelCentre = {
+            "name": "testLevelCentre",
+            "components": [
+                {
+                    type: 'sprite',
+                    name: 'centreSprite',
+                    textureName: Assets.Textures.testObjectTexture.name,
+                    width: 50
+                },
+                {
+                    type: 'collision',
+                    name: 'centreSprite_CC',
+                    spriteName: 'centreSprite',
+                    width: undefined,
+                    height: undefined,
+                    bStatic: true
+                }
+            ]
+        };
+    })(Objects = Assets.Objects || (Assets.Objects = {}));
+})(Assets || (Assets = {}));
+(function (Assets) {
     var Levels;
     (function (Levels) {
         Levels.testLevel0 = {
@@ -1005,80 +1555,80 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 0,
-            "yPos": 0,
-            "levelCollisions": [false, true, true, true],
+            "x": 0,
+            "y": 0,
+            "borderCollisions": [false, true, true, true],
             "spawnPoint": {
                 "name": "tl_spawn",
-                "type": "start",
-                "tex": Assets.Textures.SPAWNPOINT,
-                "texActive": undefined,
+                spType: MG.SpawnPointType.SPAWN,
+                textureN: Assets.Textures.SPAWNPOINT.name,
+                "activeTextureN": undefined,
                 "x": 5,
                 "y": 5
             },
             "tiles": [
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                     "x": 0,
                     "y": 0,
-                    "d": 270,
-                    "collision": "wall"
+                    rotation: 270,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 1,
                     "y": 0,
-                    "d": 180,
-                    "collision": "wall"
+                    rotation: 180,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 2,
                     "y": 0,
-                    "d": 180,
-                    "collision": "wall"
+                    rotation: 180,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 3,
                     "y": 0,
-                    "d": 180,
-                    "collision": "wall"
+                    rotation: 180,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 0,
                     "y": 1,
-                    "d": 90,
-                    "collision": "wall"
+                    rotation: 90,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 0,
                     "y": 2,
-                    "d": 90,
-                    "collision": "wall"
+                    rotation: 90,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     "x": 0,
                     "y": 3,
-                    "d": 90,
-                    "collision": "wall"
+                    rotation: 90,
+                    collisionType: MG.CollisionType.BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_FLOOR_TEST,
+                    textureName: Assets.Textures.TILE_FLOOR_TEST.name,
                     "x": 1,
                     "y": 1,
-                    "d": 0,
-                    "collision": "floor"
+                    rotation: 0,
+                    collisionType: MG.CollisionType.NON_BLOCKING
                 },
                 {
-                    "obj": Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                     "x": 0,
                     "y": 19,
-                    "d": 180,
-                    "collision": "wall"
+                    rotation: 180,
+                    collisionType: MG.CollisionType.BLOCKING
                 }
             ],
             "objects": []
@@ -1089,26 +1639,26 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 0,
-            "yPos": -1000,
-            "levelCollisions": [false, false, false, true],
+            "x": 0,
+            "y": -1000,
+            "borderCollisions": [false, false, false, true],
             "spawnPoint": {
                 "name": "tl1_Checkpoint_001",
-                "type": "checkpoint",
-                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                spType: MG.SpawnPointType.CHECKPOINT,
+                "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+                "activeTextureN": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
                 "x": 3,
                 "y": 18
             },
             "tiles": [],
             "objects": [
                 {
-                    "obj": Assets.Objects.testLevelCentre,
+                    objectBuildData: Assets.Objects.testLevelCentre,
                     "x": 0,
                     "y": 0
                 },
                 {
-                    "obj": Assets.Objects.testLevelCentre,
+                    objectBuildData: Assets.Objects.testLevelCentre,
                     "x": -200,
                     "y": 100
                 }
@@ -1120,26 +1670,26 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 1000,
-            "yPos": -1000,
-            "levelCollisions": [false, true, true, false],
+            "x": 1000,
+            "y": -1000,
+            "borderCollisions": [false, true, true, false],
             "spawnPoint": {
                 "name": "tl2_Checkpoint_001",
-                "type": "checkpoint",
-                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                spType: MG.SpawnPointType.CHECKPOINT,
+                "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+                activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
                 "x": 3,
                 "y": 2
             },
             "tiles": [],
             "objects": [
                 {
-                    "obj": Assets.Objects.testLevelCentre,
+                    objectBuildData: Assets.Objects.testLevelCentre,
                     "x": 0,
                     "y": 0
                 },
                 {
-                    "obj": Assets.Objects.testLevelCentre,
+                    objectBuildData: Assets.Objects.testLevelCentre,
                     "x": -200,
                     "y": 100
                 }
@@ -1151,14 +1701,14 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 0,
-            "yPos": -2000,
-            "levelCollisions": [true, false, false, true],
+            "x": 0,
+            "y": -2000,
+            "borderCollisions": [true, false, false, true],
             "spawnPoint": {
                 "name": "tl3_Checkpoint_001",
-                "type": "checkpoint",
-                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                spType: MG.SpawnPointType.CHECKPOINT,
+                "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+                activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
                 "x": 3,
                 "y": 2
             },
@@ -1171,14 +1721,14 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 1000,
-            "yPos": -2000,
-            "levelCollisions": [false, true, false, false],
+            "x": 1000,
+            "y": -2000,
+            "borderCollisions": [false, true, false, false],
             "spawnPoint": {
                 "name": "tl4_Checkpoint_001",
-                "type": "checkpoint",
-                "tex": Assets.Textures.SPAWNPOINT_CHECKPOINT,
-                "texActive": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
+                spType: MG.SpawnPointType.CHECKPOINT,
+                textureN: Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
+                activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
                 "x": 3,
                 "y": 2
             },
@@ -1191,13 +1741,13 @@ var Assets;
             "height": 1000,
             "gridSize": 50,
             "colour": "white",
-            "xPos": 1000,
-            "yPos": -3000,
-            "levelCollisions": [true, true, false, true],
+            "x": 1000,
+            "y": -3000,
+            "borderCollisions": [true, true, false, true],
             "spawnPoint": {
                 "name": "tl5_End",
-                "type": "end",
-                "tex": Assets.Textures.SPAWNPOINT_END,
+                spType: MG.SpawnPointType.END,
+                "textureN": Assets.Textures.SPAWNPOINT_END.name,
                 "x": 9,
                 "y": 9
             },
@@ -1218,32 +1768,6 @@ window.onload = function () {
     var engine = new MG.Engine('GameCanvas');
     engine.Start();
 };
-var MG;
-(function (MG) {
-    var BaseComponent = /** @class */ (function () {
-        function BaseComponent(name) {
-            this.name = name;
-        }
-        Object.defineProperty(BaseComponent.prototype, "owner", {
-            get: function () {
-                return this._owner;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        BaseComponent.prototype.setOwner = function (obj) {
-            this._owner = obj;
-        };
-        BaseComponent.prototype.load = function () {
-        };
-        BaseComponent.prototype.update = function (deltaTime) {
-        };
-        BaseComponent.prototype.render = function (transform, camera, bDrawDebugs) {
-        };
-        return BaseComponent;
-    }());
-    MG.BaseComponent = BaseComponent;
-})(MG || (MG = {}));
 var MG;
 (function (MG) {
     var CameraComponent = /** @class */ (function (_super) {
@@ -1277,232 +1801,6 @@ var MG;
         return CameraComponent;
     }(MG.BaseComponent));
     MG.CameraComponent = CameraComponent;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var CollisionSide;
-    (function (CollisionSide) {
-        CollisionSide[CollisionSide["X_POS"] = 1] = "X_POS";
-        CollisionSide[CollisionSide["X_NEG"] = 2] = "X_NEG";
-        CollisionSide[CollisionSide["Y_NEG"] = 4] = "Y_NEG";
-        CollisionSide[CollisionSide["Y_POS"] = 8] = "Y_POS";
-        CollisionSide[CollisionSide["SUM"] = 15] = "SUM";
-        CollisionSide[CollisionSide["XY_NEG"] = 6] = "XY_NEG";
-        CollisionSide[CollisionSide["X_NEG_Y"] = 10] = "X_NEG_Y";
-        CollisionSide[CollisionSide["Y_NEG_X"] = 5] = "Y_NEG_X";
-        CollisionSide[CollisionSide["XY_POS"] = 9] = "XY_POS";
-    })(CollisionSide = MG.CollisionSide || (MG.CollisionSide = {}));
-    var CollisionType;
-    (function (CollisionType) {
-        CollisionType[CollisionType["BLOCKING"] = 0] = "BLOCKING";
-        CollisionType[CollisionType["NON_BLOCKING"] = 1] = "NON_BLOCKING";
-    })(CollisionType = MG.CollisionType || (MG.CollisionType = {}));
-    var BoxCollisionResult = /** @class */ (function () {
-        function BoxCollisionResult(a, b, side, separation, type) {
-            this.objectA = a;
-            this.objectB = b;
-            this._rawSide = side;
-            this.separation = separation;
-            this.type = type;
-            this._calculatedSide = this.calculateSide();
-        }
-        BoxCollisionResult.prototype.calculateSide = function () {
-            // calculate probable side based off separation
-            if (this._rawSide === CollisionSide.X_POS || this._rawSide === CollisionSide.X_NEG || this._rawSide === CollisionSide.Y_POS || this._rawSide === CollisionSide.Y_NEG)
-                return this._rawSide;
-            switch (this._rawSide) {
-                case CollisionSide.XY_NEG: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_NEG;
-                case CollisionSide.XY_POS: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_POS;
-                case CollisionSide.X_NEG_Y: return this.separation.x < this.separation.y ? CollisionSide.X_NEG : CollisionSide.Y_POS;
-                case CollisionSide.Y_NEG_X: return this.separation.x < this.separation.y ? CollisionSide.X_POS : CollisionSide.Y_NEG;
-            }
-        };
-        Object.defineProperty(BoxCollisionResult.prototype, "rawSide", {
-            get: function () {
-                return this._rawSide;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(BoxCollisionResult.prototype, "side", {
-            get: function () {
-                return this._calculatedSide;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        BoxCollisionResult.prototype.drawResult = function (x, y, colour) {
-            if (colour === void 0) { colour = 'violet'; }
-            var output = "".concat(this.objectA.name, " is colliding with ").concat(this.objectB.name, " on side ").concat(CollisionSide[this.side], " with separation of ").concat(this.separation.x, ", ").concat(this.separation.y);
-            MG.ctx.fillStyle = colour;
-            MG.ctx.fillText(output, x, y);
-        };
-        return BoxCollisionResult;
-    }());
-    MG.BoxCollisionResult = BoxCollisionResult;
-    var PointInBoxResult = /** @class */ (function () {
-        function PointInBoxResult() {
-            this._placeholder = 'pibr_placeholder';
-        }
-        return PointInBoxResult;
-    }());
-    MG.PointInBoxResult = PointInBoxResult;
-    var CollisionComponent = /** @class */ (function (_super) {
-        __extends(CollisionComponent, _super);
-        function CollisionComponent(name, width, height, transform, type) {
-            var _this = _super.call(this, name) || this;
-            _this._transform = new MG.Transform();
-            _this._width = width;
-            _this._height = height;
-            _this._transform = transform;
-            _this._collisionType = type;
-            return _this;
-        }
-        Object.defineProperty(CollisionComponent.prototype, "transform", {
-            get: function () {
-                return this._transform;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionComponent.prototype, "width", {
-            get: function () {
-                return this._width;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionComponent.prototype, "height", {
-            get: function () {
-                return this._height;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(CollisionComponent.prototype, "collisionType", {
-            get: function () {
-                return this._collisionType;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        CollisionComponent.prototype.updateTransform = function (transform) {
-            this._transform.copyFrom(transform);
-        };
-        CollisionComponent.prototype.checkColliding = function (collisionObject, movement) {
-            // TODO // enable collision checking for rotated objects
-            if (movement === void 0) { movement = MG.Vector2.Zero; }
-            var leftA, leftB;
-            var rightA, rightB;
-            var topA, topB;
-            var bottomA, bottomB;
-            leftA = this._transform.position.x - this._width / 2 + movement.x;
-            // rightA = leftA + this._width + movement.y; // no way... #2
-            // rightA = leftA + this._width + movement.x; // no way... #3
-            rightA = leftA + this._width;
-            // topA = this._transform.position.y - this._height/2 + movement.x; // no way...
-            topA = this._transform.position.y - this._height / 2 + movement.y;
-            // bottomA = topA + this._height + movement.y; // no way... #4
-            bottomA = topA + this._height;
-            leftB = collisionObject.transform.position.x - collisionObject.width / 2;
-            rightB = leftB + collisionObject.width;
-            topB = collisionObject.transform.position.y - collisionObject.height / 2;
-            bottomB = topB + collisionObject.height;
-            if (bottomA <= topB)
-                return undefined;
-            if (topA >= bottomB)
-                return undefined;
-            if (rightA <= leftB)
-                return undefined;
-            if (leftA >= rightB)
-                return undefined;
-            var side = CollisionSide.SUM;
-            // TODO? // I'm sure this derives from bit shifting binary or something...
-            if (bottomA > collisionObject.transform.position.y) {
-                // then it can't be Y_POS
-                side -= CollisionSide.Y_POS;
-            }
-            if (topA < collisionObject.transform.position.y) {
-                // then it can't be Y_NEG
-                side -= CollisionSide.Y_NEG;
-            }
-            if (rightA > collisionObject.transform.position.x) {
-                // then it can't be X_POS
-                side -= CollisionSide.X_POS;
-            }
-            if (leftA < collisionObject.transform.position.x) {
-                // then it can't be X_NEG
-                side -= CollisionSide.X_NEG;
-            }
-            // TODO // deal with delayed frames somehow, if large dTime smaller collision checks can and will miss
-            var sepX, sepY;
-            if (rightA - leftB < rightB - leftA)
-                sepX = rightA - leftB;
-            else
-                sepX = rightB - leftA;
-            if (bottomA - topB < bottomB - topA)
-                sepY = bottomA - topB;
-            else
-                sepY = bottomB - topA;
-            return new BoxCollisionResult(this.owner, collisionObject.owner, side, new MG.Vector2(sepX, sepY), collisionObject.collisionType);
-        };
-        CollisionComponent.prototype.checkPointWithin = function (point, bCentre) {
-            if (bCentre === void 0) { bCentre = true; }
-            var left, right, top, bottom;
-            // left = this._transform.position.x - this._width/2;
-            left = this._transform.position.x;
-            // top = this._transform.position.y - this._height/2;
-            top = this._transform.position.y;
-            if (bCentre) {
-                left -= this._width / 2;
-                top -= this._height / 2;
-            }
-            right = left + this._width;
-            bottom = top + this._height;
-            if (point.x < left)
-                return undefined;
-            if (point.x > right)
-                return undefined;
-            if (point.y < top)
-                return undefined;
-            if (point.y > bottom)
-                return undefined;
-            return new PointInBoxResult();
-        };
-        CollisionComponent.prototype.checkBoxContained = function (containingBox, bCentre) {
-            if (bCentre === void 0) { bCentre = true; }
-            var leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
-            /*leftA = this._transform.position.x - this._width/2;
-            rightA = leftA + this._width;
-            topA = this._transform.position.y - this._height/2;
-            bottomA = topA + this._height;
-
-            leftB = containingBox.transform.position.x - containingBox.width/2;
-            rightB = leftB + containingBox.width;
-            topB = containingBox.transform.position.y - containingBox.height/2;
-            bottomB = topB + containingBox.height;*/
-            // this possibly works, hasn't been tested
-            leftA = this._transform.position.x;
-            topA = this._transform.position.y;
-            leftB = containingBox.transform.position.x;
-            topB = containingBox.transform.position.y;
-            if (bCentre) {
-                leftA -= this._width / 2;
-                topA -= this._height / 2;
-                leftB -= containingBox.width / 2;
-                topB -= containingBox.height / 2;
-            }
-            rightA = leftA + this._width;
-            bottomA = topA + this._height;
-            rightB = leftB + containingBox.width;
-            bottomB = topB + containingBox.height;
-            if (bottomA < bottomB && topA > topB && leftA > leftB && rightA < rightB)
-                return true;
-            return false;
-        };
-        return CollisionComponent;
-    }(MG.BaseComponent));
-    MG.CollisionComponent = CollisionComponent;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -1591,238 +1889,6 @@ var MG;
         return Camera;
     }());
     MG.Camera = Camera;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var oObject = /** @class */ (function () {
-        /**
-         * @param name The object's name
-         * @param level The level the object is associated with, if applicable
-         * @param id The object's id. Leave empty unless intentionally overriding built-in id assignment
-         */
-        function oObject(name, level, id) {
-            if (level === void 0) { level = undefined; }
-            if (id === void 0) { id = undefined; }
-            this._children = [];
-            this._components = [];
-            this._collisionComponent = undefined;
-            this._transform = new MG.Transform();
-            this._worldTransform = new MG.Transform();
-            // don't bother updating collisions if so
-            this._bIsStatic = true;
-            this._id = MG.LevelManager.registerObject(this, id);
-            this._name = name;
-            this._level = level;
-            // console.log('Object \'', this._name, '\' has been created with id:', this._id);
-        }
-        Object.defineProperty(oObject.prototype, "id", {
-            get: function () {
-                return this._id;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "name", {
-            get: function () {
-                return this._name;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "parent", {
-            get: function () {
-                return this._parent;
-            },
-            set: function (parent) {
-                this._parent = parent;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "rotation", {
-            get: function () {
-                return this._transform.rotation;
-            },
-            set: function (degrees) {
-                this._transform.rotation = degrees;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "position", {
-            get: function () {
-                return this._transform.position;
-            },
-            set: function (pos) {
-                this._transform.position.copyFrom(pos);
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "worldTransform", {
-            get: function () {
-                return this._worldTransform;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "level", {
-            get: function () {
-                return this._level;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "isStatic", {
-            get: function () {
-                return this._bIsStatic;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "children", {
-            get: function () {
-                return this._children;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        Object.defineProperty(oObject.prototype, "collisionComponent", {
-            get: function () {
-                return this._collisionComponent;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        oObject.prototype.setIsStatic = function (bIsStatic) {
-            this._bIsStatic = bIsStatic;
-        };
-        oObject.prototype.addChild = function (child) {
-            child.parent = this;
-            this._children.push(child);
-        };
-        oObject.prototype.removeChild = function (child) {
-            var index = this._children.indexOf(child);
-            if (index !== -1) {
-                child.parent = undefined;
-                this._children.splice(index, 1);
-            }
-        };
-        oObject.prototype.enableCollisionFromSprite = function (spriteComponentName, bIsStatic, collisionType) {
-            if (bIsStatic === void 0) { bIsStatic = true; }
-            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
-            var dimensions = this.getComponent(spriteComponentName).dimensions;
-            this.enableCollision(dimensions.x, dimensions.y, bIsStatic, collisionType);
-        };
-        oObject.prototype.enableCollision = function (width, height, bIsStatic, collisionType) {
-            if (bIsStatic === void 0) { bIsStatic = true; }
-            if (collisionType === void 0) { collisionType = MG.CollisionType.BLOCKING; }
-            this._collisionComponent = new MG.CollisionComponent(this._name + 'CollisionComponent', width, height, this._worldTransform !== undefined ? this._worldTransform : this._transform, collisionType);
-            this._bIsStatic = bIsStatic;
-            this._collisionComponent.setOwner(this);
-        };
-        oObject.prototype.disableCollision = function () {
-            // TODO // necessary?
-            delete this._collisionComponent;
-            this._collisionComponent = undefined;
-            this._bIsStatic = true;
-        };
-        oObject.prototype.onCollision = function (collidingObject) { };
-        oObject.prototype.getObjectByName = function (name) {
-            if (this._name === name)
-                return this;
-            for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
-                var child = _a[_i];
-                var result = child.getObjectByName(name);
-                if (result !== undefined)
-                    return result;
-            }
-            return undefined;
-        };
-        oObject.prototype.addComponent = function (component) {
-            this._components.push(component);
-            component.setOwner(this);
-        };
-        oObject.prototype.getComponent = function (name) {
-            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
-                var e = _a[_i];
-                if (e.name === name)
-                    return e;
-            }
-            return undefined;
-        };
-        oObject.prototype.getComponents = function () {
-            return this._components;
-        };
-        // TODO // provide overriding load functionality for all classes inheriting from oObject
-        oObject.load = function (data, level) {
-            var obj = new oObject(level.name + '_' + data['name'], level);
-            // create components                        // TODO // yuo may be best off seperating this into seperate functions, or something... this is going to be interesting to handle when dealing with sub-classes
-            for (var _i = 0, _a = data['components']; _i < _a.length; _i++) {
-                var cD = _a[_i];
-                switch (cD['type']) {
-                    case 'sprite':
-                        obj.addComponent(new MG.SpriteComponent(cD['name'], [cD['texture']], cD['width'], cD['height']));
-                        break;
-                    case 'collision':
-                        if (cD['spriteName'] !== undefined)
-                            obj.enableCollisionFromSprite(cD['spriteName'], cD['isStatic']);
-                        else
-                            obj.enableCollision(cD['width'], cD['height'], cD['isStatic']);
-                        break;
-                }
-            }
-            return obj;
-        };
-        oObject.prototype.update = function (deltaTime) {
-            this.updateWorldTransform(this._parent !== undefined ? this._parent.worldTransform : undefined);
-            if (this._collisionComponent !== undefined && this._bIsStatic === false) {
-                this._collisionComponent.updateTransform(this._worldTransform !== undefined ? this._worldTransform : this._transform);
-                // TODO // check collisions against other objects? (as in other objects than the player against other non-player objects? maybe...)
-            }
-            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
-                var c = _a[_i];
-                c.update(deltaTime);
-            }
-            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
-                var c = _c[_b];
-                c.update(deltaTime);
-            }
-        };
-        oObject.prototype.render = function (camera, bDrawDebugs) {
-            if (bDrawDebugs === void 0) { bDrawDebugs = false; }
-            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
-                var c = _a[_i];
-                c.render(this._worldTransform, camera, bDrawDebugs);
-            }
-            for (var _b = 0, _c = this._children; _b < _c.length; _b++) {
-                var c = _c[_b];
-                c.render(camera, bDrawDebugs);
-            }
-            if (bDrawDebugs) {
-                // collision
-                if (this._collisionComponent !== undefined) {
-                    var tex = MG.TextureManager.getTexture('collisionDebug');
-                    tex.draw(camera, true, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
-                }
-            }
-        };
-        oObject.prototype.updateWorldTransform = function (parentWorldTransform) {
-            if (parentWorldTransform !== undefined) {
-                var trans = new MG.Transform();
-                trans.copyFrom(this._transform);
-                trans.rotation += parentWorldTransform.rotation;
-                trans.position = MG.Vector2.rotate(trans.position, parentWorldTransform.rotation);
-                trans.position.x += parentWorldTransform.position.x;
-                trans.position.y += parentWorldTransform.position.y;
-                this._worldTransform.copyFrom(trans);
-            }
-            else
-                this._worldTransform.copyFrom(this._transform);
-        };
-        return oObject;
-    }());
-    MG.oObject = oObject;
 })(MG || (MG = {}));
 /// <reference path="oObject.ts"/>
 var MG;
@@ -1918,15 +1984,15 @@ var MG;
             MG.LevelManager.render();
             // ui bits
             var fps = Math.round(1000 / this.FRAME_TIME);
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblFrameData').value = "".concat(this.FRAME_TIME, "ms | FPS: ").concat(fps);
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblFrameData').value = this.FRAME_TIME + "ms | FPS: " + fps;
             MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblWorldData').value = MG.LevelManager.player.currentLevel ? MG.LevelManager.player.currentLevel.name : 'the void';
             var relPosX, relPosY;
             if (MG.LevelManager.player.currentLevel) {
                 relPosX = MG.LevelManager.player.position.x < MG.LevelManager.currentLevel.centre.x ? -1 : 1;
                 relPosY = MG.LevelManager.player.position.y < MG.LevelManager.currentLevel.centre.y ? -1 : 1;
             }
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = "".concat(relPosX, ", ").concat(relPosY);
-            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = "".concat(MG.InputHandler.mousePosition.x, ", ").concat(MG.InputHandler.mousePosition.y);
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = relPosX + ", " + relPosY;
+            MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = MG.InputHandler.mousePosition.x + ", " + MG.InputHandler.mousePosition.y;
             MG.UserInterfaceManager.update(this.FRAME_TIME / 1000);
             MG.UserInterfaceManager.render();
             this.LAST_FRAME = performance.now();
@@ -2370,7 +2436,7 @@ var MG;
             return _this;
         }
         Player.prototype.createPlayerCamera = function (vpWidth, vpHeight) {
-            var c = new MG.CameraObject("".concat(this.name, "Camera"), vpWidth, vpHeight);
+            var c = new MG.CameraObject(this.name + "Camera", vpWidth, vpHeight);
             c.cameraComponent.setTarget(this);
         };
         Player.prototype.update = function (deltaTime) {
@@ -2381,61 +2447,6 @@ var MG;
         return Player;
     }(MG.PlayerObject));
     MG.Player = Player;
-})(MG || (MG = {}));
-var MG;
-(function (MG) {
-    var SpawnPointType;
-    (function (SpawnPointType) {
-        SpawnPointType["SPAWN"] = "start";
-        SpawnPointType["CHECKPOINT"] = "checkpoint";
-        SpawnPointType["END"] = "end";
-    })(SpawnPointType = MG.SpawnPointType || (MG.SpawnPointType = {}));
-    var SpawnPoint = /** @class */ (function (_super) {
-        __extends(SpawnPoint, _super);
-        function SpawnPoint(name, level, type, textureName, activeTextureName) {
-            if (activeTextureName === void 0) { activeTextureName = undefined; }
-            var _this = _super.call(this, name, level) || this;
-            _this._checkpointActive = false;
-            _this._type = type;
-            _this.addComponent(new MG.SpriteComponent("".concat(_this.name, "_spriteC"), [textureName, activeTextureName], type === SpawnPointType.SPAWN ? level.gridSize * 3 : level.gridSize));
-            // if type==checkpoint, create no blocking collision
-            if (_this._type === SpawnPointType.CHECKPOINT || _this._type === SpawnPointType.END) {
-                _this.enableCollisionFromSprite("".concat(_this.name, "_spriteC"), true, MG.CollisionType.NON_BLOCKING);
-            }
-            return _this;
-        }
-        Object.defineProperty(SpawnPoint.prototype, "type", {
-            get: function () {
-                return this._type;
-            },
-            enumerable: false,
-            configurable: true
-        });
-        SpawnPoint.load = function (data, level) {
-            return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive'] ? data['texActive']['name'] : undefined);
-        };
-        SpawnPoint.prototype.onCollision = function (collidingObject) {
-            _super.prototype.onCollision.call(this, collidingObject);
-            if (this._type === SpawnPointType.END)
-                MG.LevelManager.restart();
-            else if (this._type === SpawnPointType.CHECKPOINT && this._checkpointActive === false)
-                MG.LevelManager.setCheckpoint(this);
-        };
-        SpawnPoint.prototype.enable = function () {
-            if (this._type === SpawnPointType.SPAWN)
-                return;
-            this._checkpointActive = true;
-            this.getComponent("".concat(this.name, "_spriteC")).frame = 1;
-        };
-        SpawnPoint.prototype.disable = function () {
-            if (this._type === SpawnPointType.SPAWN)
-                return;
-            this._checkpointActive = false;
-            this.getComponent("".concat(this.name, "_spriteC")).frame = 0;
-        };
-        return SpawnPoint;
-    }(MG.oObject));
-    MG.SpawnPoint = SpawnPoint;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
@@ -2933,7 +2944,7 @@ var MG;
         };
         TextureManager.releaseTexture = function (textureName) {
             if (TextureManager._textures[textureName] === undefined)
-                console.warn("A texture named ".concat(textureName, " does not exist and therefore cannot be released."));
+                console.warn("A texture named " + textureName + " does not exist and therefore cannot be released.");
             else
                 TextureManager._textures[textureName].referenceCount--;
         };
@@ -2974,12 +2985,12 @@ var MG;
     var Tile = /** @class */ (function (_super) {
         __extends(Tile, _super);
         function Tile(textureName, level) {
-            var _this = _super.call(this, "".concat(level.name, "_TILE_").concat(textureName), level) || this;
+            var _this = _super.call(this, level.name + "_TILE_" + textureName, level) || this;
             _this._width = _this._level.gridSize;
             var ts = TileSpriteManager.getSprite(textureName);
             if (ts === undefined)
                 ts = TileSpriteManager.addSprite(_this._width, textureName);
-            _this.addComponent(MG.SpriteComponent.fromSprite("".concat(level.name, "_TEXTURECOMPONENT_").concat(textureName), ts));
+            _this.addComponent(MG.SpriteComponent.fromSprite(level.name + "_TEXTURECOMPONENT_" + textureName, ts));
             return _this;
         }
         return Tile;
@@ -3490,6 +3501,14 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
+    /*export interface lSpawnPointBuildData {
+        name: string,
+        type: SpawnPointType,
+        textureN: string,
+        activeTextureN?: string,
+        x: number,
+        y: number
+    }*/
     var Level = /** @class */ (function () {
         function Level(name, width, height, gridSize, colour, x, y, levelCollisions) {
             if (x === void 0) { x = 0; }
@@ -3508,9 +3527,9 @@ var MG;
             this._transform.position.y = y;
             this._rootObject.position = this._transform.position;
             this.generateBorderCollisions();
-            MG.TextureManager.addTexture(new MG.Texture("LEVEL_".concat(this._name, "_BASE"), 1, 1, this._baseColour));
-            this._baseTexture = new MG.Sprite(this._width, this._height, ["LEVEL_".concat(this._name, "_BASE")]);
-            this._levelDetectionCollision = new MG.CollisionComponent("".concat(this._name, "_levelCollisionComponent"), this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
+            MG.TextureManager.addTexture(new MG.Texture("LEVEL_" + this._name + "_BASE", 1, 1, this._baseColour));
+            this._baseTexture = new MG.Sprite(this._width, this._height, ["LEVEL_" + this._name + "_BASE"]);
+            this._levelDetectionCollision = new MG.CollisionComponent(this._name + "_levelCollisionComponent", this._width, this._height, this._transform, MG.CollisionType.NON_BLOCKING);
         }
         Object.defineProperty(Level.prototype, "name", {
             get: function () {
@@ -3582,67 +3601,110 @@ var MG;
             var oTemp;
             var borderWidth = this._gridSize;
             if (this._bBorderCollisions[0]) {
-                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_T"), this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_T", this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[1]) {
-                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_R"), this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_R", this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[2]) {
-                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_B"), this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_B", this);
                 oTemp.enableCollision(this._width, borderWidth);
                 oTemp.position.y = this._width / 2 + borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
             if (this._bBorderCollisions[3]) {
-                oTemp = new MG.oObject("".concat(this._name, "_levelCollisionObject_L"), this);
+                oTemp = new MG.oObject(this._name + "_levelCollisionObject_L", this);
                 oTemp.enableCollision(borderWidth, this._height);
                 oTemp.position.x = -this._height / 2 - borderWidth / 2;
                 this._rootObject.addChild(oTemp);
             }
         };
-        Level.load = function (data) {
-            var level = new Level(data['name'], data['width'], data['height'], data['gridSize'], MG.Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
+        /*public static load (data: object): Level {
+            let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
+
             // tile logic goes here
-            var tTemp;
-            for (var _i = 0, _a = data['tiles']; _i < _a.length; _i++) {
-                var t = _a[_i];
-                tTemp = new MG.Tile(t['obj']['name'], level);
-                tTemp.position.x = t['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
-                tTemp.position.y = t['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
+            let tTemp: Tile;
+            for (let t of data['tiles']) {
+                tTemp = new Tile(t['obj']['name'], level);
+                tTemp.position.x = t['x'] * level.gridSize - level._width/2 + level.gridSize/2;
+                tTemp.position.y = t['y'] * level.gridSize - level._height/2 + level.gridSize/2;
                 tTemp.rotation = t['d'];
                 tTemp.update(0);
                 // TODO // move collision creation to tile constructor
-                if (t['collision'] === "wall")
-                    tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true); // in theory this is working????
+                if (t['collision'] === "wall") tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true);        // in theory this is working????
                 level.tiles.push(tTemp);
             }
+
             // spawn/create objects
-            var oTemp;
-            for (var _b = 0, _c = data['objects']; _b < _c.length; _b++) {
-                var o = _c[_b];
-                oTemp = MG.oObject.load(o['obj'], level);
+            let oTemp: oObject;
+            for (let o of data['objects']) {
+                oTemp = oObject.load(o['obj'], level);
                 oTemp.position.x = o['x'];
                 oTemp.position.y = o['y'];
                 level.rootObject.addChild(oTemp);
             }
+
             // spawnpoint/checkpoint spawn/registration
-            var spD = data['spawnPoint'];
+            let spD: object = data['spawnPoint'];
+            if (spD) {
+                let sp: SpawnPoint;
+                sp = SpawnPoint.load(spD, level);
+                if (sp.type === SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
+                level.rootObject.addChild(sp);
+                level.spawnPoint = sp;
+                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;
+                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height/2 + level.gridSize/2;
+                level.spawnPoint.update(0);
+            }
+            
+
+            return level;
+        }*/
+        Level.load = function (lData) {
+            var level = new Level(lData.name, lData.width, lData.height, lData.gridSize, MG.Colour.fromString(lData.colour), lData.x, lData.y, lData.borderCollisions);
+            // TODO // t.textureName['name'] -> an actual string once TileBuildData/TextureBuildData is sorted
+            // TODO // refactor tile, oObject and sp constructors to append object to level rather than doing it after building/loading it here
+            // tile build logic
+            var tTemp;
+            for (var _i = 0, _a = lData.tiles; _i < _a.length; _i++) {
+                var t = _a[_i];
+                tTemp = new MG.Tile(t.textureName, level);
+                tTemp.position.x = t.x * level.gridSize - level._width / 2 + level.gridSize / 2;
+                tTemp.position.y = t.y * level.gridSize - level._height / 2 + level.gridSize / 2;
+                tTemp.rotation = t.rotation;
+                tTemp.update(0);
+                // TODO // move collision creation to tile constructor
+                if (t.collisionType === MG.CollisionType.BLOCKING)
+                    tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
+                level.tiles.push(tTemp);
+            }
+            // spawn objects
+            var oTemp;
+            for (var _b = 0, _c = lData.objects; _b < _c.length; _b++) {
+                var o = _c[_b];
+                oTemp = MG.oObject.load(o.objectBuildData, level);
+                oTemp.position.x = o.x;
+                oTemp.position.y = o.y;
+                level.rootObject.addChild(oTemp);
+            }
+            // spawnpoint/checkpoint spawn/registration
+            var spD = lData.spawnPoint;
             if (spD) {
                 var sp = void 0;
                 sp = MG.SpawnPoint.load(spD, level);
                 if (sp.type === MG.SpawnPointType.SPAWN)
                     MG.LevelManager.registerSpawn(sp);
-                level.rootObject.addChild(sp);
+                level.rootObject.addChild(sp); // do this in sp constructor
                 level.spawnPoint = sp;
-                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width / 2 + level.gridSize / 2;
-                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height / 2 + level.gridSize / 2;
-                level.spawnPoint.update(0);
+                sp.position.x = spD.x * level.gridSize - level._width / 2 + level.gridSize / 2;
+                sp.position.y = spD.y * level.gridSize - level._height / 2 + level.gridSize / 2;
+                sp.update(0);
             }
             return level;
         };

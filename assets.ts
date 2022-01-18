@@ -1,26 +1,8 @@
+/// <reference path="./src/ts/game/spawnPoint.ts"/>
+/// <reference path="./src/ts/components/collisionComponent.ts"/>
+
 namespace Assets.GameOptions {
     export const bDrawDebugs = false;
-}
-
-namespace Assets.Objects {
-    export const testLevelCentre: MG.IoObjectBuildData = {
-        "name":"testLevelCentre",
-        "components": [
-            <MG.ISpriteComponentBuildData>{
-                type: 'sprite',
-                name: 'centreSprite',
-                textureName: Assets.Textures.testObjectTexture.name,
-                width: 50
-            },
-            <MG.ICollisionComponentBuildData>{
-                type: 'collision',
-                name: 'centreSprite',
-                width: undefined,
-                height: undefined,
-                bStatic: true
-            }
-        ]
-    }
 }
 
 namespace Assets.Textures {
@@ -979,6 +961,28 @@ namespace Assets.Textures {
     ]
 }
 
+namespace Assets.Objects {
+    export const testLevelCentre: MG.IoObjectBuildData = {
+        "name":"testLevelCentre",
+        "components": [
+            <MG.ISpriteComponentBuildData>{
+                type: 'sprite',
+                name: 'centreSprite',
+                textureName: Assets.Textures.testObjectTexture.name,
+                width: 50
+            },
+            <MG.ICollisionComponentBuildData>{
+                type: 'collision',
+                name: 'centreSprite_CC',
+                spriteName: 'centreSprite',
+                width: undefined,
+                height: undefined,
+                bStatic: true
+            }
+        ]
+    }
+}
+
 namespace Assets.Levels {
     export const testLevel0: MG.ILevelBuildData = {
         "name": "testLevel0",
@@ -991,7 +995,7 @@ namespace Assets.Levels {
         "borderCollisions": [false, true, true, true],
         "spawnPoint": {
             "name": "tl_spawn",
-            "type": MG.SpawnPointType.SPAWN,
+            spType: MG.SpawnPointType.SPAWN,
             textureN: Assets.Textures.SPAWNPOINT.name,
             "activeTextureN": undefined,
             "x": 5,
@@ -1076,7 +1080,7 @@ namespace Assets.Levels {
         "borderCollisions": [false, false, false, true],
         "spawnPoint": {
             "name": "tl1_Checkpoint_001",
-            "type": MG.SpawnPointType.CHECKPOINT,
+            spType: MG.SpawnPointType.CHECKPOINT,
             "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
             "activeTextureN": Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
@@ -1107,7 +1111,7 @@ namespace Assets.Levels {
         "borderCollisions": [false, true, true, false],
         "spawnPoint": {
             "name": "tl2_Checkpoint_001",
-            "type": MG.SpawnPointType.CHECKPOINT,
+            spType: MG.SpawnPointType.CHECKPOINT,
             "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
             activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
@@ -1139,7 +1143,7 @@ namespace Assets.Levels {
         "borderCollisions": [true, false, false, true],
         "spawnPoint": {
             "name": "tl3_Checkpoint_001",
-            "type": MG.SpawnPointType.CHECKPOINT,
+            spType: MG.SpawnPointType.CHECKPOINT,
             "textureN": Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
             activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
@@ -1160,7 +1164,7 @@ namespace Assets.Levels {
         "borderCollisions": [false, true, false, false],
         "spawnPoint": {
             "name": "tl4_Checkpoint_001",
-            "type": MG.SpawnPointType.CHECKPOINT,
+            spType: MG.SpawnPointType.CHECKPOINT,
             textureN: Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
             activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
             "x": 3,
@@ -1181,7 +1185,7 @@ namespace Assets.Levels {
         "borderCollisions": [true, true, false, true],
         "spawnPoint": {
             "name": "tl5_End",
-            "type": MG.SpawnPointType.END,
+            spType: MG.SpawnPointType.END,
             "textureN": Assets.Textures.SPAWNPOINT_END.name,
             "x": 9,
             "y": 9

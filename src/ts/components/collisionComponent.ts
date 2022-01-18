@@ -1,9 +1,12 @@
+/// <reference path="baseComponent.ts"/>
+
 namespace MG {
 
     export interface ICollisionComponentBuildData extends IBaseComponentBuildData {
         width: number,
         height: number,
-        bStatic: boolean
+        bStatic: boolean,
+        spriteName: string
     }
 
     export enum CollisionSide {
