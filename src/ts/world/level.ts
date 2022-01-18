@@ -1,13 +1,5 @@
 namespace MG {
 
-    export interface lTileBuildData {
-        textureName: string,
-        x: number,
-        y: number,
-        rotation: number,
-        collisionType: CollisionType
-    }
-
     export interface loObjectBuildData {
         objectBuildData: IoObjectBuildData,
         x: number,
@@ -24,7 +16,7 @@ namespace MG {
         y: number,
         borderCollisions: boolean[],
         spawnPoint: ISpawnPointBuildData,
-        tiles: lTileBuildData[],
+        tiles: ITileBuildData[],
         objects: loObjectBuildData[]
     }
 
@@ -141,7 +133,8 @@ namespace MG {
             // TODO // refactor tile, oObject and sp constructors to append object to level rather than doing it after building/loading it here
             // tile build logic
             let tTemp: Tile;
-            for (let t of lData.tiles) {
+            for (let tT of lData.tiles) {
+                /*
                 tTemp = new Tile(t.textureName, level);
                 tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
                 tTemp.position.y = t.y* level.gridSize - level._height/2 + level.gridSize/2;
@@ -150,6 +143,17 @@ namespace MG {
                 // TODO // move collision creation to tile constructor
                 if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
                 level.tiles.push(tTemp);
+                */
+                for (let t of tT.instances) {
+                    tTemp = new Tile(tT.textureName, level);
+                    tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
+                    tTemp.position.y = t.y * level.gridSize - level._height/2 + level.gridSize/2;
+                    tTemp.rotation = t.rotation;
+                    tTemp.update(0);
+                    // if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + tT.textureName, true);
+                    if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(Tile.spriteName(level.name, tT.textureName), true);
+                    level.tiles.push(tTemp);
+               }
             }
 
             // spawn objects

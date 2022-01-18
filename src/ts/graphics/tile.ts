@@ -1,5 +1,17 @@
 namespace MG {
 
+    export interface ITileInstance {
+        x: number,
+        y: number,
+        rotation: number,
+        collisionType: CollisionType
+    }
+
+    export interface ITileBuildData {
+        textureName: string,
+        instances: ITileInstance[]
+    }
+
     class TileSpriteManager {
         private static _sprites: {[name: string]: Sprite} = {};
 
@@ -29,8 +41,12 @@ namespace MG {
 
             let ts: Sprite = TileSpriteManager.getSprite(textureName);
             if (ts === undefined) ts = TileSpriteManager.addSprite(this._width, textureName);
-            this.addComponent(SpriteComponent.fromSprite(`${level.name}_TEXTURECOMPONENT_${textureName}`, ts));
+            this.addComponent(SpriteComponent.fromSprite(Tile.spriteName(level.name, textureName), ts));
 
+        }
+
+        public static spriteName (levelName: string, textureName: string): string {
+            return `${levelName}_TEXTURECOMPONENT_${textureName}`
         }
 
     }
