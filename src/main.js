@@ -1567,66 +1567,72 @@ var Assets;
             tiles: [
                 {
                     textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
-                    x: 0,
-                    y: 0,
-                    rotation: 270,
-                    collisionType: MG.CollisionType.BLOCKING
+                    instances: [
+                        {
+                            x: 0,
+                            y: 0,
+                            rotation: 270,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 0,
+                            y: 19,
+                            rotation: 180,
+                            collisionType: MG.CollisionType.BLOCKING
+                        }
+                    ]
                 },
                 {
                     textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 1,
-                    y: 0,
-                    rotation: 180,
-                    collisionType: MG.CollisionType.BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 2,
-                    y: 0,
-                    rotation: 180,
-                    collisionType: MG.CollisionType.BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 3,
-                    y: 0,
-                    rotation: 180,
-                    collisionType: MG.CollisionType.BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 0,
-                    y: 1,
-                    rotation: 90,
-                    collisionType: MG.CollisionType.BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 0,
-                    y: 2,
-                    rotation: 90,
-                    collisionType: MG.CollisionType.BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
-                    x: 0,
-                    y: 3,
-                    rotation: 90,
-                    collisionType: MG.CollisionType.BLOCKING
+                    instances: [
+                        {
+                            x: 1,
+                            y: 0,
+                            rotation: 180,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 2,
+                            y: 0,
+                            rotation: 180,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 3,
+                            y: 0,
+                            rotation: 180,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 0,
+                            y: 1,
+                            rotation: 90,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 0,
+                            y: 2,
+                            rotation: 90,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                        {
+                            x: 0,
+                            y: 3,
+                            rotation: 90,
+                            collisionType: MG.CollisionType.BLOCKING
+                        },
+                    ]
                 },
                 {
                     textureName: Assets.Textures.TILE_FLOOR_TEST.name,
-                    x: 1,
-                    y: 1,
-                    rotation: 0,
-                    collisionType: MG.CollisionType.NON_BLOCKING
-                },
-                {
-                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
-                    x: 0,
-                    y: 19,
-                    rotation: 180,
-                    collisionType: MG.CollisionType.BLOCKING
+                    instances: [
+                        {
+                            x: 1,
+                            y: 1,
+                            rotation: 0,
+                            collisionType: MG.CollisionType.NON_BLOCKING
+                        }
+                    ]
                 }
             ],
             objects: []
@@ -2988,9 +2994,12 @@ var MG;
             var ts = TileSpriteManager.getSprite(textureName);
             if (ts === undefined)
                 ts = TileSpriteManager.addSprite(_this._width, textureName);
-            _this.addComponent(MG.SpriteComponent.fromSprite(level.name + "_TEXTURECOMPONENT_" + textureName, ts));
+            _this.addComponent(MG.SpriteComponent.fromSprite(Tile.spriteName(level.name, textureName), ts));
             return _this;
         }
+        Tile.spriteName = function (levelName, textureName) {
+            return levelName + "_TEXTURECOMPONENT_" + textureName;
+        };
         return Tile;
     }(MG.oObject));
     MG.Tile = Tile;
@@ -3621,21 +3630,34 @@ var MG;
             // tile build logic
             var tTemp;
             for (var _i = 0, _a = lData.tiles; _i < _a.length; _i++) {
-                var t = _a[_i];
-                tTemp = new MG.Tile(t.textureName, level);
-                tTemp.position.x = t.x * level.gridSize - level._width / 2 + level.gridSize / 2;
-                tTemp.position.y = t.y * level.gridSize - level._height / 2 + level.gridSize / 2;
+                var tT = _a[_i];
+                /*
+                tTemp = new Tile(t.textureName, level);
+                tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
+                tTemp.position.y = t.y* level.gridSize - level._height/2 + level.gridSize/2;
                 tTemp.rotation = t.rotation;
                 tTemp.update(0);
                 // TODO // move collision creation to tile constructor
-                if (t.collisionType === MG.CollisionType.BLOCKING)
-                    tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
+                if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t.textureName, true);
                 level.tiles.push(tTemp);
+                */
+                for (var _b = 0, _c = tT.instances; _b < _c.length; _b++) {
+                    var t = _c[_b];
+                    tTemp = new MG.Tile(tT.textureName, level);
+                    tTemp.position.x = t.x * level.gridSize - level._width / 2 + level.gridSize / 2;
+                    tTemp.position.y = t.y * level.gridSize - level._height / 2 + level.gridSize / 2;
+                    tTemp.rotation = t.rotation;
+                    tTemp.update(0);
+                    // if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + tT.textureName, true);
+                    if (t.collisionType === MG.CollisionType.BLOCKING)
+                        tTemp.enableCollisionFromSprite(MG.Tile.spriteName(level.name, tT.textureName), true);
+                    level.tiles.push(tTemp);
+                }
             }
             // spawn objects
             var oTemp;
-            for (var _b = 0, _c = lData.objects; _b < _c.length; _b++) {
-                var o = _c[_b];
+            for (var _d = 0, _e = lData.objects; _d < _e.length; _d++) {
+                var o = _e[_d];
                 oTemp = MG.oObject.load(o.objectBuildData, level);
                 oTemp.position.x = o.x;
                 oTemp.position.y = o.y;
