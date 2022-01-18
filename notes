@@ -70,4 +70,4 @@ todo:
     - build out test level as example (set: 14/01/22, done: )
     - refactor data to use interfaces (set: 14/01/22, done: 18/01/22)
     - ... finish UI
-    -  refactor level's tile data storage to be data-orientated rather than object-orientated (set: 17/01/22, done: )
+    -  refactor level's tile data storage to be data-orientated rather than object-orientated (set: 17/01/22, done: 19/01/22)

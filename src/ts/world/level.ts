@@ -140,7 +140,7 @@ namespace MG {
                     tTemp.position.y = t.y * level.gridSize - level._height/2 + level.gridSize/2;
                     tTemp.rotation = t.rotation;
                     tTemp.update(0);
-                    if (t.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(Tile.spriteName(level.name, tT.textureName), true);
+                    if (tT.collisionType === CollisionType.BLOCKING) tTemp.enableCollisionFromSprite(Tile.spriteName(level.name, tT.textureName), true);
                     level.tiles.push(tTemp);
                }
             }

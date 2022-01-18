@@ -1004,70 +1004,64 @@ namespace Assets.Levels {
         tiles: [
             {
                 textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
+                collisionType: MG.CollisionType.BLOCKING,
                 instances: [
                     {
                         x: 0,
                         y: 0,
-                        rotation: 270,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 270
                     },
                     {
                         x: 0,
                         y: 19,
-                        rotation: 180,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 180
                     }
                 ]
             },
             {
                 textureName: Assets.Textures.TILE_WALL_SINGLE.name,
+                collisionType: MG.CollisionType.BLOCKING,
                 instances: [
                     {
                         x: 1,
                         y: 0,
-                        rotation: 180,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 180
                     },
                     {
                         x: 2,
                         y: 0,
-                        rotation: 180,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 180
                     },
                     {
                         x: 3,
                         y: 0,
-                        rotation: 180,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 180
                     },
                     {
                         x: 0,
                         y: 1,
-                        rotation: 90,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 90
                     },
                     {
                         x: 0,
                         y: 2,
-                        rotation: 90,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 90
                     },
                     {
                         x: 0,
                         y: 3,
-                        rotation: 90,
-                        collisionType: MG.CollisionType.BLOCKING
+                        rotation: 90
                     },
                 ]
             },
             {
                 textureName: Assets.Textures.TILE_FLOOR_TEST.name,
+                collisionType: MG.CollisionType.NON_BLOCKING,
                 instances: [
                     {
                         x: 1,
                         y: 1,
-                        rotation: 0,
-                        collisionType: MG.CollisionType.NON_BLOCKING
+                        rotation: 0
                     }
                 ]
             }

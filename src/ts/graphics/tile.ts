@@ -3,12 +3,12 @@ namespace MG {
     export interface ITileInstance {
         x: number,
         y: number,
-        rotation: number,
-        collisionType: CollisionType
+        rotation: number
     }
 
     export interface ITileBuildData {
         textureName: string,
+        collisionType: CollisionType,
         instances: ITileInstance[]
     }
 
