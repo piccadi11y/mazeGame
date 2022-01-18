@@ -1,14 +1,5 @@
 namespace MG {
 
-    /*export interface lSpawnPointBuildData {
-        name: string,
-        type: SpawnPointType,
-        textureN: string,
-        activeTextureN?: string,
-        x: number,
-        y: number
-    }*/
-
     export interface lTileBuildData {
         textureName: string,
         x: number,
@@ -43,7 +34,7 @@ namespace MG {
         private _width: number;
         private _height: number;
         private _gridSize: number;
-        private _transform: Transform = new Transform();    // TODO // this will be relevant later when the engine supports multiple levels/streaming
+        private _transform: Transform = new Transform();
         private _levelDetectionCollision: CollisionComponent;
 
         private _baseColour: Colour;
@@ -115,7 +106,7 @@ namespace MG {
         }
 
         private generateBorderCollisions (): void {
-            let oTemp;
+            let oTemp: oObject;
             let borderWidth: number = this._gridSize;
 
             if (this._bBorderCollisions[0]) {
@@ -144,52 +135,9 @@ namespace MG {
             }
         }
 
-        /*public static load (data: object): Level {
-            let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
-
-            // tile logic goes here
-            let tTemp: Tile;
-            for (let t of data['tiles']) {
-                tTemp = new Tile(t['obj']['name'], level);
-                tTemp.position.x = t['x'] * level.gridSize - level._width/2 + level.gridSize/2;
-                tTemp.position.y = t['y'] * level.gridSize - level._height/2 + level.gridSize/2;
-                tTemp.rotation = t['d'];
-                tTemp.update(0);
-                // TODO // move collision creation to tile constructor
-                if (t['collision'] === "wall") tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true);        // in theory this is working????
-                level.tiles.push(tTemp);
-            }
-
-            // spawn/create objects
-            let oTemp: oObject;
-            for (let o of data['objects']) {
-                oTemp = oObject.load(o['obj'], level);
-                oTemp.position.x = o['x'];
-                oTemp.position.y = o['y'];
-                level.rootObject.addChild(oTemp);
-            }
-
-            // spawnpoint/checkpoint spawn/registration
-            let spD: object = data['spawnPoint'];
-            if (spD) {
-                let sp: SpawnPoint;
-                sp = SpawnPoint.load(spD, level);
-                if (sp.type === SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
-                level.rootObject.addChild(sp);
-                level.spawnPoint = sp;
-                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;
-                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height/2 + level.gridSize/2;
-                level.spawnPoint.update(0);
-            }
-            
-
-            return level;
-        }*/
-
         public static load (lData: ILevelBuildData): Level {
             let level: Level = new Level(lData.name, lData.width, lData.height, lData.gridSize, Colour.fromString(lData.colour), lData.x, lData.y, lData.borderCollisions);
 
-            // TODO // t.textureName['name'] -> an actual string once TileBuildData/TextureBuildData is sorted
             // TODO // refactor tile, oObject and sp constructors to append object to level rather than doing it after building/loading it here
             // tile build logic
             let tTemp: Tile;

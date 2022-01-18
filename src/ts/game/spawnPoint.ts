@@ -39,7 +39,6 @@ namespace MG {
         }
 
         public static load (data: ISpawnPointBuildData, level: Level): SpawnPoint {
-            // return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive']?data['texActive']['name']:undefined);
             return new SpawnPoint(data.name, level, data.spType, data.textureN, data.activeTextureN?data.activeTextureN:undefined);
         }
 

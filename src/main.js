@@ -280,7 +280,6 @@ var MG;
             configurable: true
         });
         SpawnPoint.load = function (data, level) {
-            // return new SpawnPoint(data['name'], level, data['type'], data['tex']['name'], data['texActive']?data['texActive']['name']:undefined);
             return new SpawnPoint(data.name, level, data.spType, data.textureN, data.activeTextureN ? data.activeTextureN : undefined);
         };
         SpawnPoint.prototype.onCollision = function (collidingObject) {
@@ -3500,19 +3499,11 @@ var MG;
 })(MG || (MG = {}));
 var MG;
 (function (MG) {
-    /*export interface lSpawnPointBuildData {
-        name: string,
-        type: SpawnPointType,
-        textureN: string,
-        activeTextureN?: string,
-        x: number,
-        y: number
-    }*/
     var Level = /** @class */ (function () {
         function Level(name, width, height, gridSize, colour, x, y, levelCollisions) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
-            this._transform = new MG.Transform(); // TODO // this will be relevant later when the engine supports multiple levels/streaming
+            this._transform = new MG.Transform();
             this._tiles = [];
             this._spawnPoint = undefined; // TODO // implement spawn point logic for first entry into new world/game and on death (?)
             this._name = name;
@@ -3624,50 +3615,8 @@ var MG;
                 this._rootObject.addChild(oTemp);
             }
         };
-        /*public static load (data: object): Level {
-            let level: Level = new Level(data['name'], data['width'], data['height'], data['gridSize'], Colour.fromString(data['colour']), data['xPos'], data['yPos'], data['levelCollisions']);
-
-            // tile logic goes here
-            let tTemp: Tile;
-            for (let t of data['tiles']) {
-                tTemp = new Tile(t['obj']['name'], level);
-                tTemp.position.x = t['x'] * level.gridSize - level._width/2 + level.gridSize/2;
-                tTemp.position.y = t['y'] * level.gridSize - level._height/2 + level.gridSize/2;
-                tTemp.rotation = t['d'];
-                tTemp.update(0);
-                // TODO // move collision creation to tile constructor
-                if (t['collision'] === "wall") tTemp.enableCollisionFromSprite(level.name + '_TEXTURECOMPONENT_' + t['obj']['name'], true);        // in theory this is working????
-                level.tiles.push(tTemp);
-            }
-
-            // spawn/create objects
-            let oTemp: oObject;
-            for (let o of data['objects']) {
-                oTemp = oObject.load(o['obj'], level);
-                oTemp.position.x = o['x'];
-                oTemp.position.y = o['y'];
-                level.rootObject.addChild(oTemp);
-            }
-
-            // spawnpoint/checkpoint spawn/registration
-            let spD: object = data['spawnPoint'];
-            if (spD) {
-                let sp: SpawnPoint;
-                sp = SpawnPoint.load(spD, level);
-                if (sp.type === SpawnPointType.SPAWN) LevelManager.registerSpawn(sp);
-                level.rootObject.addChild(sp);
-                level.spawnPoint = sp;
-                level.spawnPoint.position.x = spD['x'] * level.gridSize - level._width/2 + level.gridSize/2;
-                level.spawnPoint.position.y = spD['y'] * level.gridSize - level._height/2 + level.gridSize/2;
-                level.spawnPoint.update(0);
-            }
-            
-
-            return level;
-        }*/
         Level.load = function (lData) {
             var level = new Level(lData.name, lData.width, lData.height, lData.gridSize, MG.Colour.fromString(lData.colour), lData.x, lData.y, lData.borderCollisions);
-            // TODO // t.textureName['name'] -> an actual string once TileBuildData/TextureBuildData is sorted
             // TODO // refactor tile, oObject and sp constructors to append object to level rather than doing it after building/loading it here
             // tile build logic
             var tTemp;
