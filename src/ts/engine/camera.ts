@@ -15,6 +15,10 @@ namespace MG {
             return nV;
         }
 
+        public get screenDimensions(): Vector2 {
+            return new Vector2(this._screenWidth, this._screenHeight);
+        }
+
         public resizeScreen (width: number, height: number): void {
             this._screenWidth = width;
             this._screenHeight = height;

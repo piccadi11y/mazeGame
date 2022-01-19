@@ -62,6 +62,15 @@ namespace MG {
             tbtn.onClickFunction = () => LevelManager.spawnPlayer();
             tl.addElement(tbtn);
 
+            let ed: UserInterfaceLayer = new UserInterfaceLayer('levelEditor');
+            UserInterfaceManager.addLayer(ed);
+            let edML: Label = new Label('lblLevelMouseLocation', 80, 20);
+            edML.colour = 'red';
+            edML.value = 'test';
+            edML.font = '20px consolas'
+            edML.pos(-100, -100);
+            ed.addElement(edML);
+
             LevelManager.spawnPlayer();
 
 
@@ -92,6 +101,22 @@ namespace MG {
             }
             (UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData') as Label).value = `${relPosX}, ${relPosY}`;
             (UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition') as Label).value = `${InputHandler.mousePosition.x}, ${InputHandler.mousePosition.y}`;
+
+            // level mouse rel position (for editor)
+            let mouseLocLBL: Label = UserInterfaceManager.getLayerByName('levelEditor').getElementByName('lblLevelMouseLocation') as Label;
+            mouseLocLBL.pos(InputHandler.mousePosition.x - mouseLocLBL.width - 5, InputHandler.mousePosition.y);
+            mouseLocLBL.value = (() => {
+                let currentLevel = LevelManager.player.currentLevel;
+                let mouseLoc: Vector2 = InputHandler.mousePosition;
+                let worldTL: Vector2 = Vector2.Zero;
+                worldTL.copyFrom(LevelManager.camera.view.position);
+                worldTL.x += mouseLoc.x - (currentLevel.location.x - currentLevel.width/2) - currentLevel.gridSize/2;
+                worldTL.y += mouseLoc.y - (currentLevel.location.y - currentLevel.height/2) - currentLevel.gridSize/2;
+                worldTL.x /= currentLevel.gridSize;
+                worldTL.y /= currentLevel.gridSize;
+
+                return worldTL.toString(true);
+            })()
 
             UserInterfaceManager.update(this.FRAME_TIME/1000);
             UserInterfaceManager.render();

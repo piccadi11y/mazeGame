@@ -26,6 +26,14 @@ namespace MG {
             this._sprite.bCentreTexture = false;
         }
 
+        public get width (): number {
+            return this._width;
+        }
+
+        public get height (): number {
+            return this._height;
+        }
+
         public pos (x?: number, y?: number): Vector2 {
             let out: Vector2 = super.pos(x, y);
 
