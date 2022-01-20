@@ -136,6 +136,7 @@ namespace MG {
             for (let tT of lData.tiles) {
                 for (let t of tT.instances) {
                     tTemp = new Tile(tT.textureName, level);
+                    level.rootObject.addChild(tTemp);
                     tTemp.position.x = t.x * level.gridSize - level._width/2 + level.gridSize/2;
                     tTemp.position.y = t.y * level.gridSize - level._height/2 + level.gridSize/2;
                     tTemp.rotation = t.rotation;
