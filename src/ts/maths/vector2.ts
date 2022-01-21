@@ -39,8 +39,8 @@ namespace MG {
         }
 
         public toString (bRound: boolean = false): string {
-            if (bRound) return `x: ${Math.round(this._x)}, y: ${Math.round(this._y)}`;
-            return `x: ${this._x}, y: ${this._y}`;
+            if (bRound) return `${Math.round(this._x)}, ${Math.round(this._y)}`;
+            return `${this._x}, ${this._y}`;
         }
 
         public copyFrom (vector: Vector2): void {

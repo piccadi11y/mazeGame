@@ -8,7 +8,6 @@ namespace MG {
         private FRAME_TIME: number = 0;
         private LAST_FRAME: number = 0;
 
-
         public constructor (canvasID?: string) {
             window.onresize = ()=>this.resize();
             document.addEventListener('contentAdded', e => this.resize());      // so that when header/footer are loaded in canvas is resized
@@ -19,7 +18,7 @@ namespace MG {
         public Start (): void {
             TextureManager.load();
             InputHandler.initialise(this._canvas);
-            LevelManager.initialise(100);
+            LevelManager.initialise(1000);      // TODO // not convinced this limit does anything to help, or anything when surpassed
             
 
             // let player: Player = new Player('player', [Assets.Textures.defaultPlayerTexture], 50);
@@ -30,6 +29,7 @@ namespace MG {
 
             // temp, while testing everything
             LevelManager.load(Assets.Levels.testLevels);
+            TileOffscreenRenderer.initialise(TextureManager.loadedTextures, LevelManager.loadedLevels[0].gridSize);
 
             LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (LevelManager.bDrawDebugs) TextureManager.addTexture(new Texture('collisionDebug', 1, 1, Colour.red()));
@@ -71,8 +71,10 @@ namespace MG {
             edML.pos(-100, -100);
             ed.addElement(edML);
 
+            TileOffscreenRenderer.render();
+            console.log(TileOffscreenRenderer.getTextureLocation(Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name));
             LevelManager.spawnPlayer();
-
+            
 
             this.resize();
             this.mainLoop();
@@ -103,6 +105,7 @@ namespace MG {
             (UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition') as Label).value = `${InputHandler.mousePosition.x}, ${InputHandler.mousePosition.y}`;
 
             // level mouse rel position (for editor)
+            // TODO // hide this away from normal gameplay, along with the rest of the debug ui I suppose
             let mouseLocLBL: Label = UserInterfaceManager.getLayerByName('levelEditor').getElementByName('lblLevelMouseLocation') as Label;
             mouseLocLBL.pos(InputHandler.mousePosition.x - mouseLocLBL.width - 5, InputHandler.mousePosition.y);
             mouseLocLBL.value = (() => {
@@ -120,6 +123,22 @@ namespace MG {
 
             UserInterfaceManager.update(this.FRAME_TIME/1000);
             UserInterfaceManager.render();
+
+            const texLoc: Vector2 = TileOffscreenRenderer.getTextureLocation(Assets.Textures.TILE_WALL_POST.name);
+            /*ctx.drawImage(
+                TileOffscreenRenderer.ctx.canvas,
+                texLoc.x,
+                texLoc.y,
+                TileOffscreenRenderer.width,
+                TileOffscreenRenderer.width,
+                20,
+                500,
+                TileOffscreenRenderer.width,
+                TileOffscreenRenderer.width
+            )*/
+            ctx.drawImage(TileOffscreenRenderer.ctx.canvas, 20, 200)
+
+            // ctx.fillRect(300, 200, 50, 50);
 
 
             this.LAST_FRAME = performance.now();

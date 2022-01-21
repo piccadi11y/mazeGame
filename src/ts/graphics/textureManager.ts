@@ -15,6 +15,14 @@ namespace MG {
 
         private constructor () {}
 
+        public static get loadedTextures (): string[] {
+            let texN: string[] = [];
+            for (let key in this._textures) {
+                if (key.substring(0, 4) === 'TILE') texN.push(key);
+            }
+            return texN;
+        }
+
         public static getTexture (textureName: string): Texture {
             if (TextureManager._textures[textureName] === undefined) return undefined
             TextureManager._textures[textureName].referenceCount++;
@@ -32,9 +40,7 @@ namespace MG {
         }
 
 
-        // TODO // load all used textures from Assets.Textures
         public static load (): void {
-            // console.log(Assets.Textures.loadList[0]);
 
             for (let t of Assets.Textures.loadList) {
                 TextureManager.addTexture(Texture.load(t));
