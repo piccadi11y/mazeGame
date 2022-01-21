@@ -69,6 +69,10 @@ namespace MG {
             return this._name;
         }
 
+        public get width (): number {
+            return this._width;
+        }
+
         public addLayer (points: Vector2[], colour: Colour) {
             let layer = new Layer();
             layer.colour = colour;
@@ -78,8 +82,9 @@ namespace MG {
 
         // TODO // refactor this abomination
         public draw (camera: Camera, bDrawCentre: boolean, bCentre: boolean, _x: number, _y: number, rotation: number = 0, width?: number, height?: number, fit: TextureFit = TextureFit.STRETCH): void {
-            let x: number = _x - (bCentre?(width?width:this._width)/2:0) - camera.view.position.x;
-            let y: number = _y - (bCentre?(height?height:this._height)/2:0) - camera.view.position.y;
+            const view = camera.view;
+            let x: number = _x - (bCentre?(width?width:this._width)/2:0) - view.position.x;
+            let y: number = _y - (bCentre?(height?height:this._height)/2:0) - view.position.y;
 
             let drawBaseRect = (vec: Vector2, width: number, height: number, rot: number) => {
                 let normalised: Vector2 = new Vector2(-(width/2), -(height/2))
@@ -117,6 +122,7 @@ namespace MG {
                 let scaleY: number = 1;
                 // does this need defining, or can the commented out logic below work in place?
                 if (fit === TextureFit.STRETCH) {
+                    // TODO 22/01/22 // this might be slightly dangerous as you're allowed to pass nothing through for width/height
                     scaleX = width / this._width;
                     scaleY = height / this._height;
                 }
@@ -149,14 +155,14 @@ namespace MG {
                             points[1] = Vector2.rotate(points[1], rotation);
                             points[2] = Vector2.rotate(points[2], rotation);
                             points[3] = Vector2.rotate(points[3], rotation);
-                            points[0].x += _x - camera.view.position.x;
-                            points[0].y += _y - camera.view.position.y;
-                            points[1].x += _x - camera.view.position.x;
-                            points[1].y += _y - camera.view.position.y;
-                            points[2].x += _x - camera.view.position.x;
-                            points[2].y += _y - camera.view.position.y;
-                            points[3].x += _x - camera.view.position.x;
-                            points[3].y += _y - camera.view.position.y;
+                            points[0].x += _x - view.position.x;
+                            points[0].y += _y - view.position.y;
+                            points[1].x += _x - view.position.x;
+                            points[1].y += _y - view.position.y;
+                            points[2].x += _x - view.position.x;
+                            points[2].y += _y - view.position.y;
+                            points[3].x += _x - view.position.x;
+                            points[3].y += _y - view.position.y;
 
                             path.moveTo(points[0].x, points[0].y);
                             path.lineTo(points[1].x, points[1].y);
@@ -174,7 +180,7 @@ namespace MG {
             // draw object centre for debugging
             if (bDrawCentre) {
                 ctx.fillStyle = 'orange';
-                ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+                ctx.fillRect(_x - 2.5 - view.position.x, _y - 2.5 - view.position.y, 5, 5);
             }
         }
 
