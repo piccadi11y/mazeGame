@@ -204,7 +204,7 @@ namespace MG {
             }
         }
 
-        private updateWorldTransform (parentWorldTransform: Transform): void {
+        protected updateWorldTransform (parentWorldTransform: Transform): void {
 
             if (parentWorldTransform !== undefined ) {
                 let trans: Transform = new Transform();
