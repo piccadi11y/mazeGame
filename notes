@@ -73,3 +73,4 @@ todo:
     -  refactor level's tile data storage to be data-orientated rather than object-orientated (set: 17/01/22, done: 19/01/22)
     - refactor level tile logic to store instances in object and batch render/offscreen render at once rather than working through the array of individual tiles (set: 21/01/22, done: )
         - refactor to use offscreen rendering/pre-rendered tiles (done: 22/01/22)
+    - pre-render all levels offscreen and then copy them onto primary canvas? (22/01/22)

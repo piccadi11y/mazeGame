@@ -72,7 +72,6 @@ namespace MG {
             ed.addElement(edML);
 
             TileOffscreenRenderer.render();
-            console.log(TileOffscreenRenderer.getTextureLocation(Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name));
             LevelManager.spawnPlayer();
             
 
@@ -123,22 +122,9 @@ namespace MG {
 
             UserInterfaceManager.update(this.FRAME_TIME/1000);
             UserInterfaceManager.render();
-
-            const texLoc: Vector2 = TileOffscreenRenderer.getTextureLocation(Assets.Textures.TILE_WALL_POST.name);
-            /*ctx.drawImage(
-                TileOffscreenRenderer.ctx.canvas,
-                texLoc.x,
-                texLoc.y,
-                TileOffscreenRenderer.width,
-                TileOffscreenRenderer.width,
-                20,
-                500,
-                TileOffscreenRenderer.width,
-                TileOffscreenRenderer.width
-            )*/
+            
+            // debug/for level design
             ctx.drawImage(TileOffscreenRenderer.ctx.canvas, 20, 200)
-
-            // ctx.fillRect(300, 200, 50, 50);
 
 
             this.LAST_FRAME = performance.now();

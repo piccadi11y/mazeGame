@@ -570,6 +570,13 @@ var Assets;
 (function (Assets) {
     var Textures;
     (function (Textures) {
+        Textures.sunset0_0 = {
+            name: 'sunset0_0',
+            width: 8,
+            height: 8,
+            baseColour: { r: 0, g: 0, b: 0 },
+            layers: []
+        };
         Textures.defaultPlayerTexture = {
             name: 'defaultPlayerTexture',
             width: 9,
@@ -1145,7 +1152,103 @@ var Assets;
                 {
                     colour: { r: 255, g: 200, b: 0 },
                     points: [
+                        { x: 0, y: 0 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_DOUBLE = {
+            name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_DOUBLE',
+            width: 7,
+            height: 7,
+            baseColour: undefined,
+            layers: [
+                {
+                    colour: { r: 255, g: 200, b: 0 },
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 6, y: 0 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_FULL = {
+            name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_FULL',
+            width: 7,
+            height: 7,
+            baseColour: undefined,
+            layers: [
+                {
+                    colour: { r: 255, g: 200, b: 0 },
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 6, y: 0 },
+                        { x: 6, y: 6 },
+                        { x: 0, y: 6 },
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA = {
+            name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA',
+            width: 7,
+            height: 7,
+            baseColour: undefined,
+            layers: [
+                {
+                    colour: { r: 255, g: 200, b: 0 },
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 3, y: 0 },
+                        { x: 4, y: 0 },
+                        { x: 5, y: 0 },
+                        { x: 6, y: 0 },
                         { x: 0, y: 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB = {
+            name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB',
+            width: 7,
+            height: 7,
+            baseColour: undefined,
+            layers: [
+                {
+                    colour: { r: 255, g: 200, b: 0 },
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 3, y: 0 },
+                        { x: 4, y: 0 },
+                        { x: 5, y: 0 },
+                        { x: 6, y: 0 },
+                        { x: 6, y: 6 }
+                    ]
+                }
+            ]
+        };
+        Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC = {
+            name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC',
+            width: 7,
+            height: 7,
+            baseColour: undefined,
+            layers: [
+                {
+                    colour: { r: 255, g: 200, b: 0 },
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: 2, y: 0 },
+                        { x: 3, y: 0 },
+                        { x: 4, y: 0 },
+                        { x: 5, y: 0 },
+                        { x: 6, y: 0 },
+                        { x: 0, y: 6 },
+                        { x: 6, y: 6 }
                     ]
                 }
             ]
@@ -1501,12 +1604,18 @@ var Assets;
             Textures.TILE_WALL_END,
             Textures.TILE_WALL_DOUBLE_CORNER,
             Textures.TILE_WALL_SINGLE_CORNER_INTERIOR,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_DOUBLE,
+            Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_FULL,
             Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR,
             Textures.TILE_FLOOR_TEST,
             Textures.SPAWNPOINT,
             Textures.SPAWNPOINT_CHECKPOINT,
             Textures.SPAWNPOINT_CHECKPOINT_ACTIVE,
-            Textures.SPAWNPOINT_END
+            Textures.SPAWNPOINT_END,
+            Textures.sunset0_0
         ];
         Textures.playerFrames = [
             Textures.playerFrame0,
@@ -1566,66 +1675,218 @@ var Assets;
             },
             tiles: [
                 {
+                    textureName: Assets.Textures.sunset0_0.name,
+                    collisionType: undefined,
+                    instances: [{ x: 8, y: 8, rotation: 0 }]
+                },
+                {
                     textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                     collisionType: MG.CollisionType.BLOCKING,
                     instances: [
-                        {
-                            x: 0,
-                            y: 0,
-                            rotation: 270
-                        },
-                        {
-                            x: 0,
-                            y: 19,
-                            rotation: 180
-                        }
+                        { x: 0, y: 0, rotation: 180 },
+                        { x: 10, y: 9, rotation: 270 },
+                        { x: 10, y: 15, rotation: 0 },
+                        { x: 14, y: 11, rotation: 270 },
+                        { x: 14, y: 13, rotation: 0 },
+                        { x: 0, y: 19, rotation: 90 },
+                        { x: 19, y: 19, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 8, rotation: 90 }
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 16, y: 2, rotation: 270 },
+                        { x: 1, y: 0, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 3, y: 7, rotation: 270 },
+                        { x: 3, y: 8, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 4, y: 8, rotation: 90 },
+                        { x: 4, y: 7, rotation: 0 },
+                        { x: 8, y: 8, rotation: 270 },
+                        { x: 16, y: 8, rotation: 0 },
+                        { x: 16, y: 16, rotation: 90 },
+                        { x: 8, y: 16, rotation: 180 },
+                        { x: 8, y: 9, rotation: 180 },
+                        { x: 8, y: 15, rotation: 270 },
+                        { x: 10, y: 11, rotation: 180 },
+                        { x: 10, y: 13, rotation: 270 },
+                        { x: 17, y: 2, rotation: 90 },
                     ]
                 },
                 {
                     textureName: Assets.Textures.TILE_WALL_SINGLE.name,
                     collisionType: MG.CollisionType.BLOCKING,
                     instances: [
-                        {
-                            x: 1,
-                            y: 0,
-                            rotation: 180
-                        },
-                        {
-                            x: 2,
-                            y: 0,
-                            rotation: 180
-                        },
-                        {
-                            x: 3,
-                            y: 0,
-                            rotation: 180
-                        },
-                        {
-                            x: 0,
-                            y: 1,
-                            rotation: 90
-                        },
-                        {
-                            x: 0,
-                            y: 2,
-                            rotation: 90
-                        },
-                        {
-                            x: 0,
-                            y: 3,
-                            rotation: 90
-                        },
+                        { x: 0, y: 1, rotation: 90 },
+                        { x: 0, y: 2, rotation: 90 },
+                        { x: 0, y: 3, rotation: 90 },
+                        { x: 0, y: 4, rotation: 90 },
+                        { x: 0, y: 5, rotation: 90 },
+                        { x: 0, y: 6, rotation: 90 },
+                        { x: 0, y: 7, rotation: 90 },
+                        { x: 0, y: 9, rotation: 90 },
+                        { x: 9, y: 8, rotation: 0 },
+                        { x: 10, y: 8, rotation: 0 },
+                        { x: 11, y: 8, rotation: 0 },
+                        { x: 12, y: 8, rotation: 0 },
+                        { x: 13, y: 8, rotation: 0 },
+                        { x: 14, y: 8, rotation: 0 },
+                        { x: 15, y: 8, rotation: 0 },
+                        { x: 16, y: 9, rotation: 90 },
+                        { x: 16, y: 10, rotation: 90 },
+                        { x: 16, y: 11, rotation: 90 },
+                        { x: 16, y: 12, rotation: 90 },
+                        { x: 16, y: 13, rotation: 90 },
+                        { x: 16, y: 14, rotation: 90 },
+                        { x: 16, y: 15, rotation: 90 },
+                        { x: 15, y: 16, rotation: 180 },
+                        { x: 14, y: 16, rotation: 180 },
+                        { x: 13, y: 16, rotation: 180 },
+                        { x: 12, y: 16, rotation: 180 },
+                        { x: 11, y: 16, rotation: 180 },
+                        { x: 10, y: 16, rotation: 180 },
+                        { x: 9, y: 16, rotation: 180 },
+                        { x: 9, y: 9, rotation: 180 },
+                        { x: 10, y: 10, rotation: 270 },
+                        { x: 9, y: 15, rotation: 0 },
+                        { x: 10, y: 14, rotation: 270 },
+                        { x: 11, y: 11, rotation: 180 },
+                        { x: 12, y: 11, rotation: 180 },
+                        { x: 13, y: 11, rotation: 180 },
+                        { x: 11, y: 13, rotation: 0 },
+                        { x: 12, y: 13, rotation: 0 },
+                        { x: 13, y: 13, rotation: 0 },
+                        { x: 14, y: 12, rotation: 270 },
+                        { x: 0, y: 10, rotation: 90 },
+                        { x: 0, y: 11, rotation: 90 },
+                        { x: 0, y: 12, rotation: 90 },
+                        { x: 0, y: 13, rotation: 90 },
+                        { x: 0, y: 14, rotation: 90 },
+                        { x: 0, y: 15, rotation: 90 },
+                        { x: 0, y: 16, rotation: 90 },
+                        { x: 0, y: 17, rotation: 90 },
+                        { x: 0, y: 18, rotation: 90 },
+                        { x: 1, y: 19, rotation: 0 },
+                        { x: 2, y: 19, rotation: 0 },
+                        { x: 3, y: 19, rotation: 0 },
+                        { x: 4, y: 19, rotation: 0 },
+                        { x: 5, y: 19, rotation: 0 },
+                        { x: 6, y: 19, rotation: 0 },
+                        { x: 7, y: 19, rotation: 0 },
+                        { x: 8, y: 19, rotation: 0 },
+                        { x: 9, y: 19, rotation: 0 },
+                        { x: 10, y: 19, rotation: 0 },
+                        { x: 11, y: 19, rotation: 0 },
+                        { x: 12, y: 19, rotation: 0 },
+                        { x: 13, y: 19, rotation: 0 },
+                        { x: 14, y: 19, rotation: 0 },
+                        { x: 15, y: 19, rotation: 0 },
+                        { x: 16, y: 19, rotation: 0 },
+                        { x: 17, y: 19, rotation: 0 },
+                        { x: 18, y: 19, rotation: 0 },
+                        { x: 19, y: 18, rotation: 270 },
+                        { x: 19, y: 17, rotation: 270 },
+                        { x: 19, y: 16, rotation: 270 },
+                        { x: 19, y: 15, rotation: 270 },
+                        { x: 19, y: 14, rotation: 270 },
+                        { x: 19, y: 13, rotation: 270 },
+                        { x: 19, y: 12, rotation: 270 },
+                        { x: 19, y: 11, rotation: 270 },
+                        { x: 19, y: 10, rotation: 270 },
+                        { x: 19, y: 9, rotation: 270 },
+                        { x: 19, y: 8, rotation: 270 },
+                        { x: 19, y: 7, rotation: 270 },
+                        { x: 19, y: 6, rotation: 270 },
+                        { x: 19, y: 5, rotation: 270 },
+                        { x: 19, y: 4, rotation: 270 },
+                        { x: 19, y: 3, rotation: 270 },
+                        { x: 19, y: 2, rotation: 270 },
+                        { x: 19, y: 1, rotation: 270 },
+                        { x: 19, y: 0, rotation: 270 },
+                        { x: 17, y: 1, rotation: 90 },
+                        { x: 17, y: 0, rotation: 90 },
+                        { x: 16, y: 1, rotation: 270 },
+                        { x: 16, y: 0, rotation: 270 },
                     ]
                 },
                 {
                     textureName: Assets.Textures.TILE_FLOOR_TEST.name,
                     collisionType: MG.CollisionType.NON_BLOCKING,
                     instances: [
-                        {
-                            x: 1,
-                            y: 1,
-                            rotation: 0
-                        }
+                        { x: 1, y: 1, rotation: 0 }
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 2, y: 0, rotation: 0 },
+                        { x: 3, y: 4, rotation: 90 },
+                        { x: 3, y: 5, rotation: 90 },
+                        { x: 3, y: 6, rotation: 90 },
+                        { x: 7, y: 4, rotation: 90 },
+                        { x: 7, y: 5, rotation: 90 },
+                        { x: 7, y: 6, rotation: 90 },
+                        { x: 1, y: 8, rotation: 0 },
+                        { x: 2, y: 8, rotation: 0 },
+                        // {x: 5, y: 1, rotation: 0},
+                        { x: 6, y: 1, rotation: 0 },
+                        { x: 7, y: 1, rotation: 0 },
+                        { x: 8, y: 1, rotation: 0 },
+                        { x: 9, y: 2, rotation: 90 },
+                        { x: 9, y: 3, rotation: 90 },
+                        { x: 9, y: 4, rotation: 90 },
+                        { x: 9, y: 5, rotation: 90 },
+                        { x: 10, y: 6, rotation: 0 },
+                        { x: 11, y: 6, rotation: 0 },
+                        { x: 12, y: 6, rotation: 0 },
+                        { x: 16, y: 5, rotation: 90 },
+                        { x: 16, y: 4, rotation: 90 },
+                        { x: 16, y: 3, rotation: 90 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 3, y: 3, rotation: 270 },
+                        { x: 7, y: 3, rotation: 0 },
+                        { x: 7, y: 7, rotation: 90 },
+                        { x: 9, y: 1, rotation: 0 },
+                        { x: 9, y: 6, rotation: 180 },
+                        { x: 16, y: 6, rotation: 90 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_END.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 4, y: 3, rotation: 0 },
+                        { x: 6, y: 3, rotation: 180 },
+                        { x: 6, y: 7, rotation: 180 },
+                        { x: 3, y: 0, rotation: 0 },
+                        { x: 4, y: 1, rotation: 180 },
+                        { x: 13, y: 6, rotation: 0 },
+                        { x: 15, y: 6, rotation: 180 },
                     ]
                 }
             ],
@@ -1648,18 +1909,207 @@ var Assets;
                 x: 3,
                 y: 18
             },
-            tiles: [],
+            tiles: [
+                {
+                    textureName: Assets.Textures.TILE_WALL_POST.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 13, y: 6, rotation: 0 },
+                        { x: 7, y: 12, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 19, y: 19, rotation: 270 },
+                        { x: 8, y: 8, rotation: 270 },
+                        { x: 11, y: 8, rotation: 0 },
+                        { x: 11, y: 11, rotation: 90 },
+                        { x: 5, y: 15, rotation: 270 },
+                        { x: 6, y: 15, rotation: 0 },
+                        { x: 14, y: 15, rotation: 270 },
+                        { x: 15, y: 15, rotation: 0 },
+                        { x: 14, y: 13, rotation: 180 },
+                        { x: 15, y: 13, rotation: 90 },
+                        { x: 15, y: 7, rotation: 0 },
+                        { x: 14, y: 7, rotation: 270 },
+                        { x: 14, y: 5, rotation: 180 },
+                        { x: 15, y: 5, rotation: 90 },
+                        { x: 6, y: 13, rotation: 90 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 16, y: 19, rotation: 270 },
+                        { x: 15, y: 17, rotation: 90 },
+                        { x: 6, y: 1, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 8, y: 11, rotation: 270 },
+                        { x: 5, y: 17, rotation: 270 },
+                        { x: 6, y: 17, rotation: 180 },
+                        { x: 14, y: 3, rotation: 0 },
+                        { x: 15, y: 1, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 17, y: 17, rotation: 0 },
+                        { x: 14, y: 19, rotation: 180 },
+                        { x: 15, y: 3, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 5, y: 19, rotation: 180 },
+                        { x: 10, y: 17, rotation: 90 },
+                        { x: 8, y: 6, rotation: 180 },
+                        { x: 8, y: 3, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 15, y: 19, rotation: 180 },
+                        { x: 17, y: 19, rotation: 90 },
+                        { x: 17, y: 18, rotation: 90 },
+                        { x: 1, y: 19, rotation: 90 },
+                        { x: 1, y: 18, rotation: 90 },
+                        { x: 1, y: 17, rotation: 90 },
+                        { x: 1, y: 16, rotation: 90 },
+                        { x: 5, y: 16, rotation: 270 },
+                        // P
+                        { x: 9, y: 8, rotation: 0 },
+                        { x: 10, y: 8, rotation: 0 },
+                        { x: 9, y: 11, rotation: 180 },
+                        { x: 10, y: 11, rotation: 180 },
+                        { x: 8, y: 9, rotation: 270 },
+                        { x: 8, y: 10, rotation: 270 },
+                        { x: 11, y: 9, rotation: 90 },
+                        { x: 11, y: 10, rotation: 90 },
+                        // P - end
+                        { x: 6, y: 16, rotation: 90 },
+                        { x: 7, y: 17, rotation: 0 },
+                        { x: 8, y: 17, rotation: 0 },
+                        { x: 9, y: 17, rotation: 0 },
+                        { x: 14, y: 18, rotation: 270 },
+                        { x: 14, y: 17, rotation: 270 },
+                        { x: 14, y: 16, rotation: 270 },
+                        { x: 15, y: 16, rotation: 90 },
+                        { x: 16, y: 17, rotation: 0 },
+                        { x: 15, y: 8, rotation: 90 },
+                        { x: 15, y: 9, rotation: 90 },
+                        { x: 15, y: 10, rotation: 90 },
+                        { x: 15, y: 11, rotation: 90 },
+                        { x: 15, y: 12, rotation: 90 },
+                        { x: 14, y: 8, rotation: 270 },
+                        { x: 14, y: 9, rotation: 270 },
+                        { x: 14, y: 10, rotation: 270 },
+                        { x: 14, y: 11, rotation: 270 },
+                        { x: 14, y: 12, rotation: 270 },
+                        { x: 15, y: 4, rotation: 90 },
+                        { x: 14, y: 4, rotation: 270 },
+                        { x: 6, y: 12, rotation: 90 },
+                        { x: 6, y: 11, rotation: 90 },
+                        { x: 6, y: 10, rotation: 90 },
+                        { x: 6, y: 9, rotation: 90 },
+                        { x: 6, y: 8, rotation: 90 },
+                        { x: 6, y: 7, rotation: 90 },
+                        { x: 6, y: 6, rotation: 90 },
+                        { x: 6, y: 5, rotation: 90 },
+                        { x: 6, y: 4, rotation: 90 },
+                        { x: 6, y: 3, rotation: 90 },
+                        { x: 6, y: 2, rotation: 90 },
+                        { x: 7, y: 1, rotation: 180 },
+                        { x: 8, y: 1, rotation: 180 },
+                        { x: 9, y: 1, rotation: 180 },
+                        { x: 10, y: 1, rotation: 180 },
+                        { x: 11, y: 1, rotation: 180 },
+                        { x: 12, y: 1, rotation: 180 },
+                        { x: 13, y: 1, rotation: 180 },
+                        { x: 14, y: 1, rotation: 180 },
+                        { x: 15, y: 0, rotation: 90 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 8, y: 12, rotation: 90 },
+                        { x: 8, y: 13, rotation: 90 },
+                        { x: 8, y: 14, rotation: 90 },
+                        { x: 18, y: 17, rotation: 0 },
+                        { x: 19, y: 17, rotation: 0 },
+                        { x: 10, y: 16, rotation: 90 },
+                        { x: 10, y: 15, rotation: 90 },
+                        { x: 10, y: 14, rotation: 90 },
+                        { x: 5, y: 18, rotation: 90 },
+                        { x: 6, y: 19, rotation: 0 },
+                        { x: 13, y: 19, rotation: 0 },
+                        { x: 12, y: 19, rotation: 0 },
+                        { x: 11, y: 19, rotation: 0 },
+                        { x: 10, y: 19, rotation: 0 },
+                        { x: 9, y: 19, rotation: 0 },
+                        { x: 8, y: 19, rotation: 0 },
+                        { x: 7, y: 19, rotation: 0 },
+                        { x: 7, y: 17, rotation: 0 },
+                        { x: 8, y: 17, rotation: 0 },
+                        { x: 9, y: 17, rotation: 0 },
+                        { x: 16, y: 3, rotation: 0 },
+                        { x: 17, y: 3, rotation: 0 },
+                        { x: 18, y: 3, rotation: 0 },
+                        { x: 19, y: 3, rotation: 0 },
+                        { x: 16, y: 1, rotation: 0 },
+                        { x: 17, y: 1, rotation: 0 },
+                        { x: 18, y: 1, rotation: 0 },
+                        { x: 19, y: 1, rotation: 0 },
+                        { x: 13, y: 3, rotation: 0 },
+                        { x: 10, y: 6, rotation: 0 },
+                        { x: 9, y: 6, rotation: 0 },
+                        { x: 8, y: 4, rotation: 90 },
+                        { x: 8, y: 5, rotation: 90 },
+                        { x: 9, y: 3, rotation: 0 },
+                        { x: 10, y: 3, rotation: 0 },
+                        { x: 11, y: 3, rotation: 0 },
+                        { x: 12, y: 3, rotation: 0 },
+                        { x: 19, y: 15, rotation: 0 },
+                        { x: 18, y: 15, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_END.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 8, y: 15, rotation: 90 },
+                        { x: 10, y: 13, rotation: 270 },
+                        { x: 11, y: 6, rotation: 0 },
+                        { x: 17, y: 15, rotation: 180 },
+                    ]
+                }
+            ],
             objects: [
                 {
                     objectBuildData: Assets.Objects.testLevelCentre,
                     x: 0,
                     y: 0
                 },
-                {
+                /*{
                     objectBuildData: Assets.Objects.testLevelCentre,
                     x: -200,
                     y: 100
-                }
+                }*/
             ]
         };
         Levels.testLevel2 = {
@@ -1679,7 +2129,243 @@ var Assets;
                 x: 3,
                 y: 2
             },
-            tiles: [],
+            tiles: [
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 19, y: 19, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 15, y: 15, rotation: 90 },
+                        { x: 15, y: 11, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 17, y: 17, rotation: 90 },
+                        { x: 2, y: 1, rotation: 0 },
+                        { x: 17, y: 1, rotation: 0 },
+                        { x: 6, y: 1, rotation: 270 },
+                        { x: 15, y: 5, rotation: 0 },
+                        { x: 13, y: 7, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 13, y: 11, rotation: 270 },
+                        { x: 13, y: 15, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 6, y: 3, rotation: 180 },
+                        { x: 4, y: 5, rotation: 270 },
+                        { x: 4, y: 7, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_FULL.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 2, y: 3, rotation: 0 },
+                        { x: 4, y: 3, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_END.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 15, y: 3, rotation: 0 },
+                        { x: 15, y: 9, rotation: 90 },
+                        { x: 2, y: 13, rotation: 90 },
+                        { x: 4, y: 13, rotation: 90 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 19, rotation: 0 },
+                        { x: 1, y: 19, rotation: 0 },
+                        { x: 2, y: 19, rotation: 0 },
+                        { x: 3, y: 19, rotation: 0 },
+                        { x: 4, y: 19, rotation: 0 },
+                        { x: 5, y: 19, rotation: 0 },
+                        { x: 6, y: 19, rotation: 0 },
+                        { x: 7, y: 19, rotation: 0 },
+                        { x: 8, y: 19, rotation: 0 },
+                        { x: 9, y: 19, rotation: 0 },
+                        { x: 10, y: 19, rotation: 0 },
+                        { x: 11, y: 19, rotation: 0 },
+                        { x: 12, y: 19, rotation: 0 },
+                        { x: 13, y: 19, rotation: 0 },
+                        { x: 14, y: 19, rotation: 0 },
+                        { x: 15, y: 19, rotation: 0 },
+                        { x: 16, y: 19, rotation: 0 },
+                        { x: 17, y: 19, rotation: 0 },
+                        { x: 18, y: 19, rotation: 0 },
+                        { x: 19, y: 18, rotation: 270 },
+                        { x: 19, y: 17, rotation: 270 },
+                        { x: 19, y: 16, rotation: 270 },
+                        { x: 19, y: 15, rotation: 270 },
+                        { x: 19, y: 14, rotation: 270 },
+                        { x: 19, y: 13, rotation: 270 },
+                        { x: 19, y: 12, rotation: 270 },
+                        { x: 19, y: 11, rotation: 270 },
+                        { x: 19, y: 10, rotation: 270 },
+                        { x: 19, y: 9, rotation: 270 },
+                        { x: 19, y: 8, rotation: 270 },
+                        { x: 19, y: 7, rotation: 270 },
+                        { x: 19, y: 6, rotation: 270 },
+                        { x: 19, y: 5, rotation: 270 },
+                        { x: 19, y: 4, rotation: 270 },
+                        { x: 19, y: 3, rotation: 270 },
+                        { x: 19, y: 2, rotation: 270 },
+                        { x: 19, y: 1, rotation: 270 },
+                        { x: 19, y: 0, rotation: 270 },
+                        { x: 15, y: 12, rotation: 90 },
+                        { x: 15, y: 13, rotation: 90 },
+                        { x: 15, y: 14, rotation: 90 },
+                        { x: 14, y: 11, rotation: 0 },
+                        { x: 13, y: 12, rotation: 270 },
+                        { x: 13, y: 13, rotation: 270 },
+                        { x: 13, y: 14, rotation: 270 },
+                        { x: 14, y: 15, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 17, rotation: 0 },
+                        { x: 1, y: 17, rotation: 0 },
+                        { x: 2, y: 17, rotation: 0 },
+                        { x: 3, y: 17, rotation: 0 },
+                        { x: 4, y: 17, rotation: 0 },
+                        { x: 5, y: 17, rotation: 0 },
+                        { x: 6, y: 17, rotation: 0 },
+                        { x: 7, y: 17, rotation: 0 },
+                        { x: 8, y: 17, rotation: 0 },
+                        { x: 9, y: 17, rotation: 0 },
+                        { x: 10, y: 17, rotation: 0 },
+                        { x: 11, y: 17, rotation: 0 },
+                        { x: 12, y: 17, rotation: 0 },
+                        { x: 13, y: 17, rotation: 0 },
+                        { x: 14, y: 17, rotation: 0 },
+                        { x: 15, y: 17, rotation: 0 },
+                        { x: 16, y: 17, rotation: 0 },
+                        { x: 17, y: 16, rotation: 90 },
+                        { x: 17, y: 15, rotation: 90 },
+                        { x: 17, y: 14, rotation: 90 },
+                        { x: 17, y: 13, rotation: 90 },
+                        { x: 17, y: 12, rotation: 90 },
+                        { x: 17, y: 11, rotation: 90 },
+                        { x: 17, y: 10, rotation: 90 },
+                        { x: 17, y: 9, rotation: 90 },
+                        { x: 17, y: 8, rotation: 90 },
+                        { x: 17, y: 7, rotation: 90 },
+                        { x: 17, y: 6, rotation: 90 },
+                        { x: 17, y: 5, rotation: 90 },
+                        { x: 17, y: 4, rotation: 90 },
+                        { x: 17, y: 3, rotation: 90 },
+                        { x: 17, y: 2, rotation: 90 },
+                        { x: 2, y: 2, rotation: 90 },
+                        { x: 0, y: 3, rotation: 0 },
+                        { x: 1, y: 3, rotation: 0 },
+                        { x: 3, y: 3, rotation: 0 },
+                        { x: 0, y: 1, rotation: 0 },
+                        { x: 1, y: 1, rotation: 0 },
+                        { x: 2, y: 4, rotation: 90 },
+                        { x: 4, y: 2, rotation: 90 },
+                        { x: 4, y: 1, rotation: 90 },
+                        { x: 4, y: 0, rotation: 90 },
+                        { x: 6, y: 2, rotation: 90 },
+                        { x: 5, y: 3, rotation: 0 },
+                        { x: 4, y: 4, rotation: 90 },
+                        { x: 7, y: 3, rotation: 0 },
+                        { x: 7, y: 1, rotation: 0 },
+                        { x: 8, y: 1, rotation: 0 },
+                        { x: 9, y: 1, rotation: 0 },
+                        { x: 10, y: 1, rotation: 0 },
+                        { x: 11, y: 1, rotation: 0 },
+                        { x: 12, y: 1, rotation: 0 },
+                        { x: 13, y: 1, rotation: 0 },
+                        { x: 14, y: 1, rotation: 0 },
+                        { x: 15, y: 1, rotation: 0 },
+                        { x: 16, y: 1, rotation: 0 },
+                        { x: 8, y: 3, rotation: 0 },
+                        { x: 9, y: 3, rotation: 0 },
+                        { x: 10, y: 3, rotation: 0 },
+                        { x: 11, y: 3, rotation: 0 },
+                        { x: 12, y: 3, rotation: 0 },
+                        { x: 13, y: 3, rotation: 0 },
+                        { x: 14, y: 3, rotation: 0 },
+                        { x: 15, y: 3, rotation: 0 },
+                        { x: 5, y: 5, rotation: 0 },
+                        { x: 6, y: 5, rotation: 0 },
+                        { x: 7, y: 5, rotation: 0 },
+                        { x: 8, y: 5, rotation: 0 },
+                        { x: 9, y: 5, rotation: 0 },
+                        { x: 10, y: 5, rotation: 0 },
+                        { x: 11, y: 5, rotation: 0 },
+                        { x: 12, y: 5, rotation: 0 },
+                        { x: 13, y: 5, rotation: 0 },
+                        { x: 14, y: 5, rotation: 0 },
+                        { x: 15, y: 6, rotation: 90 },
+                        { x: 15, y: 7, rotation: 90 },
+                        { x: 15, y: 8, rotation: 90 },
+                        { x: 12, y: 15, rotation: 0 },
+                        { x: 11, y: 15, rotation: 0 },
+                        { x: 10, y: 15, rotation: 0 },
+                        { x: 9, y: 15, rotation: 0 },
+                        { x: 8, y: 15, rotation: 0 },
+                        { x: 7, y: 15, rotation: 0 },
+                        { x: 6, y: 15, rotation: 0 },
+                        { x: 5, y: 15, rotation: 0 },
+                        { x: 4, y: 15, rotation: 0 },
+                        { x: 3, y: 15, rotation: 0 },
+                        { x: 2, y: 15, rotation: 0 },
+                        { x: 1, y: 15, rotation: 0 },
+                        { x: 0, y: 15, rotation: 0 },
+                        { x: 13, y: 10, rotation: 90 },
+                        { x: 13, y: 9, rotation: 90 },
+                        { x: 13, y: 8, rotation: 90 },
+                        { x: 12, y: 7, rotation: 0 },
+                        { x: 11, y: 7, rotation: 0 },
+                        { x: 10, y: 7, rotation: 0 },
+                        { x: 9, y: 7, rotation: 0 },
+                        { x: 8, y: 7, rotation: 0 },
+                        { x: 7, y: 7, rotation: 0 },
+                        { x: 6, y: 7, rotation: 0 },
+                        { x: 5, y: 7, rotation: 0 },
+                        { x: 4, y: 8, rotation: 90 },
+                        { x: 4, y: 9, rotation: 90 },
+                        { x: 4, y: 10, rotation: 90 },
+                        { x: 4, y: 11, rotation: 90 },
+                        { x: 4, y: 12, rotation: 90 },
+                        { x: 2, y: 5, rotation: 90 },
+                        { x: 2, y: 6, rotation: 90 },
+                        { x: 2, y: 7, rotation: 90 },
+                        { x: 2, y: 8, rotation: 90 },
+                        { x: 2, y: 9, rotation: 90 },
+                        { x: 2, y: 10, rotation: 90 },
+                        { x: 2, y: 11, rotation: 90 },
+                        { x: 2, y: 12, rotation: 90 },
+                        { x: 4, y: 6, rotation: 90 },
+                    ]
+                },
+            ],
             objects: [
                 {
                     objectBuildData: Assets.Objects.testLevelCentre,
@@ -1877,6 +2563,13 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(Camera.prototype, "screenDimensions", {
+            get: function () {
+                return new MG.Vector2(this._screenWidth, this._screenHeight);
+            },
+            enumerable: false,
+            configurable: true
+        });
         Camera.prototype.resizeScreen = function (width, height) {
             this._screenWidth = width;
             this._screenHeight = height;
@@ -1930,7 +2623,7 @@ var MG;
         Engine.prototype.Start = function () {
             MG.TextureManager.load();
             MG.InputHandler.initialise(this._canvas);
-            MG.LevelManager.initialise(100);
+            MG.LevelManager.initialise(1000); // TODO // not convinced this limit does anything to help, or anything when surpassed
             // let player: Player = new Player('player', [Assets.Textures.defaultPlayerTexture], 50);
             var player = new MG.Player('player', Assets.Textures.playerFrames, 50);
             player.enableCollisionFromSprite();
@@ -1938,6 +2631,7 @@ var MG;
             player.enableAnimations(2000, -1);
             // temp, while testing everything
             MG.LevelManager.load(Assets.Levels.testLevels);
+            MG.TileOffscreenRenderer.initialise(MG.TextureManager.loadedTextures, MG.LevelManager.loadedLevels[0].gridSize);
             MG.LevelManager.bDrawDebugs = Assets.GameOptions.bDrawDebugs;
             if (MG.LevelManager.bDrawDebugs)
                 MG.TextureManager.addTexture(new MG.Texture('collisionDebug', 1, 1, MG.Colour.red()));
@@ -1968,6 +2662,15 @@ var MG;
             tbtn.colour = 'white';
             tbtn.onClickFunction = function () { return MG.LevelManager.spawnPlayer(); };
             tl.addElement(tbtn);
+            var ed = new MG.UserInterfaceLayer('levelEditor');
+            MG.UserInterfaceManager.addLayer(ed);
+            var edML = new MG.Label('lblLevelMouseLocation', 80, 20);
+            edML.colour = 'red';
+            edML.value = 'test';
+            edML.font = '20px consolas';
+            edML.pos(-100, -100);
+            ed.addElement(edML);
+            MG.TileOffscreenRenderer.render();
             MG.LevelManager.spawnPlayer();
             this.resize();
             this.mainLoop();
@@ -1991,8 +2694,25 @@ var MG;
             }
             MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblPositionData').value = relPosX + ", " + relPosY;
             MG.UserInterfaceManager.getLayerByName('performanceMetrics').getElementByName('lblMousePosition').value = MG.InputHandler.mousePosition.x + ", " + MG.InputHandler.mousePosition.y;
+            // level mouse rel position (for editor)
+            // TODO // hide this away from normal gameplay, along with the rest of the debug ui I suppose
+            var mouseLocLBL = MG.UserInterfaceManager.getLayerByName('levelEditor').getElementByName('lblLevelMouseLocation');
+            mouseLocLBL.pos(MG.InputHandler.mousePosition.x - mouseLocLBL.width - 5, MG.InputHandler.mousePosition.y);
+            mouseLocLBL.value = (function () {
+                var currentLevel = MG.LevelManager.player.currentLevel;
+                var mouseLoc = MG.InputHandler.mousePosition;
+                var worldTL = MG.Vector2.Zero;
+                worldTL.copyFrom(MG.LevelManager.camera.view.position);
+                worldTL.x += mouseLoc.x - (currentLevel.location.x - currentLevel.width / 2) - currentLevel.gridSize / 2;
+                worldTL.y += mouseLoc.y - (currentLevel.location.y - currentLevel.height / 2) - currentLevel.gridSize / 2;
+                worldTL.x /= currentLevel.gridSize;
+                worldTL.y /= currentLevel.gridSize;
+                return worldTL.toString(true);
+            })();
             MG.UserInterfaceManager.update(this.FRAME_TIME / 1000);
             MG.UserInterfaceManager.render();
+            // debug/for level design
+            MG.ctx.drawImage(MG.TileOffscreenRenderer.ctx.canvas, 20, 200);
             this.LAST_FRAME = performance.now();
             MG.LevelManager.FRAME++;
             requestAnimationFrame(function () { return _this.mainLoop(); });
@@ -2140,6 +2860,12 @@ var MG;
         });
         Vector2.prototype.toArray = function () {
             return [this._x, this._y];
+        };
+        Vector2.prototype.toString = function (bRound) {
+            if (bRound === void 0) { bRound = false; }
+            if (bRound)
+                return Math.round(this._x) + ", " + Math.round(this._y);
+            return this._x + ", " + this._y;
         };
         Vector2.prototype.copyFrom = function (vector) {
             this._x = vector._x;
@@ -2791,6 +3517,13 @@ var MG;
             enumerable: false,
             configurable: true
         });
+        Object.defineProperty(Texture.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
         Texture.prototype.addLayer = function (points, colour) {
             var layer = new Layer();
             layer.colour = colour;
@@ -2805,8 +3538,9 @@ var MG;
             var _this = this;
             if (rotation === void 0) { rotation = 0; }
             if (fit === void 0) { fit = TextureFit.STRETCH; }
-            var x = _x - (bCentre ? (width ? width : this._width) / 2 : 0) - camera.view.position.x;
-            var y = _y - (bCentre ? (height ? height : this._height) / 2 : 0) - camera.view.position.y;
+            var view = camera.view;
+            var x = _x - (bCentre ? (width ? width : this._width) / 2 : 0) - view.position.x;
+            var y = _y - (bCentre ? (height ? height : this._height) / 2 : 0) - view.position.y;
             var drawBaseRect = function (vec, width, height, rot) {
                 var normalised = new MG.Vector2(-(width / 2), -(height / 2));
                 var points = [new MG.Vector2(normalised.x, normalised.y), new MG.Vector2(normalised.x + width, normalised.y), new MG.Vector2(normalised.x + width, normalised.y + height), new MG.Vector2(normalised.x, normalised.y + height)];
@@ -2838,6 +3572,7 @@ var MG;
                 var scaleY = 1;
                 // does this need defining, or can the commented out logic below work in place?
                 if (fit === TextureFit.STRETCH) {
+                    // TODO 22/01/22 // this might be slightly dangerous as you're allowed to pass nothing through for width/height
                     scaleX = width / this._width;
                     scaleY = height / this._height;
                 }
@@ -2870,14 +3605,14 @@ var MG;
                             points[1] = MG.Vector2.rotate(points[1], rotation);
                             points[2] = MG.Vector2.rotate(points[2], rotation);
                             points[3] = MG.Vector2.rotate(points[3], rotation);
-                            points[0].x += _x - camera.view.position.x;
-                            points[0].y += _y - camera.view.position.y;
-                            points[1].x += _x - camera.view.position.x;
-                            points[1].y += _y - camera.view.position.y;
-                            points[2].x += _x - camera.view.position.x;
-                            points[2].y += _y - camera.view.position.y;
-                            points[3].x += _x - camera.view.position.x;
-                            points[3].y += _y - camera.view.position.y;
+                            points[0].x += _x - view.position.x;
+                            points[0].y += _y - view.position.y;
+                            points[1].x += _x - view.position.x;
+                            points[1].y += _y - view.position.y;
+                            points[2].x += _x - view.position.x;
+                            points[2].y += _y - view.position.y;
+                            points[3].x += _x - view.position.x;
+                            points[3].y += _y - view.position.y;
                             path.moveTo(points[0].x, points[0].y);
                             path.lineTo(points[1].x, points[1].y);
                             path.lineTo(points[2].x, points[2].y);
@@ -2894,7 +3629,7 @@ var MG;
             // draw object centre for debugging
             if (bDrawCentre) {
                 MG.ctx.fillStyle = 'orange';
-                MG.ctx.fillRect(_x - 2.5 - camera.view.position.x, _y - 2.5 - camera.view.position.y, 5, 5);
+                MG.ctx.fillRect(_x - 2.5 - view.position.x, _y - 2.5 - view.position.y, 5, 5);
             }
         };
         Texture.load = function (data) {
@@ -2928,6 +3663,18 @@ var MG;
     var TextureManager = /** @class */ (function () {
         function TextureManager() {
         }
+        Object.defineProperty(TextureManager, "loadedTextures", {
+            get: function () {
+                var texN = [];
+                for (var key in this._textures) {
+                    if (key.substring(0, 4) === 'TILE')
+                        texN.push(key);
+                }
+                return texN;
+            },
+            enumerable: false,
+            configurable: true
+        });
         TextureManager.getTexture = function (textureName) {
             if (TextureManager._textures[textureName] === undefined)
                 return undefined;
@@ -2946,9 +3693,7 @@ var MG;
             else
                 TextureManager._textures[textureName].referenceCount--;
         };
-        // TODO // load all used textures from Assets.Textures
         TextureManager.load = function () {
-            // console.log(Assets.Textures.loadList[0]);
             for (var _i = 0, _a = Assets.Textures.loadList; _i < _a.length; _i++) {
                 var t = _a[_i];
                 TextureManager.addTexture(MG.Texture.load(t));
@@ -2980,19 +3725,108 @@ var MG;
         TileSpriteManager._sprites = {};
         return TileSpriteManager;
     }());
+    var TileOffscreenRenderer = /** @class */ (function () {
+        function TileOffscreenRenderer() {
+        }
+        Object.defineProperty(TileOffscreenRenderer, "ctx", {
+            get: function () {
+                return this._ctx;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(TileOffscreenRenderer, "width", {
+            get: function () {
+                return this._textureWidth;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        TileOffscreenRenderer.getTextureLocation = function (textureName) {
+            return this._texturesUsed[textureName];
+        };
+        TileOffscreenRenderer.initialise = function (textureNames, tWidth) {
+            this._textureWidth = tWidth;
+            this._textureCount = textureNames.length;
+            this._ctx = document.createElement('canvas').getContext('2d');
+            this._ctx.canvas.height = this._textureWidth * 4;
+            this._ctx.canvas.width = textureNames.length * this._textureWidth;
+            for (var i = 0; i < this._textureCount; ++i) {
+                this._texturesUsed[textureNames[i]] = new MG.Vector2(this._textureWidth * i, 0);
+            }
+        };
+        /**
+         * To be called once before main loop, renders all used tile textures for access by tiles during render loop.
+         */
+        TileOffscreenRenderer.render = function () {
+            var c = new MG.Camera();
+            var cTrans = new MG.Transform();
+            c.resizeScreen(this._textureWidth * this._textureCount, this._textureWidth);
+            c.resizeScreen(0, 0);
+            c.update(0, cTrans);
+            var _bCTX = MG.ctx;
+            MG.ctx = this._ctx;
+            for (var key in this._texturesUsed) {
+                var tex = MG.TextureManager.getTexture(key);
+                tex.draw(c, false, true, this._texturesUsed[key].x + this._textureWidth / 2, 0 + (this._textureWidth / 2), 0, this._textureWidth, this._textureWidth);
+                tex.draw(c, false, true, this._texturesUsed[key].x + this._textureWidth / 2, 1 * this._textureWidth + (this._textureWidth / 2), 90, this._textureWidth, this._textureWidth);
+                tex.draw(c, false, true, this._texturesUsed[key].x + this._textureWidth / 2, 2 * this._textureWidth + (this._textureWidth / 2), 180, this._textureWidth, this._textureWidth);
+                tex.draw(c, false, true, this._texturesUsed[key].x + this._textureWidth / 2, 3 * this._textureWidth + (this._textureWidth / 2), 270, this._textureWidth, this._textureWidth);
+            }
+            MG.ctx = _bCTX;
+        };
+        TileOffscreenRenderer._texturesUsed = {};
+        return TileOffscreenRenderer;
+    }());
+    MG.TileOffscreenRenderer = TileOffscreenRenderer;
     var Tile = /** @class */ (function (_super) {
         __extends(Tile, _super);
         function Tile(textureName, level) {
             var _this = _super.call(this, level.name + "_TILE_" + textureName, level) || this;
+            _this._foundationalTile = false;
+            if (textureName.substring(0, 4) === 'TILE')
+                _this._foundationalTile = true;
+            _this._textureName = textureName;
             _this._width = _this._level.gridSize;
             var ts = TileSpriteManager.getSprite(textureName);
-            if (ts === undefined)
+            if (ts === undefined) {
                 ts = TileSpriteManager.addSprite(_this._width, textureName);
+            }
             _this.addComponent(MG.SpriteComponent.fromSprite(Tile.spriteName(level.name, textureName), ts));
+            level.tiles.push(_this);
             return _this;
         }
         Tile.spriteName = function (levelName, textureName) {
             return levelName + "_TEXTURECOMPONENT_" + textureName;
+        };
+        Tile.prototype.update = function (deltaTime) {
+            _super.prototype.update.call(this, deltaTime);
+            var lt = new MG.Transform();
+            lt.position.copyFrom(this.level.location);
+            this.updateWorldTransform(lt);
+        };
+        Tile.prototype.render = function (camera, bDrawDebugs) {
+            if (bDrawDebugs === void 0) { bDrawDebugs = false; }
+            if (!this._foundationalTile) {
+                _super.prototype.render.call(this, camera, bDrawDebugs);
+                return;
+            }
+            var view = camera.view;
+            var renderCoords = MG.Vector2.Zero;
+            renderCoords.copyFrom(this.worldTransform.position);
+            renderCoords.x -= view.position.x;
+            renderCoords.y -= view.position.y;
+            var texLoc = TileOffscreenRenderer.getTextureLocation(this._textureName);
+            var rotLoc = this.worldTransform.rotation / 90;
+            var texW = TileOffscreenRenderer.width;
+            MG.ctx.drawImage(TileOffscreenRenderer.ctx.canvas, texLoc.x, texW * rotLoc, texW, texW, renderCoords.x - texW / 2, renderCoords.y - texW / 2, texW, texW);
+            if (bDrawDebugs) {
+                // collision
+                if (this._collisionComponent !== undefined) {
+                    var tex = MG.TextureManager.getTexture('collisionDebug');
+                    tex.draw(camera, true, true, this._collisionComponent.transform.position.x, this._collisionComponent.transform.position.y, 0, this._collisionComponent.width, this._collisionComponent.height);
+                }
+            }
         };
         return Tile;
     }(MG.oObject));
@@ -3118,6 +3952,20 @@ var MG;
             this._sprite = new MG.Sprite(this._width, this._height, textureNames);
             this._sprite.bCentreTexture = false;
         };
+        Object.defineProperty(UserInterfaceElement.prototype, "width", {
+            get: function () {
+                return this._width;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(UserInterfaceElement.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            enumerable: false,
+            configurable: true
+        });
         UserInterfaceElement.prototype.pos = function (x, y) {
             var out = _super.prototype.pos.call(this, x, y);
             for (var _i = 0, _a = this._children; _i < _a.length; _i++) {
@@ -3634,7 +4482,6 @@ var MG;
                     tTemp.update(0);
                     if (tT.collisionType === MG.CollisionType.BLOCKING)
                         tTemp.enableCollisionFromSprite(MG.Tile.spriteName(level.name, tT.textureName), true);
-                    level.tiles.push(tTemp);
                 }
             }
             // spawn objects
