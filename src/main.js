@@ -1674,11 +1674,11 @@ var Assets;
                 y: 5
             },
             tiles: [
-                {
+                /*{
                     textureName: Assets.Textures.sunset0_0.name,
                     collisionType: undefined,
-                    instances: [{ x: 8, y: 8, rotation: 0 }]
-                },
+                    instances: [{x: 8, y: 8, rotation: 0}]
+                },*/
                 {
                     textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
                     collisionType: MG.CollisionType.BLOCKING,
@@ -1937,6 +1937,9 @@ var Assets;
                         { x: 14, y: 5, rotation: 180 },
                         { x: 15, y: 5, rotation: 90 },
                         { x: 6, y: 13, rotation: 90 },
+                        { x: 5, y: 13, rotation: 180 },
+                        { x: 5, y: 7, rotation: 270 },
+                        { x: 1, y: 15, rotation: 0 },
                     ]
                 },
                 {
@@ -1945,7 +1948,7 @@ var Assets;
                     instances: [
                         { x: 16, y: 19, rotation: 270 },
                         { x: 15, y: 17, rotation: 90 },
-                        { x: 6, y: 1, rotation: 180 },
+                        { x: 0, y: 15, rotation: 90 },
                     ]
                 },
                 {
@@ -1956,7 +1959,7 @@ var Assets;
                         { x: 5, y: 17, rotation: 270 },
                         { x: 6, y: 17, rotation: 180 },
                         { x: 14, y: 3, rotation: 0 },
-                        { x: 15, y: 1, rotation: 180 },
+                        { x: 6, y: 7, rotation: 90 },
                     ]
                 },
                 {
@@ -1969,6 +1972,13 @@ var Assets;
                     ]
                 },
                 {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 15, y: 1, rotation: 180 },
+                    ]
+                },
+                {
                     textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
                     collisionType: MG.CollisionType.BLOCKING,
                     instances: [
@@ -1976,6 +1986,7 @@ var Assets;
                         { x: 10, y: 17, rotation: 90 },
                         { x: 8, y: 6, rotation: 180 },
                         { x: 8, y: 3, rotation: 270 },
+                        { x: 6, y: 1, rotation: 270 },
                     ]
                 },
                 {
@@ -2026,21 +2037,26 @@ var Assets;
                         { x: 6, y: 10, rotation: 90 },
                         { x: 6, y: 9, rotation: 90 },
                         { x: 6, y: 8, rotation: 90 },
-                        { x: 6, y: 7, rotation: 90 },
-                        { x: 6, y: 6, rotation: 90 },
-                        { x: 6, y: 5, rotation: 90 },
-                        { x: 6, y: 4, rotation: 90 },
-                        { x: 6, y: 3, rotation: 90 },
-                        { x: 6, y: 2, rotation: 90 },
-                        { x: 7, y: 1, rotation: 180 },
-                        { x: 8, y: 1, rotation: 180 },
-                        { x: 9, y: 1, rotation: 180 },
-                        { x: 10, y: 1, rotation: 180 },
-                        { x: 11, y: 1, rotation: 180 },
-                        { x: 12, y: 1, rotation: 180 },
-                        { x: 13, y: 1, rotation: 180 },
-                        { x: 14, y: 1, rotation: 180 },
-                        { x: 15, y: 0, rotation: 90 },
+                        { x: 5, y: 8, rotation: 270 },
+                        { x: 5, y: 9, rotation: 270 },
+                        { x: 5, y: 10, rotation: 270 },
+                        { x: 5, y: 11, rotation: 270 },
+                        { x: 5, y: 12, rotation: 270 },
+                        { x: 0, y: 14, rotation: 90 },
+                        { x: 0, y: 13, rotation: 90 },
+                        { x: 0, y: 12, rotation: 90 },
+                        { x: 0, y: 11, rotation: 90 },
+                        { x: 0, y: 10, rotation: 90 },
+                        { x: 0, y: 9, rotation: 90 },
+                        { x: 0, y: 8, rotation: 90 },
+                        { x: 0, y: 7, rotation: 90 },
+                        { x: 0, y: 6, rotation: 90 },
+                        { x: 0, y: 5, rotation: 90 },
+                        { x: 0, y: 4, rotation: 90 },
+                        { x: 0, y: 3, rotation: 90 },
+                        { x: 0, y: 2, rotation: 90 },
+                        { x: 0, y: 1, rotation: 90 },
+                        { x: 0, y: 0, rotation: 90 },
                     ]
                 },
                 {
@@ -2086,6 +2102,33 @@ var Assets;
                         { x: 12, y: 3, rotation: 0 },
                         { x: 19, y: 15, rotation: 0 },
                         { x: 18, y: 15, rotation: 0 },
+                        { x: 3, y: 12, rotation: 90 },
+                        { x: 3, y: 11, rotation: 90 },
+                        { x: 3, y: 10, rotation: 90 },
+                        { x: 3, y: 9, rotation: 90 },
+                        { x: 3, y: 8, rotation: 90 },
+                        { x: 3, y: 7, rotation: 90 },
+                        { x: 3, y: 6, rotation: 90 },
+                        { x: 3, y: 5, rotation: 90 },
+                        { x: 3, y: 4, rotation: 90 },
+                        { x: 3, y: 3, rotation: 90 },
+                        { x: 3, y: 2, rotation: 90 },
+                        { x: 3, y: 1, rotation: 90 },
+                        { x: 3, y: 0, rotation: 90 },
+                        { x: 6, y: 6, rotation: 90 },
+                        { x: 6, y: 5, rotation: 90 },
+                        { x: 6, y: 4, rotation: 90 },
+                        { x: 6, y: 3, rotation: 90 },
+                        { x: 6, y: 2, rotation: 90 },
+                        { x: 15, y: 0, rotation: 90 },
+                        { x: 7, y: 1, rotation: 0 },
+                        { x: 8, y: 1, rotation: 0 },
+                        { x: 9, y: 1, rotation: 0 },
+                        { x: 10, y: 1, rotation: 0 },
+                        { x: 11, y: 1, rotation: 0 },
+                        { x: 12, y: 1, rotation: 0 },
+                        { x: 13, y: 1, rotation: 0 },
+                        { x: 14, y: 1, rotation: 0 },
                     ]
                 },
                 {
@@ -2096,6 +2139,7 @@ var Assets;
                         { x: 10, y: 13, rotation: 270 },
                         { x: 11, y: 6, rotation: 0 },
                         { x: 17, y: 15, rotation: 180 },
+                        { x: 3, y: 13, rotation: 90 },
                     ]
                 }
             ],
@@ -2394,9 +2438,190 @@ var Assets;
                 textureN: Assets.Textures.SPAWNPOINT_CHECKPOINT.name,
                 activeTextureN: Assets.Textures.SPAWNPOINT_CHECKPOINT_ACTIVE.name,
                 x: 3,
-                y: 2
+                y: 3
             },
-            tiles: [],
+            tiles: [
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 16, rotation: 180 },
+                        { x: 18, y: 18, rotation: 90 },
+                        { x: 15, y: 15, rotation: 90 },
+                        { x: 14, y: 14, rotation: 90 },
+                        { x: 13, y: 13, rotation: 90 },
+                        { x: 12, y: 12, rotation: 90 },
+                        { x: 11, y: 11, rotation: 90 },
+                        { x: 10, y: 10, rotation: 90 },
+                        { x: 9, y: 9, rotation: 90 },
+                        { x: 8, y: 8, rotation: 90 },
+                        { x: 7, y: 7, rotation: 90 },
+                        { x: 6, y: 6, rotation: 90 },
+                        { x: 0, y: 5, rotation: 90 },
+                        { x: 0, y: 0, rotation: 180 },
+                        { x: 19, y: 12, rotation: 270 },
+                        { x: 18, y: 11, rotation: 270 },
+                        { x: 17, y: 10, rotation: 270 },
+                        { x: 16, y: 9, rotation: 270 },
+                        { x: 15, y: 8, rotation: 270 },
+                        { x: 14, y: 7, rotation: 270 },
+                        { x: 13, y: 6, rotation: 270 },
+                        { x: 12, y: 5, rotation: 270 },
+                        { x: 11, y: 4, rotation: 270 },
+                        { x: 10, y: 3, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 19, y: 19, rotation: 180 },
+                        { x: 16, y: 16, rotation: 180 },
+                        { x: 9, y: 2, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 17, y: 17, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 17, y: 19, rotation: 180 },
+                        { x: 19, y: 18, rotation: 0 },
+                        { x: 18, y: 17, rotation: 0 },
+                        { x: 16, y: 15, rotation: 0 },
+                        { x: 15, y: 14, rotation: 0 },
+                        { x: 14, y: 13, rotation: 0 },
+                        { x: 13, y: 12, rotation: 0 },
+                        { x: 12, y: 11, rotation: 0 },
+                        { x: 11, y: 10, rotation: 0 },
+                        { x: 10, y: 9, rotation: 0 },
+                        { x: 9, y: 8, rotation: 0 },
+                        { x: 8, y: 7, rotation: 0 },
+                        { x: 7, y: 6, rotation: 0 },
+                        { x: 6, y: 5, rotation: 0 },
+                        { x: 19, y: 13, rotation: 180 },
+                        { x: 18, y: 12, rotation: 180 },
+                        { x: 17, y: 11, rotation: 180 },
+                        { x: 16, y: 10, rotation: 180 },
+                        { x: 15, y: 9, rotation: 180 },
+                        { x: 14, y: 8, rotation: 180 },
+                        { x: 13, y: 7, rotation: 180 },
+                        { x: 12, y: 6, rotation: 180 },
+                        { x: 11, y: 5, rotation: 180 },
+                        { x: 10, y: 4, rotation: 180 },
+                        { x: 9, y: 3, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 3, y: 19, rotation: 270 },
+                        { x: 15, y: 19, rotation: 0 },
+                        { x: 17, y: 16, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 19, rotation: 90 },
+                        { x: 0, y: 18, rotation: 90 },
+                        { x: 0, y: 17, rotation: 90 },
+                        { x: 1, y: 16, rotation: 180 },
+                        // {x: 2, y: 16, rotation: 180},
+                        { x: 3, y: 16, rotation: 180 },
+                        { x: 4, y: 16, rotation: 180 },
+                        { x: 5, y: 16, rotation: 180 },
+                        { x: 6, y: 16, rotation: 180 },
+                        { x: 7, y: 16, rotation: 180 },
+                        { x: 8, y: 16, rotation: 180 },
+                        { x: 9, y: 16, rotation: 180 },
+                        { x: 10, y: 16, rotation: 180 },
+                        { x: 11, y: 16, rotation: 180 },
+                        { x: 12, y: 16, rotation: 180 },
+                        { x: 13, y: 16, rotation: 180 },
+                        { x: 14, y: 16, rotation: 180 },
+                        { x: 15, y: 16, rotation: 180 },
+                        { x: 17, y: 18, rotation: 270 },
+                        { x: 18, y: 19, rotation: 180 },
+                        { x: 5, y: 5, rotation: 0 },
+                        { x: 4, y: 5, rotation: 0 },
+                        { x: 3, y: 5, rotation: 0 },
+                        { x: 2, y: 5, rotation: 0 },
+                        { x: 1, y: 5, rotation: 0 },
+                        { x: 0, y: 4, rotation: 90 },
+                        { x: 0, y: 3, rotation: 90 },
+                        { x: 0, y: 2, rotation: 90 },
+                        { x: 0, y: 1, rotation: 90 },
+                        { x: 1, y: 0, rotation: 180 },
+                        { x: 2, y: 0, rotation: 180 },
+                        { x: 3, y: 0, rotation: 180 },
+                        { x: 4, y: 0, rotation: 180 },
+                        { x: 5, y: 0, rotation: 180 },
+                        { x: 6, y: 0, rotation: 180 },
+                        { x: 7, y: 0, rotation: 180 },
+                        { x: 8, y: 0, rotation: 180 },
+                        { x: 9, y: 0, rotation: 180 },
+                        { x: 10, y: 0, rotation: 180 },
+                        { x: 11, y: 0, rotation: 180 },
+                        { x: 12, y: 0, rotation: 180 },
+                        { x: 13, y: 0, rotation: 180 },
+                        { x: 14, y: 0, rotation: 180 },
+                        { x: 15, y: 0, rotation: 180 },
+                        { x: 16, y: 0, rotation: 180 },
+                        { x: 17, y: 0, rotation: 180 },
+                        { x: 18, y: 0, rotation: 180 },
+                        { x: 19, y: 0, rotation: 180 },
+                        { x: 10, y: 2, rotation: 0 },
+                        { x: 11, y: 2, rotation: 0 },
+                        { x: 12, y: 2, rotation: 0 },
+                        { x: 13, y: 2, rotation: 0 },
+                        { x: 14, y: 2, rotation: 0 },
+                        { x: 15, y: 2, rotation: 0 },
+                        { x: 16, y: 2, rotation: 0 },
+                        { x: 17, y: 2, rotation: 0 },
+                        { x: 18, y: 2, rotation: 0 },
+                        { x: 19, y: 2, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 4, y: 19, rotation: 0 },
+                        { x: 5, y: 19, rotation: 0 },
+                        { x: 6, y: 19, rotation: 0 },
+                        { x: 7, y: 19, rotation: 0 },
+                        { x: 8, y: 19, rotation: 0 },
+                        { x: 9, y: 19, rotation: 0 },
+                        { x: 10, y: 19, rotation: 0 },
+                        { x: 11, y: 19, rotation: 0 },
+                        { x: 12, y: 19, rotation: 0 },
+                        { x: 13, y: 19, rotation: 0 },
+                        { x: 14, y: 19, rotation: 0 },
+                        { x: 3, y: 2, rotation: 0 },
+                        { x: 4, y: 2, rotation: 0 },
+                        { x: 5, y: 2, rotation: 0 },
+                        { x: 6, y: 2, rotation: 0 },
+                        { x: 7, y: 2, rotation: 0 },
+                        { x: 8, y: 2, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_END.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 2, y: 2, rotation: 180 },
+                    ]
+                },
+            ],
             objects: []
         };
         Levels.testLevel4 = {
@@ -2416,7 +2641,72 @@ var Assets;
                 x: 3,
                 y: 2
             },
-            tiles: [],
+            tiles: [
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 4, y: 17, rotation: 270 },
+                        { x: 3, y: 16, rotation: 270 },
+                        { x: 2, y: 15, rotation: 270 },
+                        { x: 1, y: 14, rotation: 270 },
+                        { x: 0, y: 13, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_EXTERIOR.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 17, y: 19, rotation: 90 },
+                        { x: 3, y: 17, rotation: 180 },
+                        { x: 2, y: 16, rotation: 180 },
+                        { x: 2, y: 16, rotation: 180 },
+                        { x: 1, y: 15, rotation: 180 },
+                        { x: 0, y: 14, rotation: 180 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 4, y: 19, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_SINGLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 5, y: 19, rotation: 180 },
+                        { x: 6, y: 19, rotation: 180 },
+                        { x: 7, y: 19, rotation: 180 },
+                        { x: 8, y: 19, rotation: 180 },
+                        { x: 9, y: 19, rotation: 180 },
+                        { x: 10, y: 19, rotation: 180 },
+                        { x: 11, y: 19, rotation: 180 },
+                        { x: 12, y: 19, rotation: 180 },
+                        { x: 13, y: 19, rotation: 180 },
+                        { x: 14, y: 19, rotation: 180 },
+                        { x: 15, y: 19, rotation: 180 },
+                        { x: 16, y: 19, rotation: 180 },
+                        { x: 4, y: 18, rotation: 270 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_DOUBLE.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 0, y: 19, rotation: 0 },
+                        { x: 1, y: 19, rotation: 0 },
+                    ]
+                },
+                {
+                    textureName: Assets.Textures.TILE_WALL_END.name,
+                    collisionType: MG.CollisionType.BLOCKING,
+                    instances: [
+                        { x: 2, y: 19, rotation: 0 },
+                    ]
+                },
+            ],
             objects: []
         };
         Levels.testLevel5 = {
