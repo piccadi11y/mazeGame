@@ -68,9 +68,9 @@ next/current steps:
 
 todo:
     - build out test level as example (set: 14/01/22, done: )
-    - refactor data to use interfaces (set: 14/01/22, done: 18/01/22)
+    + refactor data to use interfaces (set: 14/01/22, done: 18/01/22)
     - ... finish UI
-    -  refactor level's tile data storage to be data-orientated rather than object-orientated (set: 17/01/22, done: 19/01/22)
+    + refactor level's tile data storage to be data-orientated rather than object-orientated (set: 17/01/22, done: 19/01/22)
     - refactor level tile logic to store instances in object and batch render/offscreen render at once rather than working through the array of individual tiles (set: 21/01/22, done: )
-        - refactor to use offscreen rendering/pre-rendered tiles (done: 22/01/22)
-    - pre-render all levels offscreen and then copy them onto primary canvas? (22/01/22)
+        + refactor to use offscreen rendering/pre-rendered tiles (done: 22/01/22)
+    - pre-render all levels offscreen and then copy them onto primary canvas? (set: 22/01/22)

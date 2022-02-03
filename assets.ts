@@ -1115,11 +1115,11 @@ namespace Assets.Levels {
             y: 5
         },
         tiles: [
-            {
+            /*{
                 textureName: Assets.Textures.sunset0_0.name,
                 collisionType: undefined,
                 instances: [{x: 8, y: 8, rotation: 0}]
-            },
+            },*/
 
             {
                 textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR.name,
@@ -1379,6 +1379,9 @@ namespace Assets.Levels {
                     {x: 14, y: 5, rotation: 180},
                     {x: 15, y: 5, rotation: 90},
                     {x: 6, y: 13, rotation: 90},
+                    {x: 5, y: 13, rotation: 180},
+                    {x: 5, y: 7, rotation: 270},
+                    {x: 1, y: 15, rotation: 0},
                 ]
             },
             {
@@ -1387,7 +1390,7 @@ namespace Assets.Levels {
                 instances: [
                     {x: 16, y: 19, rotation: 270},
                     {x: 15, y: 17, rotation: 90},
-                    {x: 6, y: 1, rotation: 180},
+                    {x: 0, y: 15, rotation: 90},
                 ]
             },
             {
@@ -1398,7 +1401,7 @@ namespace Assets.Levels {
                     {x: 5, y: 17, rotation: 270},
                     {x: 6, y: 17, rotation: 180},
                     {x: 14, y: 3, rotation: 0},
-                    {x: 15, y: 1, rotation: 180},
+                    {x: 6, y: 7, rotation: 90},
                 ]
             },
             {
@@ -1411,6 +1414,13 @@ namespace Assets.Levels {
                 ]
             },
             {
+                textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC.name,
+                collisionType: MG.CollisionType.BLOCKING,
+                instances: [
+                    {x: 15, y: 1, rotation: 180},
+                ]
+            },
+            {
                 textureName: Assets.Textures.TILE_WALL_DOUBLE_CORNER.name,
                 collisionType: MG.CollisionType.BLOCKING,
                 instances: [
@@ -1418,6 +1428,7 @@ namespace Assets.Levels {
                     {x: 10, y: 17, rotation: 90},
                     {x: 8, y: 6, rotation: 180},
                     {x: 8, y: 3, rotation: 270},
+                    {x: 6, y: 1, rotation: 270},
                 ]
             },
             {
@@ -1468,21 +1479,26 @@ namespace Assets.Levels {
                     {x: 6, y: 10, rotation: 90},
                     {x: 6, y: 9, rotation: 90},
                     {x: 6, y: 8, rotation: 90},
-                    {x: 6, y: 7, rotation: 90},
-                    {x: 6, y: 6, rotation: 90},
-                    {x: 6, y: 5, rotation: 90},
-                    {x: 6, y: 4, rotation: 90},
-                    {x: 6, y: 3, rotation: 90},
-                    {x: 6, y: 2, rotation: 90},
-                    {x: 7, y: 1, rotation: 180},
-                    {x: 8, y: 1, rotation: 180},
-                    {x: 9, y: 1, rotation: 180},
-                    {x: 10, y: 1, rotation: 180},
-                    {x: 11, y: 1, rotation: 180},
-                    {x: 12, y: 1, rotation: 180},
-                    {x: 13, y: 1, rotation: 180},
-                    {x: 14, y: 1, rotation: 180},
-                    {x: 15, y: 0, rotation: 90},
+                    {x: 5, y: 8, rotation: 270},
+                    {x: 5, y: 9, rotation: 270},
+                    {x: 5, y: 10, rotation: 270},
+                    {x: 5, y: 11, rotation: 270},
+                    {x: 5, y: 12, rotation: 270},
+                    {x: 0, y: 14, rotation: 90},
+                    {x: 0, y: 13, rotation: 90},
+                    {x: 0, y: 12, rotation: 90},
+                    {x: 0, y: 11, rotation: 90},
+                    {x: 0, y: 10, rotation: 90},
+                    {x: 0, y: 9, rotation: 90},
+                    {x: 0, y: 8, rotation: 90},
+                    {x: 0, y: 7, rotation: 90},
+                    {x: 0, y: 6, rotation: 90},
+                    {x: 0, y: 5, rotation: 90},
+                    {x: 0, y: 4, rotation: 90},
+                    {x: 0, y: 3, rotation: 90},
+                    {x: 0, y: 2, rotation: 90},
+                    {x: 0, y: 1, rotation: 90},
+                    {x: 0, y: 0, rotation: 90},
                 ]
             },
             {
@@ -1528,6 +1544,33 @@ namespace Assets.Levels {
                     {x: 12, y: 3, rotation: 0},
                     {x: 19, y: 15, rotation: 0},
                     {x: 18, y: 15, rotation: 0},
+                    {x: 3, y: 12, rotation: 90},
+                    {x: 3, y: 11, rotation: 90},
+                    {x: 3, y: 10, rotation: 90},
+                    {x: 3, y: 9, rotation: 90},
+                    {x: 3, y: 8, rotation: 90},
+                    {x: 3, y: 7, rotation: 90},
+                    {x: 3, y: 6, rotation: 90},
+                    {x: 3, y: 5, rotation: 90},
+                    {x: 3, y: 4, rotation: 90},
+                    {x: 3, y: 3, rotation: 90},
+                    {x: 3, y: 2, rotation: 90},
+                    {x: 3, y: 1, rotation: 90},
+                    {x: 3, y: 0, rotation: 90},
+                    {x: 6, y: 6, rotation: 90},
+                    {x: 6, y: 5, rotation: 90},
+                    {x: 6, y: 4, rotation: 90},
+                    {x: 6, y: 3, rotation: 90},
+                    {x: 6, y: 2, rotation: 90},
+                    {x: 15, y: 0, rotation: 90},
+                    {x: 7, y: 1, rotation: 0},
+                    {x: 8, y: 1, rotation: 0},
+                    {x: 9, y: 1, rotation: 0},
+                    {x: 10, y: 1, rotation: 0},
+                    {x: 11, y: 1, rotation: 0},
+                    {x: 12, y: 1, rotation: 0},
+                    {x: 13, y: 1, rotation: 0},
+                    {x: 14, y: 1, rotation: 0},
                 ]
             },
             {
@@ -1538,6 +1581,7 @@ namespace Assets.Levels {
                     {x: 10, y: 13, rotation: 270},
                     {x: 11, y: 6, rotation: 0},
                     {x: 17, y: 15, rotation: 180},
+                    {x: 3, y: 13, rotation: 90},
                 ]
             }
         ],
