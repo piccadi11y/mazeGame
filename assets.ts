@@ -694,6 +694,21 @@ namespace Assets.Textures {
             }
         ]
     }
+    export const TILE_WALL_SINGLE_CORNER_INTERIOR_OPPOSITE: MG.ITextureData = {
+        name: 'TILE_WALL_SINGLE_CORNER_INTERIOR_OPPOSITE',
+        width: 7,
+        height: 7,
+        baseColour: undefined,
+        layers: [
+            {
+                colour: {r: 255,g: 200,b: 0},
+                points: [
+                    {x: 0, y: 0},
+                    {x: 6, y: 6}
+                ]
+            }
+        ]
+    }
     export const TILE_WALL_SINGLE_CORNER_EXTERIOR: MG.ITextureData = {
         name: 'TILE_WALL_SINGLE_CORNER_EXTERIOR',
         width: 7,
@@ -1050,6 +1065,7 @@ namespace Assets.Textures {
         TILE_WALL_SINGLE_CORNER_INTERIOR_WALLA,
         TILE_WALL_SINGLE_CORNER_INTERIOR_WALLB,
         TILE_WALL_SINGLE_CORNER_INTERIOR_WALLC,
+        TILE_WALL_SINGLE_CORNER_INTERIOR_OPPOSITE,
         TILE_WALL_SINGLE_CORNER_INTERIOR_DOUBLE,
         TILE_WALL_SINGLE_CORNER_INTERIOR_FULL,
         TILE_WALL_SINGLE_CORNER_EXTERIOR,
@@ -2093,8 +2109,8 @@ namespace Assets.Levels {
                     {x: 4, y: 17, rotation: 270},
                     {x: 3, y: 16, rotation: 270},
                     {x: 2, y: 15, rotation: 270},
-                    {x: 1, y: 14, rotation: 270},
                     {x: 0, y: 13, rotation: 270},
+                    {x: 15, y: 14, rotation: 0},
                 ]
             },
             {
@@ -2107,6 +2123,8 @@ namespace Assets.Levels {
                     {x: 2, y: 16, rotation: 180},
                     {x: 1, y: 15, rotation: 180},
                     {x: 0, y: 14, rotation: 180},
+                    {x: 1, y: 2, rotation: 180},
+                    {x: 0, y: 0, rotation: 90},
                 ]
             },
             {
@@ -2114,6 +2132,13 @@ namespace Assets.Levels {
                 collisionType: MG.CollisionType.BLOCKING,
                 instances: [
                     {x: 4, y: 19, rotation: 270},
+                ]
+            },
+            {
+                textureName: Assets.Textures.TILE_WALL_SINGLE_CORNER_INTERIOR_OPPOSITE.name,
+                collisionType: MG.CollisionType.BLOCKING,
+                instances: [
+                    {x: 1, y: 14, rotation: 90},
                 ]
             },
             {
@@ -2132,7 +2157,85 @@ namespace Assets.Levels {
                     {x: 14, y: 19, rotation: 180},
                     {x: 15, y: 19, rotation: 180},
                     {x: 16, y: 19, rotation: 180},
-                    {x: 4, y: 18, rotation: 270},
+                    // {x: 4, y: 18, rotation: 270},
+                    {x: 19, y: 19, rotation: 270},
+                    {x: 19, y: 18, rotation: 270},
+                    {x: 19, y: 17, rotation: 270},
+                    {x: 19, y: 16, rotation: 270},
+                    {x: 19, y: 15, rotation: 270},
+                    {x: 19, y: 14, rotation: 270},
+                    {x: 19, y: 13, rotation: 270},
+                    {x: 19, y: 12, rotation: 270},
+                    {x: 19, y: 11, rotation: 270},
+                    {x: 19, y: 10, rotation: 270},
+                    {x: 19, y: 9, rotation: 270},
+                    {x: 19, y: 8, rotation: 270},
+                    {x: 19, y: 7, rotation: 270},
+                    {x: 19, y: 6, rotation: 270},
+                    {x: 19, y: 5, rotation: 270},
+                    {x: 19, y: 4, rotation: 270},
+                    {x: 19, y: 3, rotation: 270},
+                    {x: 19, y: 2, rotation: 270},
+                    {x: 19, y: 1, rotation: 270},
+                    {x: 19, y: 0, rotation: 270},
+                    {x: 17, y: 18, rotation: 90},
+                    {x: 17, y: 17, rotation: 90},
+                    {x: 17, y: 16, rotation: 90},
+                    {x: 17, y: 15, rotation: 90},
+                    {x: 17, y: 14, rotation: 90},
+                    {x: 17, y: 13, rotation: 90},
+                    {x: 17, y: 12, rotation: 90},
+                    {x: 17, y: 11, rotation: 90},
+                    {x: 17, y: 10, rotation: 90},
+                    {x: 17, y: 9, rotation: 90},
+                    {x: 17, y: 8, rotation: 90},
+                    {x: 17, y: 7, rotation: 90},
+                    {x: 17, y: 6, rotation: 90},
+                    {x: 17, y: 5, rotation: 90},
+                    {x: 17, y: 4, rotation: 90},
+                    {x: 17, y: 3, rotation: 90},
+                    {x: 17, y: 2, rotation: 90},
+                    {x: 17, y: 1, rotation: 90},
+                    {x: 17, y: 0, rotation: 90},
+                    {x: 0, y: 2, rotation: 0},
+                    {x: 1, y: 3, rotation: 90},
+                    {x: 1, y: 4, rotation: 90},
+                    {x: 1, y: 5, rotation: 90},
+                    {x: 1, y: 6, rotation: 90},
+                    {x: 1, y: 7, rotation: 90},
+                    {x: 1, y: 8, rotation: 90},
+                    {x: 1, y: 9, rotation: 90},
+                    {x: 1, y: 10, rotation: 90},
+                    {x: 1, y: 11, rotation: 90},
+                    {x: 1, y: 12, rotation: 90},
+                    {x: 1, y: 13, rotation: 90},
+                    {x: 2, y: 14, rotation: 0},
+                    {x: 3, y: 14, rotation: 0},
+                    {x: 4, y: 14, rotation: 0},
+                    {x: 5, y: 14, rotation: 0},
+                    {x: 6, y: 14, rotation: 0},
+                    // {x: 7, y: 14, rotation: 0},
+                    {x: 8, y: 14, rotation: 0},
+                    {x: 9, y: 14, rotation: 0},
+                    {x: 10, y: 14, rotation: 0},
+                    {x: 11, y: 14, rotation: 0},
+                    {x: 12, y: 14, rotation: 0},
+                    {x: 13, y: 14, rotation: 0},
+                    {x: 14, y: 14, rotation: 0},
+                    {x: 15, y: 13, rotation: 270},
+                    {x: 15, y: 12, rotation: 270},
+                    {x: 15, y: 11, rotation: 270},
+                    {x: 15, y: 10, rotation: 270},
+                    {x: 15, y: 9, rotation: 270},
+                    {x: 15, y: 8, rotation: 270},
+                    {x: 15, y: 7, rotation: 270},
+                    {x: 15, y: 6, rotation: 270},
+                    {x: 15, y: 5, rotation: 270},
+                    {x: 15, y: 4, rotation: 270},
+                    {x: 15, y: 3, rotation: 270},
+                    {x: 15, y: 2, rotation: 270},
+                    {x: 15, y: 1, rotation: 270},
+                    {x: 15, y: 0, rotation: 270},
                 ]
             },
             {
